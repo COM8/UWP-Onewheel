@@ -1,0 +1,59 @@
+﻿<Page
+    x:Class="Onewheel.Pages.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <DataTemplate x:Key="HamburgerMenuItem">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <FontIcon Grid.Column="0"
+                          FontSize="16"
+                          FontFamily="Segoe MDL2 Assets"
+                          Glyph="{Binding Glyph}"
+                          Foreground="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding Label}"
+                           Foreground="{ThemeResource SystemControlBackgroundBaseHighBrush}"
+                           FontSize="16"
+                           VerticalAlignment="Center" />
+            </Grid>
+        </DataTemplate>
+    </Page.Resources>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <controls:HamburgerMenu x:Name="main_hbm"
+                                SelectedIndex="0"
+                                ItemClick="main_hbm_ItemClick"
+                                ItemTemplate="{StaticResource HamburgerMenuItem}"
+                                OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
+                                OptionsItemClick="main_hbm_OptionsItemClick"
+                                DisplayMode="CompactOverlay"
+                                IsPaneOpen="False"
+                                PaneBackground="{ThemeResource SystemControlBackgroundListLowBrush}">
+            <controls:HamburgerMenu.ItemsSource>
+                <controls:HamburgerMenuItemCollection>
+                    <controls:HamburgerMenuGlyphItem Label="Home" Glyph="&#xE10F;" Tag="home"/>
+                    <controls:HamburgerMenuGlyphItem Label="Info" Glyph="&#xE946;" Tag="info"/>
+                    <controls:HamburgerMenuGlyphItem Label="Connect" Glyph="&#xE702;" Tag="connect"/>
+                </controls:HamburgerMenuItemCollection>
+            </controls:HamburgerMenu.ItemsSource>
+
+            <controls:HamburgerMenu.OptionsItemsSource>
+                <controls:HamburgerMenuItemCollection>
+                    <controls:HamburgerMenuGlyphItem Glyph="&#xE713;"
+                                                     Label="Settings" />
+                </controls:HamburgerMenuItemCollection>
+            </controls:HamburgerMenu.OptionsItemsSource>
+
+            <Frame x:Name="contentFrame"/>
+        </controls:HamburgerMenu>
+    </Grid>
+</Page>

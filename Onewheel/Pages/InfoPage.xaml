@@ -1,0 +1,46 @@
+﻿<Page
+    x:Class="Onewheel.Pages.InfoPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Loaded="Page_Loaded">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Grid.Row="0">
+            <StackPanel>
+                <TextBlock Text="Name:" FontSize="20"/>
+                <TextBlock x:Name="name_tbx" TextWrapping="Wrap"/>
+
+                <TextBlock Text="BluetoothAddress:" FontSize="20" Margin="0, 10, 0, 0"/>
+                <TextBlock x:Name="btAddress_tbx" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Bluetooth address type:" FontSize="20" Margin="0, 10, 0, 0"/>
+                <TextBlock x:Name="btAddressType_tbx" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Connection status:" FontSize="20" Margin="0, 10, 0, 0"/>
+                <TextBlock x:Name="connectionStatus_tbx" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Device access status:" FontSize="20" Margin="0, 10, 0, 0"/>
+                <TextBlock x:Name="accessStatus_tbx" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Device ID:" FontSize="20" Margin="0, 10, 0, 0"/>
+                <TextBlock x:Name="deviceId_tbx" TextWrapping="Wrap"/>
+
+                <TextBlock Text="Battery:" FontSize="20" Margin="0, 10, 0, 0"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock x:Name="batteryIcon_tbx" Text="&#xEC02;" FontSize="20" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="batteryPercent_tbx" Text="Unknown" Margin="10, 0, 0, 0" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <Button x:Name="printAll_btn" Content="Print all" Margin="0, 10, 0, 0" Click="printAll_btn_Click"/>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

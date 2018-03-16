@@ -1,0 +1,21 @@
+﻿<Page
+    x:Class="Onewheel.Pages.ConnectPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Onewheel.Controls"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <controls:ConnectedBoardControl Grid.Row="0"/>
+            <controls:ConnectBoardControl Grid.Row="1" Margin="0, 10, 0, 0"/>
+        </Grid>
+    </ScrollViewer>
+</Page>
