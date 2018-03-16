@@ -60,7 +60,23 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
+        public void setBoard(ObservableBluetoothLEDevice board)
+        {
+            if(this.board != null)
+            {
+                this.board.PropertyChanged -= Board_PropertyChanged;
+            }
 
+            this.board = board;
+
+            if (this.board != null)
+            {
+                this.board.PropertyChanged += Board_PropertyChanged;
+            }
+
+            showBattery();
+            showBoard();
+        }
 
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
@@ -115,21 +131,36 @@ namespace Onewheel.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged;
-            board = OnewheelConnectionHelper.INSTANCE.board;
-            showBattery();
-            showBoard();
+            setBoard(OnewheelConnectionHelper.INSTANCE.board);
         }
 
         private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, Classes.Events.BoardChangedEventArgs args)
         {
-            board = args.BOARD;
-            showBattery();
-            showBoard();
+            setBoard(args.BOARD);
         }
 
         private void printAll_btn_Click(object sender, RoutedEventArgs e)
         {
             Task t = OnewheelConnectionHelper.INSTANCE.printAllAsync();
+        }
+
+        private void Board_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "BluetoothAddressAsString":
+                case "BluetoothLEDevice":
+                case "Name":
+                    showBattery();
+                    showBoard();
+                    break;
+            }
+        }
+
+        private void reload_btn_Click(object sender, RoutedEventArgs e)
+        {
+            showBattery();
+            showBoard();
         }
 
         #endregion

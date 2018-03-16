@@ -5,6 +5,7 @@ using System;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 using System.Diagnostics;
+using DataManager.Classes;
 
 namespace Onewheel.Classes
 {
@@ -13,6 +14,7 @@ namespace Onewheel.Classes
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
         public static OnewheelConnectionHelper INSTANCE = new OnewheelConnectionHelper();
+        private BluetoothLEHelper bluetoothLEHelper;
 
         public ObservableBluetoothLEDevice board { get; private set; }
 
@@ -26,6 +28,27 @@ namespace Onewheel.Classes
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
+        /// <summary>
+        /// Basic Constructor
+        /// </summary>
+        /// <history>
+        /// 15/03/2018 Created [Fabian Sauter]
+        /// </history>
+        public OnewheelConnectionHelper()
+        {
+            this.bluetoothLEHelper = BluetoothLEHelper.Context;
+        }
+
+        #endregion
+        //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
+        #region --Set-, Get- Methods--
+        public void setBoard(ObservableBluetoothLEDevice board)
+        {
+            this.board = board;
+            setLastBoard(board);
+            BoardChanged?.Invoke(this, new BoardChangedEventArgs(board));
+        }
+
         public async Task<int> getBatteryLevelAsync()
         {
             if (board != null && board.BluetoothLEDevice != null)
@@ -49,84 +72,88 @@ namespace Onewheel.Classes
             return -1;
         }
 
-        #endregion
-        //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
-        #region --Set-, Get- Methods--
-        public void setBoard(ObservableBluetoothLEDevice newBoard)
+        public void setLastBoard(ObservableBluetoothLEDevice lastBoard)
         {
-            board = newBoard;
-            BoardChanged?.Invoke(this, new BoardChangedEventArgs(newBoard));
+            if (board != null && board.BluetoothAddressAsString != null)
+            {
+                Settings.setSetting(SettingsConsts.BOARD_ADDRESS, lastBoard.BluetoothAddressAsString);
+                Settings.setSetting(SettingsConsts.BOARD_NAME, lastBoard.Name);
+            }
         }
 
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public void init()
+        {
+            connectToLastBoard();
+        }
+
+        public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)
+        {
+            GattReadResult vRes = await characteristic.ReadValueAsync();
+            if (vRes.Status == GattCommunicationStatus.Success)
+            {
+                DataReader reader = DataReader.FromBuffer(vRes.Value);
+                byte[] data = new byte[reader.UnconsumedBufferLength];
+                reader.ReadBytes(data);
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(data);
+                }
+                return data;
+            }
+            return null;
+        }
+
+        public async Task<string> readStringFromCharacteristicAsync(GattCharacteristic characteristic)
+        {
+            byte[] data = await readBytesFromCharacteristicAsync(characteristic);
+            if (data != null)
+            {
+                return BitConverter.ToString(data);
+            }
+            return null;
+        }
+
         public async Task<int> readIntFromCharacteristicAsync(GattCharacteristic characteristic)
         {
-            try
+            byte[] data = await readBytesFromCharacteristicAsync(characteristic);
+            if (data != null)
             {
-                GattReadResult vRes = await characteristic.ReadValueAsync();
-                if (vRes.Status == GattCommunicationStatus.Success)
-                {
-                    var reader = DataReader.FromBuffer(vRes.Value);
-                    var input = new byte[reader.UnconsumedBufferLength];
-                    reader.ReadBytes(input);
-
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        Array.Reverse(input);
-                    }
-                    return BitConverter.ToInt16(input, 0);
-                }
-            }
-            catch (Exception e)
-            {
+                return BitConverter.ToInt16(data, 0);
             }
             return -1;
         }
 
         public void connectToLastBoard()
         {
-
-        }
-
-        public async Task<string> readStringFromCharacteristicAsync(GattCharacteristic characteristic)
-        {
-            try
+            Task.Run(async () =>
             {
-                GattReadResult vRes = await characteristic.ReadValueAsync();
-                if (vRes.Status == GattCommunicationStatus.Success)
+                if (BluetoothLEHelper.IsBluetoothLESupported && Settings.getSettingString(SettingsConsts.BOARD_ADDRESS) != null)
                 {
-                    var reader = DataReader.FromBuffer(vRes.Value);
-                    var input = new byte[reader.UnconsumedBufferLength];
-                    reader.ReadBytes(input);
+                    bluetoothLEHelper.StartEnumeration();
 
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        Array.Reverse(input);
-                    }
-                    return BitConverter.ToString(input);
+                    bluetoothLEHelper.BluetoothLeDevices.CollectionChanged += BluetoothLeDevices_CollectionChanged;
+                    await searchBoardAsync();
                 }
-            }
-            catch (Exception e)
-            {
-            }
-            return null;
+            });
         }
 
         public async Task printAllAsync()
         {
-            if(board != null && board.BluetoothLEDevice != null)
+            if (board != null && board.BluetoothLEDevice != null)
             {
                 GattDeviceServicesResult sResult = await board.BluetoothLEDevice.GetGattServicesAsync();
-                if(sResult.Status == GattCommunicationStatus.Success)
+                if (sResult.Status == GattCommunicationStatus.Success)
                 {
                     foreach (GattDeviceService s in sResult.Services)
                     {
                         Debug.WriteLine("UUID: " + s.Uuid + ", Handle: " + s.AttributeHandle);
 
                         GattCharacteristicsResult cResult = await s.GetCharacteristicsAsync();
-                        if(cResult.Status == GattCommunicationStatus.Success)
+                        if (cResult.Status == GattCommunicationStatus.Success)
                         {
                             foreach (GattCharacteristic c in cResult.Characteristics)
                             {
@@ -144,7 +171,19 @@ namespace Onewheel.Classes
         #endregion
 
         #region --Misc Methods (Private)--
-
+        private async Task searchBoardAsync()
+        {
+            string boardAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
+            for (int i = 0; i < bluetoothLEHelper.BluetoothLeDevices.Count; i++)
+            {
+                if (Equals(bluetoothLEHelper.BluetoothLeDevices[i].BluetoothAddressAsString, boardAddress))
+                {
+                    await bluetoothLEHelper.BluetoothLeDevices[i].ConnectAsync();
+                    setBoard(bluetoothLEHelper.BluetoothLeDevices[i]);
+                    bluetoothLEHelper.StopEnumeration();
+                }
+            }
+        }
 
         #endregion
 
@@ -154,7 +193,10 @@ namespace Onewheel.Classes
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-
+        private void BluetoothLeDevices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            searchBoardAsync();
+        }
 
         #endregion
     }

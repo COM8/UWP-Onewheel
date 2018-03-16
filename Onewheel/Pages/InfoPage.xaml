@@ -39,6 +39,7 @@
                 </StackPanel>
 
                 <Button x:Name="printAll_btn" Content="Print all" Margin="0, 10, 0, 0" Click="printAll_btn_Click"/>
+                <Button x:Name="reload_btn" Content="Reload" Margin="0, 10, 0, 0" Click="reload_btn_Click"/>
             </StackPanel>
         </ScrollViewer>
 

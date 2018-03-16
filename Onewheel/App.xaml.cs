@@ -1,4 +1,5 @@
-﻿using Onewheel.Pages;
+﻿using Onewheel.Classes;
+using Onewheel.Pages;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -30,6 +31,9 @@ namespace Onewheel
         /// <param name="e">Details über Startanforderung und -prozess.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
+            // Init onewheel helper:
+            OnewheelConnectionHelper.INSTANCE.init();
+
             Frame rootFrame = Window.Current.Content as Frame;
 
             // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.

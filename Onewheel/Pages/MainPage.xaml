@@ -37,7 +37,7 @@
                                 OptionsItemClick="main_hbm_OptionsItemClick"
                                 DisplayMode="CompactOverlay"
                                 IsPaneOpen="False"
-                                PaneBackground="{ThemeResource SystemControlBackgroundListLowBrush}">
+                                PaneBackground="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
             <controls:HamburgerMenu.ItemsSource>
                 <controls:HamburgerMenuItemCollection>
                     <controls:HamburgerMenuGlyphItem Label="Home" Glyph="&#xE10F;" Tag="home"/>

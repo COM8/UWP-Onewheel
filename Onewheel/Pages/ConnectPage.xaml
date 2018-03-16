@@ -14,8 +14,8 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <controls:ConnectedBoardControl Grid.Row="0"/>
-            <controls:ConnectBoardControl Grid.Row="1" Margin="0, 10, 0, 0"/>
+            <controls:ConnectedBoardControl Grid.Row="0" Margin="10, 10, 10, 0"/>
+            <controls:ConnectBoardControl Grid.Row="1" Margin="10, 10, 10, 0"/>
         </Grid>
     </ScrollViewer>
 </Page>
