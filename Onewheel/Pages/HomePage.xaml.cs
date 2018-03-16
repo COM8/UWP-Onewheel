@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Onewheel.Classes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,23 @@ namespace Onewheel.Pages
         #endregion
 
         #region --Misc Methods (Private)--
-
+        private void showBatteryLevel()
+        {
+            int level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (level >= 0 && level <= 100)
+                {
+                    batteryPerc_tbx.Text = level + "%";
+                    batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[level / 10];
+                }
+                else
+                {
+                    batteryIcon_tbx.Text = "Unknown";
+                    batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[11];
+                }
+            }).AsTask();
+        }
 
         #endregion
 
@@ -58,7 +75,19 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged += ONEWHEEL_INFO_BoardCharacteristicChanged;
+            showBatteryLevel();
+        }
 
+        private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, Classes.Events.BoardCharacteristicChangedEventArgs args)
+        {
+            if (args.UUID.CompareTo(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL) == 0)
+            {
+                showBatteryLevel();
+            }
+        }
 
         #endregion
     }

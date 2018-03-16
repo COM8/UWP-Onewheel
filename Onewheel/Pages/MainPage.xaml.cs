@@ -82,6 +82,11 @@ namespace Onewheel.Pages
             contentFrame.Navigate(typeof(SettingsPage));
         }
 
+        private void main_hbm_Loaded(object sender, RoutedEventArgs e)
+        {
+            contentFrame.Navigate(typeof(HomePage));
+        }
+
         #endregion
     }
 }

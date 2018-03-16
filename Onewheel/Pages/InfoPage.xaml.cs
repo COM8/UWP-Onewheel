@@ -27,21 +27,6 @@ namespace Onewheel.Pages
         #region --Attributes--
         private ObservableBluetoothLEDevice board;
 
-        private readonly string[] BATTERY_LEVEL_ICONS = new string[] {
-            "\uEBA0", // 0%
-            "\uEBA1", // 10%
-            "\uEBA2", // 20%
-            "\uEBA3", // 30%
-            "\uEBA4", // 40%
-            "\uEBA5", // 50%
-            "\uEBA6", // 60%
-            "\uEBA7", // 70%
-            "\uEBA8", // 80%
-            "\uEBA9", // 90%
-            "\uEBAA", // 100%
-            "\uEC02", // Unknown
-        };
-
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
@@ -88,23 +73,17 @@ namespace Onewheel.Pages
         #region --Misc Methods (Private)--
         private void showBattery()
         {
-            Task.Run(async () =>
+            int level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
+            if (level >= 0 && level <= 100)
             {
-                int level = await OnewheelConnectionHelper.INSTANCE.getBatteryLevelAsync();
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                {
-                    if (level >= 0 && level <= 100)
-                    {
-                        batteryPercent_tbx.Text = level + "%";
-                        batteryIcon_tbx.Text = BATTERY_LEVEL_ICONS[level / 10];
-                    }
-                    else
-                    {
-                        batteryPercent_tbx.Text = "Unknown!";
-                        batteryIcon_tbx.Text = BATTERY_LEVEL_ICONS[11];
-                    }
-                });
-            });
+                batteryPercent_tbx.Text = level + "%";
+                batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[level / 10];
+            }
+            else
+            {
+                batteryPercent_tbx.Text = "Unknown!";
+                batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[11];
+            }
         }
 
         private void showBoard()

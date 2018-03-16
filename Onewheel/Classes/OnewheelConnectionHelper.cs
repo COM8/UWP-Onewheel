@@ -14,16 +14,14 @@ namespace Onewheel.Classes
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
         public static OnewheelConnectionHelper INSTANCE = new OnewheelConnectionHelper();
-        private BluetoothLEHelper bluetoothLEHelper;
 
+        public readonly OnewheelInfo ONEWHEEL_INFO;
+        private BluetoothLEHelper bluetoothLEHelper;
         public ObservableBluetoothLEDevice board { get; private set; }
 
-        public delegate void BoardChangedHandler(OnewheelConnectionHelper helper, BoardChangedEventArgs args);
+        public delegate void BoardChangedHandler(OnewheelConnectionHelper sender, BoardChangedEventArgs args);
 
         public event BoardChangedHandler BoardChanged;
-
-        private static readonly Guid BATTERY_SERVICE_UUID = Guid.Parse("e659f300-ea98-11e3-ac10-0800200c9a66");
-        private static readonly Guid BATTERY_CHARACTERISTIC_UUID = Guid.Parse("e659f303-ea98-11e3-ac10-0800200c9a66");
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -36,7 +34,8 @@ namespace Onewheel.Classes
         /// </history>
         public OnewheelConnectionHelper()
         {
-            this.bluetoothLEHelper = BluetoothLEHelper.Context;
+            this.ONEWHEEL_INFO = new OnewheelInfo();
+            this.bluetoothLEHelper = null;
         }
 
         #endregion
@@ -47,29 +46,6 @@ namespace Onewheel.Classes
             this.board = board;
             setLastBoard(board);
             BoardChanged?.Invoke(this, new BoardChangedEventArgs(board));
-        }
-
-        public async Task<int> getBatteryLevelAsync()
-        {
-            if (board != null && board.BluetoothLEDevice != null)
-            {
-                GattDeviceServicesResult sResult = await board.BluetoothLEDevice.GetGattServicesForUuidAsync(BATTERY_SERVICE_UUID);
-                if (sResult.Status == GattCommunicationStatus.Success)
-                {
-                    if (sResult.Services.Count >= 1)
-                    {
-                        GattCharacteristicsResult cResult = await sResult.Services[0].GetCharacteristicsForUuidAsync(BATTERY_CHARACTERISTIC_UUID);
-                        if (cResult.Status == GattCommunicationStatus.Success)
-                        {
-                            if (cResult.Characteristics.Count >= 1)
-                            {
-                                return await readIntFromCharacteristicAsync(cResult.Characteristics[0]);
-                            }
-                        }
-                    }
-                }
-            }
-            return -1;
         }
 
         public void setLastBoard(ObservableBluetoothLEDevice lastBoard)
@@ -86,7 +62,9 @@ namespace Onewheel.Classes
         #region --Misc Methods (Public)--
         public void init()
         {
+            bluetoothLEHelper = BluetoothLEHelper.Context;
             connectToLastBoard();
+            ONEWHEEL_INFO.init();
         }
 
         public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)

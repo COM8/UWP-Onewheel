@@ -95,9 +95,11 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Events\BoardCharacteristicChangedEventArgs.cs" />
     <Compile Include="Classes\Events\BoardChangedEventArgs.cs" />
     <Compile Include="Classes\OnewheelConnectionHelper.cs" />
     <Compile Include="Classes\OnewheelInfo.cs" />
+    <Compile Include="Classes\UIUtils.cs" />
     <Compile Include="Controls\ConnectBoardControl.xaml.cs">
       <DependentUpon>ConnectBoardControl.xaml</DependentUpon>
     </Compile>
