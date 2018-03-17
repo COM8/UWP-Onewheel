@@ -1,20 +1,11 @@
-﻿using DataManager.Classes;
+﻿using BluetoothOnewheelAccess.Classes;
+using BluetoothOnewheelAccess.Classes.Events;
+using DataManager.Classes;
 using Onewheel.Classes;
 using Onewheel.Controls;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace Onewheel.Pages
 {
@@ -126,14 +117,14 @@ namespace Onewheel.Pages
         private void showBoadName()
         {
             string name = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsString(OnewheelInfo.CHARACTERISTIC_CUSTOM_NAME);
-            if(name == null)
+            if (name == null)
             {
                 name = Settings.getSettingString(SettingsConsts.BOARD_NAME);
             }
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                if(name != null)
+                if (name != null)
                 {
                     boardName_tbx.Text = name;
                     editName_btn.Visibility = Visibility.Visible;
@@ -164,7 +155,7 @@ namespace Onewheel.Pages
             showBoadName();
         }
 
-        private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, Classes.Events.BoardCharacteristicChangedEventArgs args)
+        private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args)
         {
             if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL))
             {

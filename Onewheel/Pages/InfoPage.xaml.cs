@@ -1,23 +1,10 @@
-﻿using Microsoft.Toolkit.Uwp.Connectivity;
+﻿using BluetoothOnewheelAccess.Classes;
+using BluetoothOnewheelAccess.Classes.Events;
+using Microsoft.Toolkit.Uwp.Connectivity;
 using Onewheel.Classes;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Devices.Bluetooth.GenericAttributeProfile;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace Onewheel.Pages
 {
@@ -47,7 +34,7 @@ namespace Onewheel.Pages
         #region --Set-, Get- Methods--
         public void setBoard(ObservableBluetoothLEDevice board)
         {
-            if(this.board != null)
+            if (this.board != null)
             {
                 this.board.PropertyChanged -= Board_PropertyChanged;
             }
@@ -113,7 +100,7 @@ namespace Onewheel.Pages
             setBoard(OnewheelConnectionHelper.INSTANCE.board);
         }
 
-        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, Classes.Events.BoardChangedEventArgs args)
+        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
         {
             setBoard(args.BOARD);
         }

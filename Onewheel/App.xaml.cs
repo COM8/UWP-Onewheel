@@ -1,4 +1,4 @@
-﻿using Onewheel.Classes;
+﻿using BluetoothOnewheelAccess.Classes;
 using Onewheel.Pages;
 using System;
 using Windows.ApplicationModel;

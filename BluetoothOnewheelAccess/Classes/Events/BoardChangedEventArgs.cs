@@ -1,9 +1,9 @@
 ﻿using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
 
-namespace Onewheel.Classes.Events
+namespace BluetoothOnewheelAccess.Classes.Events
 {
-    class BoardChangedEventArgs : EventArgs
+    public class BoardChangedEventArgs : EventArgs
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--

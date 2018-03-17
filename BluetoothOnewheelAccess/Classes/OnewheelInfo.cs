@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Connectivity;
-using Onewheel.Classes.Events;
+﻿using BluetoothOnewheelAccess.Classes.Events;
+using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 
-namespace Onewheel.Classes
+namespace BluetoothOnewheelAccess.Classes
 {
     public class OnewheelInfo
     {
@@ -37,8 +37,8 @@ namespace Onewheel.Classes
         public static readonly Guid CHARACTERISTIC_LIGHTING_BACK = Guid.Parse("e659f30e-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_FRONT = Guid.Parse("e659f30d-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_SPEED_RPM = Guid.Parse("e659f30b-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_TRIP_ODOMETER= Guid.Parse("e659f30a-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_LIFETIME_ODOMETER= Guid.Parse("e659f319-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_TRIP_ODOMETER = Guid.Parse("e659f30a-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_LIFETIME_ODOMETER = Guid.Parse("e659f319-ea98-11e3-ac10-0800200c9a66");
 
         public static readonly Guid[] SUBSCRIBED_CHARACTERISTICS = new Guid[]
         {

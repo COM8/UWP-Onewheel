@@ -95,10 +95,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Classes\Events\BoardCharacteristicChangedEventArgs.cs" />
-    <Compile Include="Classes\Events\BoardChangedEventArgs.cs" />
-    <Compile Include="Classes\OnewheelConnectionHelper.cs" />
-    <Compile Include="Classes\OnewheelInfo.cs" />
     <Compile Include="Classes\UIUtils.cs" />
     <Compile Include="Controls\BoardInfoControl.xaml.cs">
       <DependentUpon>BoardInfoControl.xaml</DependentUpon>
@@ -207,6 +203,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BluetoothOnewheelAccess\BluetoothOnewheelAccess.csproj">
+      <Project>{aa2a91ff-40e8-4e8a-a86d-367e7f2d15f6}</Project>
+      <Name>BluetoothOnewheelAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataManager\DataManager.csproj">
       <Project>{3239a757-e34c-45be-b4b7-3a3046d5d2ce}</Project>
       <Name>DataManager</Name>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Onewheel.Classes.Events
+namespace BluetoothOnewheelAccess.Classes.Events
 {
     public class BoardCharacteristicChangedEventArgs : EventArgs
     {

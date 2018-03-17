@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Connectivity;
-using Onewheel.Classes;
+﻿using BluetoothOnewheelAccess.Classes;
+using Microsoft.Toolkit.Uwp.Connectivity;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 

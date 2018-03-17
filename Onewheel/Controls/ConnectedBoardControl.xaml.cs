@@ -1,6 +1,7 @@
-﻿using DataManager.Classes;
+﻿using BluetoothOnewheelAccess.Classes;
+using BluetoothOnewheelAccess.Classes.Events;
+using DataManager.Classes;
 using Microsoft.Toolkit.Uwp.Connectivity;
-using Onewheel.Classes;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -109,7 +110,7 @@ namespace Onewheel.Controls
             setBoard(OnewheelConnectionHelper.INSTANCE.board);
         }
 
-        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, Classes.Events.BoardChangedEventArgs args)
+        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
         {
             setBoard(args.BOARD);
         }

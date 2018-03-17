@@ -1,15 +1,15 @@
 ﻿using Microsoft.Toolkit.Uwp.Connectivity;
-using Onewheel.Classes.Events;
 using System.Threading.Tasks;
 using System;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 using System.Diagnostics;
+using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
 
-namespace Onewheel.Classes
+namespace BluetoothOnewheelAccess.Classes
 {
-    class OnewheelConnectionHelper
+    public class OnewheelConnectionHelper
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--

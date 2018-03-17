@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Onewheel", "Onewheel\Onewhe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataManager", "DataManager\DataManager.csproj", "{3239A757-E34C-45BE-B4B7-3A3046D5D2CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothOnewheelAccess", "BluetoothOnewheelAccess\BluetoothOnewheelAccess.csproj", "{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,22 @@ Global
 		{3239A757-E34C-45BE-B4B7-3A3046D5D2CE}.Release|x64.Build.0 = Release|x64
 		{3239A757-E34C-45BE-B4B7-3A3046D5D2CE}.Release|x86.ActiveCfg = Release|x86
 		{3239A757-E34C-45BE-B4B7-3A3046D5D2CE}.Release|x86.Build.0 = Release|x86
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|ARM.ActiveCfg = Debug|ARM
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|ARM.Build.0 = Debug|ARM
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|x64.ActiveCfg = Debug|x64
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|x64.Build.0 = Debug|x64
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|x86.ActiveCfg = Debug|x86
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Debug|x86.Build.0 = Debug|x86
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|ARM.ActiveCfg = Release|ARM
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|ARM.Build.0 = Release|ARM
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|x64.ActiveCfg = Release|x64
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|x64.Build.0 = Release|x64
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|x86.ActiveCfg = Release|x86
+		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
