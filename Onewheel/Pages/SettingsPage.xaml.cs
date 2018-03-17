@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BluetoothOnewheelAccess.Classes;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -58,7 +59,15 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
+        private void register_btn_Click(object sender, RoutedEventArgs e)
+        {
+            OnewheelConnectionHelper.INSTANCE.registerBackgroundTask();
+        }
 
+        private void unregister_btn_Click(object sender, RoutedEventArgs e)
+        {
+            OnewheelConnectionHelper.INSTANCE.unregisterBackgroundTask();
+        }
 
         #endregion
     }

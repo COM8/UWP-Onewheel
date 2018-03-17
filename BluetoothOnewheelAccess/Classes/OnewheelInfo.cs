@@ -296,27 +296,34 @@ namespace BluetoothOnewheelAccess.Classes
                 {
                     if (board != null && board.BluetoothLEDevice != null)
                     {
-                        // Get all services:
-                        GattDeviceServicesResult sResult = await board.BluetoothLEDevice.GetGattServicesAsync();
-                        if (sResult.Status == GattCommunicationStatus.Success)
+                        try
                         {
-                            foreach (GattDeviceService s in sResult.Services)
+                            // Get all services:
+                            GattDeviceServicesResult sResult = await board.BluetoothLEDevice.GetGattServicesAsync();
+                            if (sResult.Status == GattCommunicationStatus.Success)
                             {
-                                // Get all characteristics:
-                                GattCharacteristicsResult cResult = await s.GetCharacteristicsAsync();
-                                if (cResult.Status == GattCommunicationStatus.Success)
+                                foreach (GattDeviceService s in sResult.Services)
                                 {
-                                    foreach (GattCharacteristic c in cResult.Characteristics)
+                                    // Get all characteristics:
+                                    GattCharacteristicsResult cResult = await s.GetCharacteristicsAsync();
+                                    if (cResult.Status == GattCommunicationStatus.Success)
                                     {
-                                        await loadCharacteristicValueAsync(c);
-
-                                        if (SUBSCRIBED_CHARACTERISTICS.Contains(c.Uuid))
+                                        foreach (GattCharacteristic c in cResult.Characteristics)
                                         {
-                                            await subscribeToCharacteristicAsync(c);
+                                            await loadCharacteristicValueAsync(c);
+
+                                            if (SUBSCRIBED_CHARACTERISTICS.Contains(c.Uuid))
+                                            {
+                                                await subscribeToCharacteristicAsync(c);
+                                            }
                                         }
                                     }
                                 }
                             }
+                        }
+                        catch (Exception)
+                        {
+                            // ToDo: Log exception
                         }
                     }
                 });

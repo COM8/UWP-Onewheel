@@ -6,6 +6,8 @@ using Windows.Storage.Streams;
 using System.Diagnostics;
 using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
+using Windows.ApplicationModel.Background;
+using Microsoft.Toolkit.Uwp.Helpers;
 
 namespace BluetoothOnewheelAccess.Classes
 {
@@ -15,13 +17,21 @@ namespace BluetoothOnewheelAccess.Classes
         #region --Attributes--
         public static OnewheelConnectionHelper INSTANCE = new OnewheelConnectionHelper();
 
+        private const string BACKGROUND_TASK_ENTRY_POINT = "BluetoothBackgroundTask.Classes.BackgroundTask";
+        private const string BACKGROUND_TASK_NAME = "onewheel_bluetooth_background_task";
+
         public readonly OnewheelInfo ONEWHEEL_INFO;
         private BluetoothLEHelper bluetoothLEHelper;
         public ObservableBluetoothLEDevice board { get; private set; }
+        public bool autoReconnect;
+        public bool connectingToLastBoard;
+        public OnewheelConnectionState state;
 
         public delegate void BoardChangedHandler(OnewheelConnectionHelper sender, BoardChangedEventArgs args);
+        public delegate void OnewheelConnectionStateChangedHandler(OnewheelConnectionHelper sender, OnewheelConnectionStateChangedEventArgs args);
 
         public event BoardChangedHandler BoardChanged;
+        public event OnewheelConnectionStateChangedHandler OnewheelConnectionStateChanged;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -36,16 +46,52 @@ namespace BluetoothOnewheelAccess.Classes
         {
             this.ONEWHEEL_INFO = new OnewheelInfo();
             this.bluetoothLEHelper = null;
+            this.autoReconnect = true;
+            this.connectingToLastBoard = false;
+            setOnewheelConnectionState(OnewheelConnectionState.DISCONNECTED);
         }
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setBoard(ObservableBluetoothLEDevice board)
+        private void setBoard(ObservableBluetoothLEDevice board)
         {
+            if (this.board == board)
+            {
+                return;
+            }
+
+            if (this.board != null)
+            {
+                board.PropertyChanged -= Board_PropertyChanged;
+            }
+
             this.board = board;
+
+            if (this.board != null)
+            {
+                board.PropertyChanged += Board_PropertyChanged;
+            }
+
             setLastBoard(board);
             BoardChanged?.Invoke(this, new BoardChangedEventArgs(board));
+        }
+
+        public void setOnewheelConnectionState(OnewheelConnectionState state)
+        {
+            if (this.state == state)
+            {
+                return;
+            }
+
+            OnewheelConnectionStateChangedEventArgs args = new OnewheelConnectionStateChangedEventArgs(this.state, state);
+            this.state = state;
+            OnewheelConnectionStateChanged?.Invoke(this, args);
+
+            if (state == OnewheelConnectionState.DISCONNECTED)
+            {
+                connectToLastBoard();
+            }
         }
 
         public void setLastBoard(ObservableBluetoothLEDevice lastBoard)
@@ -65,6 +111,18 @@ namespace BluetoothOnewheelAccess.Classes
             bluetoothLEHelper = BluetoothLEHelper.Context;
             connectToLastBoard();
             ONEWHEEL_INFO.init();
+        }
+
+        public async Task useBoardAsync(ObservableBluetoothLEDevice board)
+        {
+            setOnewheelConnectionState(OnewheelConnectionState.CONNECTING);
+            await board.ConnectAsync();
+            setBoard(board);
+            if (board.IsConnected)
+            {
+                setOnewheelConnectionState(OnewheelConnectionState.CONNECTED);
+            }
+            stopSearchingForLastBoard();
         }
 
         public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)
@@ -107,14 +165,26 @@ namespace BluetoothOnewheelAccess.Classes
 
         public void connectToLastBoard()
         {
+            if (!autoReconnect || connectingToLastBoard)
+            {
+                return;
+            }
+
             Task.Run(async () =>
             {
+                connectingToLastBoard = true;
                 if (BluetoothLEHelper.IsBluetoothLESupported && Settings.getSettingString(SettingsConsts.BOARD_ADDRESS) != null)
                 {
+                    setOnewheelConnectionState(OnewheelConnectionState.SEARCHING);
+
                     bluetoothLEHelper.StartEnumeration();
 
                     bluetoothLEHelper.BluetoothLeDevices.CollectionChanged += BluetoothLeDevices_CollectionChanged;
                     await searchBoardAsync();
+                }
+                else
+                {
+                    setOnewheelConnectionState(OnewheelConnectionState.NO_LAST_BOARD);
                 }
             });
         }
@@ -146,6 +216,26 @@ namespace BluetoothOnewheelAccess.Classes
             }
         }
 
+        public void registerBackgroundTask()
+        {
+            if (BackgroundTaskHelper.IsBackgroundTaskRegistered(BACKGROUND_TASK_NAME))
+            {
+                return;
+            }
+
+            BluetoothLEAdvertisementWatcherTrigger btLEtrigger = new BluetoothLEAdvertisementWatcherTrigger();
+
+            BackgroundTaskRegistration registered = BackgroundTaskHelper.Register(BACKGROUND_TASK_NAME, BACKGROUND_TASK_ENTRY_POINT,
+                btLEtrigger,
+                false, true,
+                new SystemCondition(SystemConditionType.UserNotPresent));
+        }
+
+        public void unregisterBackgroundTask()
+        {
+            BackgroundTaskHelper.Unregister(BACKGROUND_TASK_NAME);
+        }
+
         #endregion
 
         #region --Misc Methods (Private)--
@@ -154,14 +244,27 @@ namespace BluetoothOnewheelAccess.Classes
             string boardAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
             for (int i = 0; i < bluetoothLEHelper.BluetoothLeDevices.Count; i++)
             {
+                // Searching got canceled:
+                if (!connectingToLastBoard)
+                {
+                    return;
+                }
+
                 if (Equals(bluetoothLEHelper.BluetoothLeDevices[i].BluetoothAddressAsString, boardAddress))
                 {
+                    setOnewheelConnectionState(OnewheelConnectionState.CONNECTING);
                     await bluetoothLEHelper.BluetoothLeDevices[i].ConnectAsync();
                     setBoard(bluetoothLEHelper.BluetoothLeDevices[i]);
-                    bluetoothLEHelper.StopEnumeration();
-                    bluetoothLEHelper.BluetoothLeDevices.CollectionChanged -= BluetoothLeDevices_CollectionChanged;
+                    stopSearchingForLastBoard();
                 }
             }
+        }
+
+        private void stopSearchingForLastBoard()
+        {
+            bluetoothLEHelper.StopEnumeration();
+            bluetoothLEHelper.BluetoothLeDevices.CollectionChanged -= BluetoothLeDevices_CollectionChanged;
+            connectingToLastBoard = false;
         }
 
         #endregion
@@ -175,6 +278,23 @@ namespace BluetoothOnewheelAccess.Classes
         private async void BluetoothLeDevices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             await searchBoardAsync();
+        }
+
+        private void Board_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            switch (e.PropertyName)
+            {
+                case "IsConnected":
+                    if (board.IsConnected)
+                    {
+                        setOnewheelConnectionState(OnewheelConnectionState.CONNECTED);
+                    }
+                    else
+                    {
+                        setOnewheelConnectionState(OnewheelConnectionState.DISCONNECTED);
+                    }
+                    break;
+            }
         }
 
         #endregion

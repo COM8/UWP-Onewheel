@@ -86,11 +86,7 @@ namespace Onewheel.Controls
         {
             try
             {
-                if (!bluetoothLEHelper.BluetoothLeDevices[boards_lstv.SelectedIndex].IsConnected)
-                {
-                    await bluetoothLEHelper.BluetoothLeDevices[boards_lstv.SelectedIndex].ConnectAsync();
-                }
-                OnewheelConnectionHelper.INSTANCE.setBoard(bluetoothLEHelper.BluetoothLeDevices[boards_lstv.SelectedIndex]);
+                await OnewheelConnectionHelper.INSTANCE.useBoardAsync(bluetoothLEHelper.BluetoothLeDevices[boards_lstv.SelectedIndex]);
                 error_stckp.Visibility = Visibility.Collapsed;
             }
             catch (System.Exception e)

@@ -1,15 +1,13 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using System;
+﻿using System;
+using Windows.ApplicationModel.Background;
 
-namespace Onewheel.Pages
+namespace BluetoothBackgroundTask.Classes
 {
-    public sealed partial class ConnectPage : Page
+    public sealed class BackgroundTask : IBackgroundTask
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-
+        private BackgroundTaskDeferral deferral;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -18,11 +16,10 @@ namespace Onewheel.Pages
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 15/03/2018 Created [Fabian Sauter]
+        /// 17/03/2018 Created [Fabian Sauter]
         /// </history>
-        public ConnectPage()
+        public BackgroundTask()
         {
-            this.InitializeComponent();
         }
 
         #endregion
@@ -33,7 +30,14 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public void Run(IBackgroundTaskInstance taskInstance)
+        {
+            deferral = taskInstance.GetDeferral();
 
+            // Insert async code here
+
+            deferral.Complete();
+        }
 
         #endregion
 
@@ -48,16 +52,7 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionStateChanged += INSTANCE_OnewheelConnectionStateChanged;
-            status_tbx.Text = OnewheelConnectionHelper.INSTANCE.state.ToString();
-        }
 
-        private async void INSTANCE_OnewheelConnectionStateChanged(OnewheelConnectionHelper sender, BluetoothOnewheelAccess.Classes.Events.OnewheelConnectionStateChangedEventArgs args)
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => status_tbx.Text = args.NEW_STATE.ToString());
-        }
 
         #endregion
     }

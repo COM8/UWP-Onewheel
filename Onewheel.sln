@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataManager", "DataManager\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothOnewheelAccess", "BluetoothOnewheelAccess\BluetoothOnewheelAccess.csproj", "{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothBackgroundTask", "BluetoothBackgroundTask\BluetoothBackgroundTask.csproj", "{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,22 @@ Global
 		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|x64.Build.0 = Release|x64
 		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|x86.ActiveCfg = Release|x86
 		{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}.Release|x86.Build.0 = Release|x86
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|ARM.Build.0 = Debug|ARM
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|x64.ActiveCfg = Debug|x64
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|x64.Build.0 = Debug|x64
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|x86.ActiveCfg = Debug|x86
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Debug|x86.Build.0 = Debug|x86
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|ARM.ActiveCfg = Release|ARM
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|ARM.Build.0 = Release|ARM
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|x64.ActiveCfg = Release|x64
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|x64.Build.0 = Release|x64
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|x86.ActiveCfg = Release|x86
+		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,14 +1,13 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using System;
+﻿using System;
 
-namespace Onewheel.Pages
+namespace BluetoothOnewheelAccess.Classes.Events
 {
-    public sealed partial class ConnectPage : Page
+    public class OnewheelConnectionStateChangedEventArgs : EventArgs
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
+        public readonly OnewheelConnectionState OLD_STATE;
+        public readonly OnewheelConnectionState NEW_STATE;
 
 
         #endregion
@@ -18,11 +17,12 @@ namespace Onewheel.Pages
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 15/03/2018 Created [Fabian Sauter]
+        /// 17/03/2018 Created [Fabian Sauter]
         /// </history>
-        public ConnectPage()
+        public OnewheelConnectionStateChangedEventArgs(OnewheelConnectionState oldState, OnewheelConnectionState newState)
         {
-            this.InitializeComponent();
+            this.OLD_STATE = oldState;
+            this.NEW_STATE = newState;
         }
 
         #endregion
@@ -48,16 +48,7 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionStateChanged += INSTANCE_OnewheelConnectionStateChanged;
-            status_tbx.Text = OnewheelConnectionHelper.INSTANCE.state.ToString();
-        }
 
-        private async void INSTANCE_OnewheelConnectionStateChanged(OnewheelConnectionHelper sender, BluetoothOnewheelAccess.Classes.Events.OnewheelConnectionStateChangedEventArgs args)
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => status_tbx.Text = args.NEW_STATE.ToString());
-        }
 
         #endregion
     }
