@@ -1,4 +1,5 @@
 ﻿using BluetoothOnewheelAccess.Classes.Events;
+using DataManager.Classes;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using System;
 using System.Collections.Generic;
@@ -40,6 +41,12 @@ namespace BluetoothOnewheelAccess.Classes
         public static readonly Guid CHARACTERISTIC_TRIP_ODOMETER = Guid.Parse("e659f30a-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIFETIME_ODOMETER = Guid.Parse("e659f319-ea98-11e3-ac10-0800200c9a66");
 
+        // Mock UUID objects:
+        public static readonly Guid MOCK_TOP_RPM_TRIP = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        public static readonly Guid MOCK_TOP_RPM_LIVE = Guid.Parse("00000000-0000-0000-0000-000000000002");
+
+
+
         public static readonly Guid[] SUBSCRIBED_CHARACTERISTICS = new Guid[]
         {
             CHARACTERISTIC_SERIAL_NUMBER,
@@ -70,7 +77,6 @@ namespace BluetoothOnewheelAccess.Classes
         };
 
         private Dictionary<Guid, byte[]> characteristics;
-        private Dictionary<Guid, int> characteristicsEventCount;
         private ObservableBluetoothLEDevice board;
 
         public delegate void BoardCharacteristicChangedHandler(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args);
@@ -89,7 +95,6 @@ namespace BluetoothOnewheelAccess.Classes
         public OnewheelInfo()
         {
             this.characteristics = new Dictionary<Guid, byte[]>();
-            this.characteristicsEventCount = new Dictionary<Guid, int>();
         }
 
         #endregion
@@ -111,9 +116,8 @@ namespace BluetoothOnewheelAccess.Classes
             loadCharacteristics();
         }
 
-        public string getCharacteristicAsString(Guid uuid)
+        public string getCharacteristicAsString(byte[] value)
         {
-            characteristics.TryGetValue(uuid, out byte[] value);
             if (value != null)
             {
                 return System.Text.Encoding.ASCII.GetString(value);
@@ -121,46 +125,54 @@ namespace BluetoothOnewheelAccess.Classes
             return null;
         }
 
-        public int getCharacteristicAsInt(Guid uuid)
+        public string getCharacteristicAsString(Guid uuid)
         {
             characteristics.TryGetValue(uuid, out byte[] value);
+            return getCharacteristicAsString(value);
+        }
+
+        public uint getCharacteristicAsUInt(byte[] value)
+        {
             if (value != null)
             {
                 switch (value.Length)
                 {
                     case 2:
-                        return BitConverter.ToInt16(value, 0);
+                        return BitConverter.ToUInt16(value, 0);
 
                     case 4:
-                        return BitConverter.ToInt32(value, 0);
-
-                    default:
-                        return -2;
+                        return BitConverter.ToUInt32(value, 0);
                 }
             }
-            return -1;
+            return 0;
         }
 
-        public long getCharacteristicAsLong(Guid uuid)
+        public uint getCharacteristicAsUInt(Guid uuid)
         {
             characteristics.TryGetValue(uuid, out byte[] value);
+            return getCharacteristicAsUInt(value);
+        }
+
+        public ulong getCharacteristicAsULong(byte[] value)
+        {
             if (value != null)
             {
                 if (value.Length == 8)
                 {
-                    return BitConverter.ToInt64(value, 0);
-                }
-                else
-                {
-                    return -2;
+                    return BitConverter.ToUInt64(value, 0);
                 }
             }
-            return -1;
+            return 0;
         }
 
-        public bool getCharacteristicAsBool(Guid uuid)
+        public ulong getCharacteristicAsULong(Guid uuid)
         {
             characteristics.TryGetValue(uuid, out byte[] value);
+            return getCharacteristicAsULong(value);
+        }
+
+        public bool getCharacteristicAsBool(byte[] value)
+        {
             if (value != null)
             {
                 if (value.Length == 1)
@@ -171,10 +183,23 @@ namespace BluetoothOnewheelAccess.Classes
             return false;
         }
 
+        public bool getCharacteristicAsBool(Guid uuid)
+        {
+            characteristics.TryGetValue(uuid, out byte[] value);
+            return getCharacteristicAsBool(value);
+        }
+
         public void init()
         {
             OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged1;
             setBoard(OnewheelConnectionHelper.INSTANCE.board);
+
+            // Load top RPM:
+            byte[] topRpm = Settings.getSettingByteArray(SettingsConsts.BOARD_TOP_RPM_LIVE);
+            if(topRpm != null)
+            {
+                addCharacteristicToDictionary(MOCK_TOP_RPM_LIVE, topRpm, false);
+            }
         }
 
         #endregion
@@ -304,7 +329,7 @@ namespace BluetoothOnewheelAccess.Classes
             }
 
             // Insert characteristic and its value into a dictionary:
-            addCharacteristicToDictionary(c.Uuid, value);
+            addCharacteristicToDictionary(c.Uuid, value, true);
         }
 
         /// <summary>
@@ -312,18 +337,34 @@ namespace BluetoothOnewheelAccess.Classes
         /// </summary>
         /// <param name="uuid">The UUID of the characteristic.</param>
         /// <param name="value">The value of the characteristics.</param>
-        public void addCharacteristicToDictionary(Guid uuid, byte[] value)
+        /// <param name="updateMockObjects">Whether to update the mock objects</param>
+        private void addCharacteristicToDictionary(Guid uuid, byte[] value, bool shouldUpdateMockObjects)
         {
             characteristics[uuid] = value;
             BoardCharacteristicChanged?.Invoke(this, new BoardCharacteristicChangedEventArgs(uuid, value));
 
-            if (characteristicsEventCount.ContainsKey(uuid))
+            if (shouldUpdateMockObjects)
             {
-                characteristicsEventCount[uuid]++;
+                updateMockObjects(uuid, value);
             }
-            else
+        }
+
+        private void updateMockObjects(Guid uuid, byte[] value)
+        {
+            if (uuid.Equals(CHARACTERISTIC_SPEED_RPM))
             {
-                characteristicsEventCount[uuid] = 1;
+                uint rpm = getCharacteristicAsUInt(value);
+
+                if (rpm > getCharacteristicAsUInt(MOCK_TOP_RPM_TRIP))
+                {
+                    addCharacteristicToDictionary(MOCK_TOP_RPM_TRIP, value, false);
+                }
+
+                if (rpm > getCharacteristicAsUInt(MOCK_TOP_RPM_LIVE))
+                {
+                    addCharacteristicToDictionary(MOCK_TOP_RPM_LIVE, value, false);
+                    Settings.setSetting(SettingsConsts.BOARD_TOP_RPM_LIVE, value);
+                }
             }
         }
 
@@ -363,7 +404,7 @@ namespace BluetoothOnewheelAccess.Classes
             }
 
             // Insert characteristic and its value into a dictionary:
-            addCharacteristicToDictionary(sender.Uuid, value);
+            addCharacteristicToDictionary(sender.Uuid, value, true);
         }
 
         #endregion

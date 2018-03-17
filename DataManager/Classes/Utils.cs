@@ -28,7 +28,7 @@
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-        public static double rpmToKilometersPerHour(int rpm)
+        public static double rpmToKilometersPerHour(uint rpm)
         {
             return 60.0 * (35.0 * rpm) / 39370.1;
         }

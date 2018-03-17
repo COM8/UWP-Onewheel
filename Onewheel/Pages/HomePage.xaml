@@ -18,9 +18,9 @@
               Height="50"
               Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <TextBlock x:Name="batteryPerc_tbx"
@@ -30,8 +30,9 @@
                        FontSize="25"/>
 
             <Grid VerticalAlignment="Center"
-                        HorizontalAlignment="Center"
-                        Grid.Column="1">
+                  HorizontalAlignment="Center"
+                  Grid.Column="1"
+                  Margin="10, 0, 10, 0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -62,11 +63,23 @@
         </Grid>
 
         <ScrollViewer Grid.Row="1">
-            <StackPanel>
-                <controls:SeperatorControl Text="General:"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <controls:SeperatorControl Text="General:"
+                                           Grid.Row="0"/>
                 <GridView SelectionMode="None"
                   IsItemClickEnabled="False"
                   HorizontalAlignment="Center"
+                          Grid.Row="1"
                   Margin="10">
                     <!-- Speed: -->
                     <controls:BoardInfoControl x:Name="speed_bic"
@@ -82,10 +95,12 @@
                 </GridView>
 
                 <controls:SeperatorControl Text="Trip:"
-                                           Margin="0, 10, 0, 0"/>
+                                           Margin="0, 10, 0, 0"
+                                           Grid.Row="2"/>
                 <GridView SelectionMode="None"
                   IsItemClickEnabled="False"
                   HorizontalAlignment="Center"
+                          Grid.Row="3"
                   Margin="10">
                     <!-- Top speed trip: -->
                     <controls:BoardInfoControl x:Name="topSpeedTrip_bic"
@@ -101,10 +116,12 @@
                 </GridView>
 
                 <controls:SeperatorControl Text="Live:"
-                                           Margin="0, 10, 0, 0"/>
+                                           Margin="0, 10, 0, 0"
+                                           Grid.Row="4"/>
                 <GridView SelectionMode="None"
                   IsItemClickEnabled="False"
                   HorizontalAlignment="Center"
+                          Grid.Row="5"
                   Margin="10">
                     <!-- Top speed live: -->
                     <controls:BoardInfoControl x:Name="topSpeedLive_bic"
@@ -120,13 +137,9 @@
                 </GridView>
 
                 <controls:SeperatorControl Text="Other:"
-                                           Margin="0, 10, 0, 0"/>
-            </StackPanel>
+                                           Margin="0, 10, 0, 0"
+                                           Grid.Row="6"/>
+            </Grid>
         </ScrollViewer>
-
-
-
-        <TextBlock x:Name="temp_tbx"
-                   Grid.Row="1"/>
     </Grid>
 </Page>

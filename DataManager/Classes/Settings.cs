@@ -71,6 +71,12 @@
             return obj == null ? (ushort)0 : (ushort)obj;
         }
 
+        public static byte[] getSettingByteArray(string token)
+        {
+            object obj = getSetting(token);
+            return obj == null ? null : (byte[])obj;
+        }
+
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--

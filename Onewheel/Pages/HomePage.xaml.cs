@@ -44,7 +44,7 @@ namespace Onewheel.Pages
         #region --Misc Methods (Private)--
         private void showBatteryLevel()
         {
-            int level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
+            uint level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (level >= 0 && level <= 100)
@@ -62,7 +62,7 @@ namespace Onewheel.Pages
 
         private void showInt(BoardInfoControl boardInfoControl, Guid uuid)
         {
-            int value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(uuid);
+            uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(uuid);
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (value >= 0)
@@ -76,9 +76,9 @@ namespace Onewheel.Pages
             }).AsTask();
         }
 
-        private void showSpeed()
+        private void showSpeed(BoardInfoControl boardInfoControl, Guid uuid)
         {
-            int value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+            uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(uuid);
             double speed = Utils.rpmToKilometersPerHour(value);
             speed = Math.Round(speed, 2);
 
@@ -86,18 +86,18 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    speed_bic.ValueText = speed.ToString();
+                    boardInfoControl.ValueText = speed.ToString();
                 }
                 else
                 {
-                    speed_bic.ValueText = "0";
+                    boardInfoControl.ValueText = "0";
                 }
             }).AsTask();
         }
 
         private void showDistance(BoardInfoControl boardInfoControl, Guid uuid)
         {
-            int value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+            uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(uuid);
             double distance = Utils.milesToKilometers(value);
             distance = Math.Round(distance, 2);
 
@@ -149,7 +149,9 @@ namespace Onewheel.Pages
         {
             OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged += ONEWHEEL_INFO_BoardCharacteristicChanged;
             showBatteryLevel();
-            showSpeed();
+            showSpeed(speed_bic, OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+            showSpeed(topSpeedTrip_bic, OnewheelInfo.MOCK_TOP_RPM_TRIP);
+            showSpeed(topSpeedLive_bic, OnewheelInfo.MOCK_TOP_RPM_LIVE);
             showDistance(odometerLive_bic, OnewheelInfo.CHARACTERISTIC_LIFETIME_ODOMETER);
             showDistance(odometerTrip_bic, OnewheelInfo.CHARACTERISTIC_TRIP_ODOMETER);
             showBoadName();
@@ -163,7 +165,15 @@ namespace Onewheel.Pages
             }
             else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_SPEED_RPM))
             {
-                showSpeed();
+                showSpeed(speed_bic, OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+            }
+            else if (args.UUID.Equals(OnewheelInfo.MOCK_TOP_RPM_TRIP))
+            {
+                showSpeed(topSpeedTrip_bic, OnewheelInfo.MOCK_TOP_RPM_TRIP);
+            }
+            else if (args.UUID.Equals(OnewheelInfo.MOCK_TOP_RPM_LIVE))
+            {
+                showSpeed(topSpeedLive_bic, OnewheelInfo.MOCK_TOP_RPM_LIVE);
             }
             else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_LIFETIME_ODOMETER))
             {

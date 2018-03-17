@@ -60,7 +60,7 @@ namespace Onewheel.Pages
         #region --Misc Methods (Private)--
         private void showBattery()
         {
-            int level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
+            uint level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
             if (level >= 0 && level <= 100)
             {
                 batteryPercent_tbx.Text = level + "%";
