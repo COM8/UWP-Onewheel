@@ -30,7 +30,12 @@
         #region --Misc Methods (Public)--
         public static double rpmToKilometersPerHour(uint rpm)
         {
-            return 60.0 * (35.0 * rpm) / 39370.1;
+            return rpmToKilometers(rpm) * 60;
+        }
+
+        public static double rpmToKilometers(uint rpm)
+        {
+            return (35.0 * rpm) / 39370.1;
         }
 
         public static double milesToKilometers(double miles)

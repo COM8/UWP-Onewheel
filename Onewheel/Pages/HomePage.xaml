@@ -72,6 +72,9 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <controls:SeperatorControl Text="General:"
@@ -113,6 +116,18 @@
                                        ValueText="-"
                                        DescriptionPrimary="KM"
                                        DescriptionSecondary="Trip"/>
+
+                    <!-- Ampere hours trip: -->
+                    <controls:BoardInfoControl x:Name="ampereHoursTrip_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="Ah"
+                                       DescriptionSecondary="Trip"/>
+
+                    <!-- Ampere hours regen trip: -->
+                    <controls:BoardInfoControl x:Name="ampereHoursRegenTrip_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="Ah"
+                                       DescriptionSecondary="Regen"/>
                 </GridView>
 
                 <controls:SeperatorControl Text="Live:"
@@ -134,11 +149,61 @@
                                        ValueText="-"
                                        DescriptionPrimary="KM"
                                        DescriptionSecondary="Live"/>
+
+                    <!-- Ampere hours live: -->
+                    <controls:BoardInfoControl x:Name="ampereHoursLive_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="Ah"
+                                       DescriptionSecondary="Live"/>
                 </GridView>
 
-                <controls:SeperatorControl Text="Other:"
+                <controls:SeperatorControl Text="Battery:"
                                            Margin="0, 10, 0, 0"
                                            Grid.Row="6"/>
+                <GridView SelectionMode="None"
+                  IsItemClickEnabled="False"
+                  HorizontalAlignment="Center"
+                          Grid.Row="7"
+                  Margin="10">
+                    <!-- Battery voltage: -->
+                    <controls:BoardInfoControl x:Name="batteryVoltage_bic"
+                                       ValueText="0"
+                                       DescriptionPrimary="V"
+                                       DescriptionSecondary="Battery"/>
+
+                    <!-- Battery ampere: -->
+                    <controls:BoardInfoControl x:Name="batteryAmpere_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="A"
+                                       DescriptionSecondary="Battery"/>
+                </GridView>
+
+                <controls:SeperatorControl Text="Misc:"
+                                           Margin="0, 10, 0, 0"
+                                           Grid.Row="8"/>
+                <GridView SelectionMode="None"
+                  IsItemClickEnabled="False"
+                  HorizontalAlignment="Center"
+                          Grid.Row="9"
+                  Margin="10">
+                    <!-- Battery temperature: -->
+                    <controls:BoardInfoControl x:Name="batteryTemp_bic"
+                                       ValueText="0"
+                                       DescriptionPrimary="°C"
+                                       DescriptionSecondary="Battery"/>
+
+                    <!-- Motor temperature: -->
+                    <controls:BoardInfoControl x:Name="motorTemp_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="°C"
+                                       DescriptionSecondary="Motor"/>
+
+                    <!-- Controller temperature: -->
+                    <controls:BoardInfoControl x:Name="controllerTemp_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="°C"
+                                       DescriptionSecondary="Controller"/>
+                </GridView>
             </Grid>
         </ScrollViewer>
     </Grid>

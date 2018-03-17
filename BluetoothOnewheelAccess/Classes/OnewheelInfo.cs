@@ -29,21 +29,23 @@ namespace BluetoothOnewheelAccess.Classes
         public static readonly Guid CHARACTERISTIC_BATTERY_TEMPERATUR = Guid.Parse("e659f315-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_VOLTAGE = Guid.Parse("e659f316-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_CURRENT_AMPERE = Guid.Parse("e659f312-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_BATTERY_LIFETIME_AMPERE_HOURS = Guid.Parse("e659f31a-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_BATTERY_TRIP_AMPERE_HOURS = Guid.Parse("e659f314-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_BATTERY_TRIP_REGEN_AMPERE_HOURS = Guid.Parse("e659f313-ea98-11e3-ac10-0800200c9a66");
 
-        public static readonly Guid CHARACTERISTIC_TEMPERATURE = Guid.Parse("e659f310-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE = Guid.Parse("e659f310-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_MODE = Guid.Parse("e659f30c-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_BACK = Guid.Parse("e659f30e-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_FRONT = Guid.Parse("e659f30d-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_SPEED_RPM = Guid.Parse("e659f30b-ea98-11e3-ac10-0800200c9a66");
+
         public static readonly Guid CHARACTERISTIC_TRIP_ODOMETER = Guid.Parse("e659f30a-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_TRIP_AMPERE_HOURS = Guid.Parse("e659f314-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS = Guid.Parse("e659f313-ea98-11e3-ac10-0800200c9a66");
+
         public static readonly Guid CHARACTERISTIC_LIFETIME_ODOMETER = Guid.Parse("e659f319-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_LIFETIME_AMPERE_HOURS = Guid.Parse("e659f31a-ea98-11e3-ac10-0800200c9a66");
 
         // Mock UUID objects:
-        public static readonly Guid MOCK_TOP_RPM_TRIP = Guid.Parse("00000000-0000-0000-0000-000000000001");
-        public static readonly Guid MOCK_TOP_RPM_LIVE = Guid.Parse("00000000-0000-0000-0000-000000000002");
+        public static readonly Guid MOCK_TRIP_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        public static readonly Guid MOCK_LIVETIME_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000002");
 
 
 
@@ -63,17 +65,19 @@ namespace BluetoothOnewheelAccess.Classes
             CHARACTERISTIC_BATTERY_TEMPERATUR,
             CHARACTERISTIC_BATTERY_VOLTAGE,
             CHARACTERISTIC_BATTERY_CURRENT_AMPERE,
-            CHARACTERISTIC_BATTERY_LIFETIME_AMPERE_HOURS,
-            CHARACTERISTIC_BATTERY_TRIP_AMPERE_HOURS,
-            CHARACTERISTIC_BATTERY_TRIP_REGEN_AMPERE_HOURS,
 
-            CHARACTERISTIC_TEMPERATURE,
+            CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE,
             CHARACTERISTIC_LIGHTING_MODE,
             CHARACTERISTIC_LIGHTING_BACK,
             CHARACTERISTIC_LIGHTING_FRONT,
             CHARACTERISTIC_SPEED_RPM,
+
             CHARACTERISTIC_TRIP_ODOMETER,
-            CHARACTERISTIC_LIFETIME_ODOMETER
+            CHARACTERISTIC_TRIP_AMPERE_HOURS,
+            CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS,
+
+            CHARACTERISTIC_LIFETIME_ODOMETER,
+            CHARACTERISTIC_LIFETIME_AMPERE_HOURS
         };
 
         private Dictionary<Guid, byte[]> characteristics;
@@ -189,6 +193,12 @@ namespace BluetoothOnewheelAccess.Classes
             return getCharacteristicAsBool(value);
         }
 
+        public byte[] getRawValue(Guid uuid)
+        {
+            characteristics.TryGetValue(uuid, out byte[] value);
+            return value;
+        }
+
         public void init()
         {
             OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged1;
@@ -198,7 +208,7 @@ namespace BluetoothOnewheelAccess.Classes
             byte[] topRpm = Settings.getSettingByteArray(SettingsConsts.BOARD_TOP_RPM_LIVE);
             if(topRpm != null)
             {
-                addCharacteristicToDictionary(MOCK_TOP_RPM_LIVE, topRpm, false);
+                addCharacteristicToDictionary(MOCK_LIVETIME_TOP_RPM, topRpm, false);
             }
         }
 
@@ -355,14 +365,14 @@ namespace BluetoothOnewheelAccess.Classes
             {
                 uint rpm = getCharacteristicAsUInt(value);
 
-                if (rpm > getCharacteristicAsUInt(MOCK_TOP_RPM_TRIP))
+                if (rpm > getCharacteristicAsUInt(MOCK_TRIP_TOP_RPM))
                 {
-                    addCharacteristicToDictionary(MOCK_TOP_RPM_TRIP, value, false);
+                    addCharacteristicToDictionary(MOCK_TRIP_TOP_RPM, value, false);
                 }
 
-                if (rpm > getCharacteristicAsUInt(MOCK_TOP_RPM_LIVE))
+                if (rpm > getCharacteristicAsUInt(MOCK_LIVETIME_TOP_RPM))
                 {
-                    addCharacteristicToDictionary(MOCK_TOP_RPM_LIVE, value, false);
+                    addCharacteristicToDictionary(MOCK_LIVETIME_TOP_RPM, value, false);
                     Settings.setSetting(SettingsConsts.BOARD_TOP_RPM_LIVE, value);
                 }
             }
