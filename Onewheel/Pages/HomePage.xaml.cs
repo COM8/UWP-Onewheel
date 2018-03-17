@@ -1,4 +1,6 @@
-﻿using Onewheel.Classes;
+﻿using DataManager.Classes;
+using Onewheel.Classes;
+using Onewheel.Controls;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -61,8 +63,85 @@ namespace Onewheel.Pages
                 }
                 else
                 {
-                    batteryIcon_tbx.Text = "Unknown";
+                    batteryPerc_tbx.Text = "Unknown";
                     batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[11];
+                }
+            }).AsTask();
+        }
+
+        private void showInt(BoardInfoControl boardInfoControl, Guid uuid)
+        {
+            int value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(uuid);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    boardInfoControl.ValueText = value.ToString();
+                }
+                else
+                {
+                    boardInfoControl.ValueText = "0";
+                }
+            }).AsTask();
+        }
+
+        private void showSpeed()
+        {
+            int value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+            double speed = Utils.rpmToKilometersPerHour(value);
+            speed = Math.Round(speed, 2);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    speed_bic.ValueText = speed.ToString();
+                }
+                else
+                {
+                    speed_bic.ValueText = "0";
+                }
+            }).AsTask();
+        }
+
+        private void showDistance(BoardInfoControl boardInfoControl, Guid uuid)
+        {
+            int value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+            double distance = Utils.milesToKilometers(value);
+            distance = Math.Round(distance, 2);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    boardInfoControl.ValueText = distance.ToString();
+                }
+                else
+                {
+                    boardInfoControl.ValueText = "0";
+                }
+            }).AsTask();
+        }
+
+        private void showBoadName()
+        {
+            string name = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsString(OnewheelInfo.CHARACTERISTIC_CUSTOM_NAME);
+            if(name == null)
+            {
+                name = Settings.getSettingString(SettingsConsts.BOARD_NAME);
+            }
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if(name != null)
+                {
+                    boardName_tbx.Text = name;
+                    editName_btn.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    boardName_tbx.Text = "";
+                    editName_btn.Visibility = Visibility.Collapsed;
                 }
             }).AsTask();
         }
@@ -79,16 +158,41 @@ namespace Onewheel.Pages
         {
             OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged += ONEWHEEL_INFO_BoardCharacteristicChanged;
             showBatteryLevel();
+            showSpeed();
+            showDistance(odometerLive_bic, OnewheelInfo.CHARACTERISTIC_LIFETIME_ODOMETER);
+            showDistance(odometerTrip_bic, OnewheelInfo.CHARACTERISTIC_TRIP_ODOMETER);
+            showBoadName();
         }
 
         private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, Classes.Events.BoardCharacteristicChangedEventArgs args)
         {
-            if (args.UUID.CompareTo(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL) == 0)
+            if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL))
             {
                 showBatteryLevel();
+            }
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_SPEED_RPM))
+            {
+                showSpeed();
+            }
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_LIFETIME_ODOMETER))
+            {
+                showDistance(odometerLive_bic, OnewheelInfo.CHARACTERISTIC_LIFETIME_ODOMETER);
+            }
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_TRIP_ODOMETER))
+            {
+                showDistance(odometerTrip_bic, OnewheelInfo.CHARACTERISTIC_TRIP_ODOMETER);
+            }
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_CUSTOM_NAME))
+            {
+                showBoadName();
             }
         }
 
         #endregion
+
+        private void editName_btn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

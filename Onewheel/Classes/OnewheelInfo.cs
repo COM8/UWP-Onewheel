@@ -2,6 +2,7 @@
 using Onewheel.Classes.Events;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
@@ -14,27 +15,62 @@ namespace Onewheel.Classes
         #region --Attributes--
         // UUID source: https://github.com/ponewheel/android-ponewheel/blob/master/app/src/main/java/net/kwatts/powtools/model/OWDevice.java
         public static readonly Guid CHARACTERISTIC_SERIAL_NUMBER = Guid.Parse("e659F301-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_FIRMWARE_REVISION = Guid.Parse("e659f311-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_HARDWARE_REVISION = Guid.Parse("e659f318-ea98-11e3-ac10-0800200c9a66");
+
         public static readonly Guid CHARACTERISTIC_RIDING_MODE = Guid.Parse("e659f302-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_CUSTOM_NAME = Guid.Parse("e659f3fd-ea98-11e3-ac10-0800200c9a66");
+
+        public static readonly Guid CHARACTERISTIC_BATTERY_SERIAL_NUMBER = Guid.Parse("e659f306-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_LEVEL = Guid.Parse("e659f303-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_LOW_5 = Guid.Parse("e659f304-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_LOW_20 = Guid.Parse("e659f305-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_BATTERY_SERIAL_NUMBER = Guid.Parse("e659f306-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_TEMPERATUR = Guid.Parse("e659f315-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_VOLTAGE = Guid.Parse("e659f316-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_CURRENT_AMPERE = Guid.Parse("e659f312-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_BATTERY_CURRENT_AMPERE = Guid.Parse("e659f312-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_LIFETIME_AMPERE_HOURS = Guid.Parse("e659f31a-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_TRIP_AMPERE_HOURS = Guid.Parse("e659f314-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_TRIP_REGEN_AMPERE_HOURS = Guid.Parse("e659f313-ea98-11e3-ac10-0800200c9a66");
+
         public static readonly Guid CHARACTERISTIC_TEMPERATURE = Guid.Parse("e659f310-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_CUSTOM_NAME = Guid.Parse("e659f3fd-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_FIRMWARE_REVISION = Guid.Parse("e659f311-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_HARDWARE_REVISION = Guid.Parse("e659f318-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_MODE = Guid.Parse("e659f30c-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_BACK = Guid.Parse("e659f30e-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_FRONT = Guid.Parse("e659f30d-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_SPEED_RPM = Guid.Parse("e659f30b-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_TRIP_ODOMETER= Guid.Parse("e659f30a-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_LIFETIME_ODOMETER= Guid.Parse("e659f319-ea98-11e3-ac10-0800200c9a66");
+
+        public static readonly Guid[] SUBSCRIBED_CHARACTERISTICS = new Guid[]
+        {
+            CHARACTERISTIC_SERIAL_NUMBER,
+            CHARACTERISTIC_FIRMWARE_REVISION,
+            CHARACTERISTIC_HARDWARE_REVISION,
+
+            CHARACTERISTIC_RIDING_MODE,
+            CHARACTERISTIC_CUSTOM_NAME,
+
+            CHARACTERISTIC_BATTERY_SERIAL_NUMBER,
+            CHARACTERISTIC_BATTERY_LEVEL,
+            CHARACTERISTIC_BATTERY_LOW_5,
+            CHARACTERISTIC_BATTERY_LOW_20,
+            CHARACTERISTIC_BATTERY_TEMPERATUR,
+            CHARACTERISTIC_BATTERY_VOLTAGE,
+            CHARACTERISTIC_BATTERY_CURRENT_AMPERE,
+            CHARACTERISTIC_BATTERY_LIFETIME_AMPERE_HOURS,
+            CHARACTERISTIC_BATTERY_TRIP_AMPERE_HOURS,
+            CHARACTERISTIC_BATTERY_TRIP_REGEN_AMPERE_HOURS,
+
+            CHARACTERISTIC_TEMPERATURE,
+            CHARACTERISTIC_LIGHTING_MODE,
+            CHARACTERISTIC_LIGHTING_BACK,
+            CHARACTERISTIC_LIGHTING_FRONT,
+            CHARACTERISTIC_SPEED_RPM,
+            CHARACTERISTIC_TRIP_ODOMETER,
+            CHARACTERISTIC_LIFETIME_ODOMETER
+        };
 
         private Dictionary<Guid, byte[]> characteristics;
+        private Dictionary<Guid, int> characteristicsEventCount;
         private ObservableBluetoothLEDevice board;
 
         public delegate void BoardCharacteristicChangedHandler(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args);
@@ -53,6 +89,7 @@ namespace Onewheel.Classes
         public OnewheelInfo()
         {
             this.characteristics = new Dictionary<Guid, byte[]>();
+            this.characteristicsEventCount = new Dictionary<Guid, int>();
         }
 
         #endregion
@@ -71,7 +108,6 @@ namespace Onewheel.Classes
             {
                 this.board.PropertyChanged += Board_PropertyChanged;
             }
-
             loadCharacteristics();
         }
 
@@ -176,9 +212,45 @@ namespace Onewheel.Classes
             setBoard(OnewheelConnectionHelper.INSTANCE.board);
         }
 
-        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, Events.BoardChangedEventArgs args)
+        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
         {
             setBoard(args.BOARD);
+        }
+
+        private async Task subscribeToCharacteristicAsync(GattCharacteristic c)
+        {
+            // Check if characteristic supports subscriptions:
+            GattClientCharacteristicConfigurationDescriptorValue cccdValue = GattClientCharacteristicConfigurationDescriptorValue.None;
+            if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Indicate))
+            {
+                cccdValue = GattClientCharacteristicConfigurationDescriptorValue.Indicate;
+            }
+            else if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+            {
+                cccdValue = GattClientCharacteristicConfigurationDescriptorValue.Notify;
+            }
+            else
+            {
+                return;
+            }
+
+            // Set subscribed:
+            GattCommunicationStatus status;
+            try
+            {
+                status = await c.WriteClientCharacteristicConfigurationDescriptorAsync(cccdValue);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return;
+            }
+
+            // Add event handler:
+            if (status == GattCommunicationStatus.Success)
+            {
+                c.ValueChanged -= C_ValueChanged;
+                c.ValueChanged += C_ValueChanged;
+            }
         }
 
         private void loadCharacteristics()
@@ -203,11 +275,9 @@ namespace Onewheel.Classes
                                     {
                                         await loadCharacteristicValueAsync(c);
 
-                                        // Subscribe to value changes:
-                                        if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Notify))
+                                        if (SUBSCRIBED_CHARACTERISTICS.Contains(c.Uuid))
                                         {
-                                            c.ValueChanged -= C_ValueChanged;
-                                            c.ValueChanged += C_ValueChanged;
+                                            await subscribeToCharacteristicAsync(c);
                                         }
                                     }
                                 }
@@ -237,10 +307,24 @@ namespace Onewheel.Classes
             addCharacteristicToDictionary(c.Uuid, value);
         }
 
+        /// <summary>
+        /// Adds the given value to the characteristics dictionary and triggers the BoardCharacteristicChanged event.
+        /// </summary>
+        /// <param name="uuid">The UUID of the characteristic.</param>
+        /// <param name="value">The value of the characteristics.</param>
         public void addCharacteristicToDictionary(Guid uuid, byte[] value)
         {
-            characteristics.Add(uuid, value);
+            characteristics[uuid] = value;
             BoardCharacteristicChanged?.Invoke(this, new BoardCharacteristicChangedEventArgs(uuid, value));
+
+            if (characteristicsEventCount.ContainsKey(uuid))
+            {
+                characteristicsEventCount[uuid]++;
+            }
+            else
+            {
+                characteristicsEventCount[uuid] = 1;
+            }
         }
 
         #endregion
@@ -255,13 +339,13 @@ namespace Onewheel.Classes
         {
             switch (e.PropertyName)
             {
-                case "IsConnected":
+                case "IsConnected" when board.IsConnected:
                     loadCharacteristics();
                     break;
             }
         }
 
-        private void INSTANCE_BoardChanged1(OnewheelConnectionHelper helper, Events.BoardChangedEventArgs args)
+        private void INSTANCE_BoardChanged1(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
         {
             setBoard(args.BOARD);
         }

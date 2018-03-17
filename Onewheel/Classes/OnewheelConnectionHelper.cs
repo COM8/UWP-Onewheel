@@ -159,6 +159,7 @@ namespace Onewheel.Classes
                     await bluetoothLEHelper.BluetoothLeDevices[i].ConnectAsync();
                     setBoard(bluetoothLEHelper.BluetoothLeDevices[i]);
                     bluetoothLEHelper.StopEnumeration();
+                    bluetoothLEHelper.BluetoothLeDevices.CollectionChanged -= BluetoothLeDevices_CollectionChanged;
                 }
             }
         }
@@ -171,9 +172,9 @@ namespace Onewheel.Classes
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void BluetoothLeDevices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private async void BluetoothLeDevices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            searchBoardAsync();
+            await searchBoardAsync();
         }
 
         #endregion

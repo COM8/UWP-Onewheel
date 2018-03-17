@@ -4,19 +4,21 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Onewheel.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0"
               Height="50"
               Background="{ThemeResource SystemControlHighlightAltListAccentLowBrush}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -26,13 +28,105 @@
                        Margin="10, 0, 0, 0"
                        VerticalAlignment="Center"
                        FontSize="25"/>
+
+            <Grid VerticalAlignment="Center"
+                        HorizontalAlignment="Center"
+                        Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="boardName_tbx"
+                           Grid.Column="0"
+                           FontSize="20"
+                           VerticalAlignment="Center"
+                           TextTrimming="CharacterEllipsis"/>
+                <Button x:Name="editName_btn"
+                        Content="&#xE70F;"
+                        Grid.Column="1"
+                        Background="Transparent"
+                        VerticalAlignment="Center"
+                        FontFamily="Segoe MDL2 Assets"
+                        Click="editName_btn_Click"
+                        Visibility="Collapsed"/>
+            </Grid>
+
             <TextBlock x:Name="batteryIcon_tbx"
-                       Grid.Column="1"
+                       Grid.Column="2"
                        HorizontalAlignment="Right"
                        Margin="0, 0, 10, 0"
                        FontSize="25"
                        FontFamily="Segoe MDL2 Assets"
                        VerticalAlignment="Center"/>
         </Grid>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <controls:SeperatorControl Text="General:"/>
+                <GridView SelectionMode="None"
+                  IsItemClickEnabled="False"
+                  HorizontalAlignment="Center"
+                  Margin="10">
+                    <!-- Speed: -->
+                    <controls:BoardInfoControl x:Name="speed_bic"
+                                       ValueText="0"
+                                       DescriptionPrimary="KM/H"
+                                       DescriptionSecondary="Speed"/>
+
+                    <!-- Range: -->
+                    <controls:BoardInfoControl x:Name="range_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="KM"
+                                       DescriptionSecondary="Range"/>
+                </GridView>
+
+                <controls:SeperatorControl Text="Trip:"
+                                           Margin="0, 10, 0, 0"/>
+                <GridView SelectionMode="None"
+                  IsItemClickEnabled="False"
+                  HorizontalAlignment="Center"
+                  Margin="10">
+                    <!-- Top speed trip: -->
+                    <controls:BoardInfoControl x:Name="topSpeedTrip_bic"
+                                       ValueText="0"
+                                       DescriptionPrimary="KM/H"
+                                       DescriptionSecondary="Top speed"/>
+
+                    <!-- Odometer trip: -->
+                    <controls:BoardInfoControl x:Name="odometerTrip_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="KM"
+                                       DescriptionSecondary="Trip"/>
+                </GridView>
+
+                <controls:SeperatorControl Text="Live:"
+                                           Margin="0, 10, 0, 0"/>
+                <GridView SelectionMode="None"
+                  IsItemClickEnabled="False"
+                  HorizontalAlignment="Center"
+                  Margin="10">
+                    <!-- Top speed live: -->
+                    <controls:BoardInfoControl x:Name="topSpeedLive_bic"
+                                       ValueText="0"
+                                       DescriptionPrimary="KM/H"
+                                       DescriptionSecondary="Top speed"/>
+
+                    <!-- Odometer live: -->
+                    <controls:BoardInfoControl x:Name="odometerLive_bic"
+                                       ValueText="-"
+                                       DescriptionPrimary="KM"
+                                       DescriptionSecondary="Live"/>
+                </GridView>
+
+                <controls:SeperatorControl Text="Other:"
+                                           Margin="0, 10, 0, 0"/>
+            </StackPanel>
+        </ScrollViewer>
+
+
+
+        <TextBlock x:Name="temp_tbx"
+                   Grid.Row="1"/>
     </Grid>
 </Page>

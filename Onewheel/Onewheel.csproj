@@ -100,6 +100,9 @@
     <Compile Include="Classes\OnewheelConnectionHelper.cs" />
     <Compile Include="Classes\OnewheelInfo.cs" />
     <Compile Include="Classes\UIUtils.cs" />
+    <Compile Include="Controls\BoardInfoControl.xaml.cs">
+      <DependentUpon>BoardInfoControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ConnectBoardControl.xaml.cs">
       <DependentUpon>ConnectBoardControl.xaml</DependentUpon>
     </Compile>
@@ -108,6 +111,9 @@
     </Compile>
     <Compile Include="Controls\IconTextBlockControl.xaml.cs">
       <DependentUpon>IconTextBlockControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SeperatorControl.xaml.cs">
+      <DependentUpon>SeperatorControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataTemplates\ItemCountToEmptyLabelVisibilityConverter.cs" />
     <Compile Include="Pages\ConnectPage.xaml.cs">
@@ -148,6 +154,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\BoardInfoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ConnectBoardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -157,6 +167,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\IconTextBlockControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SeperatorControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

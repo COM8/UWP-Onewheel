@@ -8,7 +8,7 @@
     mc:Ignorable="d">
 
     <Page.Resources>
-        <DataTemplate x:Key="HamburgerMenuItem">
+        <DataTemplate x:Key="hamburgerMenuItemTemplate" x:DataType="controls:HamburgerMenuGlyphItem">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="48" />
@@ -17,10 +17,10 @@
                 <FontIcon Grid.Column="0"
                           FontSize="16"
                           FontFamily="Segoe MDL2 Assets"
-                          Glyph="{Binding Glyph}"
+                          Glyph="{x:Bind Glyph, Mode=OneWay}"
                           Foreground="{ThemeResource SystemControlBackgroundBaseHighBrush}"/>
                 <TextBlock Grid.Column="1"
-                           Text="{Binding Label}"
+                           Text="{x:Bind Label, Mode=OneWay}"
                            Foreground="{ThemeResource SystemControlBackgroundBaseHighBrush}"
                            FontSize="16"
                            VerticalAlignment="Center" />
@@ -32,8 +32,8 @@
         <controls:HamburgerMenu x:Name="main_hbm"
                                 SelectedIndex="0"
                                 ItemClick="main_hbm_ItemClick"
-                                ItemTemplate="{StaticResource HamburgerMenuItem}"
-                                OptionsItemTemplate="{StaticResource HamburgerMenuItem}"
+                                ItemTemplate="{StaticResource hamburgerMenuItemTemplate}"
+                                OptionsItemTemplate="{StaticResource hamburgerMenuItemTemplate}"
                                 OptionsItemClick="main_hbm_OptionsItemClick"
                                 DisplayMode="CompactOverlay"
                                 IsPaneOpen="False"
