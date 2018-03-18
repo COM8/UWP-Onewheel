@@ -1,4 +1,6 @@
-﻿namespace DataManager.Classes
+﻿using System;
+
+namespace DataManager.Classes
 {
     public class Utils
     {
@@ -30,7 +32,7 @@
         #region --Misc Methods (Public)--
         public static double rpmToKilometersPerHour(uint rpm)
         {
-            return rpmToKilometers(rpm) * 60;
+            return Math.Round(rpmToKilometers(rpm) * 60, 2);
         }
 
         public static double rpmToKilometers(uint rpm)
@@ -41,6 +43,26 @@
         public static double milesToKilometers(double miles)
         {
             return miles * 1.60934;
+        }
+
+        public static double convertToAmpere(uint value)
+        {
+            double multiplier = 0;
+
+            if (true)
+            {
+                // Onewheel+:
+                multiplier = 1.8;
+            }
+            else
+            {
+                // Onewheel:
+                multiplier = 0.9;
+            }
+
+            double amp = value / 1000.0 * multiplier;
+
+            return Math.Round(amp, 2);
         }
 
         #endregion

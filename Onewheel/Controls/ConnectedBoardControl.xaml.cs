@@ -4,6 +4,7 @@ using DataManager.Classes;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System;
 
 namespace Onewheel.Controls
 {
@@ -59,22 +60,25 @@ namespace Onewheel.Controls
         #region --Misc Methods (Private)--
         private void showBoard()
         {
-            if (board != null)
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                name_tbx.Text = board.Name ?? "-";
-                btAddress_tbx.Text = board.BluetoothAddressAsString ?? "-";
-                deviceId_tbx.Text = board.BluetoothLEDevice?.DeviceId ?? "-";
-            }
-            else
-            {
-                string btAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
-                if (btAddress != null)
+                if (board != null)
                 {
-                    btAddress_tbx.Text = btAddress;
-                    name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME);
-                    deviceId_tbx.Text = "-";
+                    name_tbx.Text = board.Name ?? "-";
+                    btAddress_tbx.Text = board.BluetoothAddressAsString ?? "-";
+                    deviceId_tbx.Text = board.BluetoothLEDevice?.DeviceId ?? "-";
                 }
-            }
+                else
+                {
+                    string btAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
+                    if (btAddress != null)
+                    {
+                        btAddress_tbx.Text = btAddress;
+                        name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME);
+                        deviceId_tbx.Text = "-";
+                    }
+                }
+            }).AsTask();
         }
 
         private void showRSSI()

@@ -47,10 +47,11 @@ namespace Onewheel.Pages
             uint level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
+                bool isCharching = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.isCharging;
                 if (level >= 0 && level <= 100)
                 {
                     batteryPerc_tbx.Text = level + "%";
-                    batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[level / 10];
+                    batteryIcon_tbx.Text = isCharching ? UIUtils.BATTERY_CHARCHING_LEVEL_ICONS[level / 10] : UIUtils.BATTERY_LEVEL_ICONS[level / 10];
                 }
                 else
                 {
@@ -80,7 +81,6 @@ namespace Onewheel.Pages
         {
             uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(uuid);
             double speed = Utils.rpmToKilometersPerHour(value);
-            speed = Math.Round(speed, 2);
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
@@ -136,22 +136,7 @@ namespace Onewheel.Pages
         private void showAmpere(BoardInfoControl boardInfoControl, Guid uuid)
         {
             uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(uuid);
-            double multiplier = 0;
-
-            if (true)
-            {
-                // Onewheel+:
-                multiplier = 1.8;
-            }
-            else
-            {
-                // Onewheel:
-                multiplier = 0.9;
-            }
-
-            double amp = value / 1000.0 * multiplier;
-
-            amp = Math.Round(amp, 2);
+            double amp = Utils.convertToAmpere(value);
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {

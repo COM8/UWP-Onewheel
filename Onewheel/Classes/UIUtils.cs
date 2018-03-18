@@ -19,6 +19,21 @@
             "\uEC02", // Unknown
         };
 
+        public static readonly string[] BATTERY_CHARCHING_LEVEL_ICONS = new string[] {
+            "\xEBAB", // 0%
+            "\xEBAC", // 10%
+            "\uEBAD", // 20%
+            "\uEBAE", // 30%
+            "\uEBAF", // 40%
+            "\xEBB0", // 50%
+            "\uEBB1", // 60%
+            "\uEBB2", // 70%
+            "\uEBB3", // 80%
+            "\uEBB4", // 90%
+            "\uEBB5", // 100%
+            "\uEC02", // Unknown
+        };
+
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--

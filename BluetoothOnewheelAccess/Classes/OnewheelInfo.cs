@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
+using Windows.System.Threading;
 
 namespace BluetoothOnewheelAccess.Classes
 {
@@ -82,8 +83,14 @@ namespace BluetoothOnewheelAccess.Classes
             CHARACTERISTIC_LIFETIME_AMPERE_HOURS
         };
 
+        private static object characteristicsLock = new object();
         private Dictionary<Guid, byte[]> characteristics;
         private ObservableBluetoothLEDevice board;
+
+        public bool isCharging { get; private set; }
+        private ThreadPoolTimer isChargingTimer;
+        private readonly TimeSpan TIMEOUT;
+        private double lastAmpHoursRegenTrip;
 
         private const string BACKGROUND_TASK_ENTRY_POINT = "BluetoothBackgroundTask.Classes.BackgroundTask";
         private const string BACKGROUND_TASK_NAME = "onewheel_bluetooth_background_task";
@@ -104,6 +111,10 @@ namespace BluetoothOnewheelAccess.Classes
         public OnewheelInfo()
         {
             this.characteristics = new Dictionary<Guid, byte[]>();
+            this.isCharging = false;
+            this.isChargingTimer = null;
+            this.TIMEOUT = TimeSpan.FromSeconds(5);
+            this.lastAmpHoursRegenTrip = 0;
         }
 
         #endregion
@@ -125,6 +136,22 @@ namespace BluetoothOnewheelAccess.Classes
             loadCharacteristics();
         }
 
+        private void setIsCharging(bool isCharging)
+        {
+            if (isCharging)
+            {
+                resetIsChargingTimer();
+            }
+            else
+            {
+                stopIsChargingTimer();
+                lastAmpHoursRegenTrip = 0;
+            }
+
+            this.isCharging = isCharging;
+            BoardCharacteristicChanged?.Invoke(this, new BoardCharacteristicChangedEventArgs(CHARACTERISTIC_BATTERY_LEVEL, getRawValue(CHARACTERISTIC_BATTERY_LEVEL)));
+        }
+
         public string getCharacteristicAsString(byte[] value)
         {
             if (value != null)
@@ -136,7 +163,7 @@ namespace BluetoothOnewheelAccess.Classes
 
         public string getCharacteristicAsString(Guid uuid)
         {
-            characteristics.TryGetValue(uuid, out byte[] value);
+            byte[] value = getRawValue(uuid);
             return getCharacteristicAsString(value);
         }
 
@@ -158,7 +185,7 @@ namespace BluetoothOnewheelAccess.Classes
 
         public uint getCharacteristicAsUInt(Guid uuid)
         {
-            characteristics.TryGetValue(uuid, out byte[] value);
+            byte[] value = getRawValue(uuid);
             return getCharacteristicAsUInt(value);
         }
 
@@ -176,7 +203,7 @@ namespace BluetoothOnewheelAccess.Classes
 
         public ulong getCharacteristicAsULong(Guid uuid)
         {
-            characteristics.TryGetValue(uuid, out byte[] value);
+            byte[] value = getRawValue(uuid);
             return getCharacteristicAsULong(value);
         }
 
@@ -194,16 +221,23 @@ namespace BluetoothOnewheelAccess.Classes
 
         public bool getCharacteristicAsBool(Guid uuid)
         {
-            characteristics.TryGetValue(uuid, out byte[] value);
+            byte[] value = getRawValue(uuid);
             return getCharacteristicAsBool(value);
         }
 
         public byte[] getRawValue(Guid uuid)
         {
-            characteristics.TryGetValue(uuid, out byte[] value);
+            byte[] value = null;
+            lock (characteristicsLock)
+            {
+                characteristics.TryGetValue(uuid, out value);
+            }
             return value;
         }
 
+        #endregion
+        //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
+        #region --Misc Methods (Public)--
         public void init()
         {
             OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged1;
@@ -217,9 +251,6 @@ namespace BluetoothOnewheelAccess.Classes
             }
         }
 
-        #endregion
-        //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
-        #region --Misc Methods (Public)--
         public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)
         {
             GattReadResult vRes = await characteristic.ReadValueAsync();
@@ -310,6 +341,32 @@ namespace BluetoothOnewheelAccess.Classes
             }
         }
 
+        /// <summary>
+        /// Stops the isChargingTimer.
+        /// </summary>
+        private void stopIsChargingTimer()
+        {
+            try
+            {
+                isChargingTimer?.Cancel();
+            }
+            catch (Exception)
+            {
+            }
+
+            isChargingTimer = null;
+        }
+
+        /// <summary>
+        /// Resets the isChargingTimer.
+        /// </summary>
+        private void resetIsChargingTimer()
+        {
+            stopIsChargingTimer();
+
+            isChargingTimer = ThreadPoolTimer.CreateTimer((source) => setIsCharging(false), TIMEOUT);
+        }
+
         private void loadCharacteristics()
         {
             if (board != null && board.IsConnected)
@@ -380,7 +437,10 @@ namespace BluetoothOnewheelAccess.Classes
         /// <param name="updateMockObjects">Whether to update the mock objects</param>
         private void addCharacteristicToDictionary(Guid uuid, byte[] value, DateTime timestamp, bool shouldUpdateMockObjects)
         {
-            characteristics[uuid] = value;
+            lock (characteristicsLock)
+            {
+                characteristics[uuid] = value;
+            }
             BoardCharacteristicChanged?.Invoke(this, new BoardCharacteristicChangedEventArgs(uuid, value));
 
             if (shouldUpdateMockObjects)
@@ -407,6 +467,18 @@ namespace BluetoothOnewheelAccess.Classes
                     rpm = rpm,
                     kilometersPerHour = Utils.rpmToKilometersPerHour(rpm)
                 });
+            }
+            // Set Charging:
+            else if (uuid.Equals(CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS))
+            {
+                uint ampRaw = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(value);
+                double amp = Utils.convertToAmpere(ampRaw);
+                bool isCharching = lastAmpHoursRegenTrip != 0 && amp > lastAmpHoursRegenTrip;
+                if (isCharching)
+                {
+                    lastAmpHoursRegenTrip = amp;
+                }
+                setIsCharging(isCharching);
             }
         }
 
