@@ -1,5 +1,7 @@
 ﻿using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
+using DataManager.Classes.DBManagers;
+using DataManager.Classes.DBTables;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
@@ -209,7 +211,7 @@ namespace BluetoothOnewheelAccess.Classes
 
             // Load top RPM:
             byte[] topRpm = Settings.getSettingByteArray(SettingsConsts.BOARD_TOP_RPM_LIVE);
-            if(topRpm != null)
+            if (topRpm != null)
             {
                 addCharacteristicToDictionary(MOCK_LIVETIME_TOP_RPM, topRpm, false);
             }
@@ -374,8 +376,9 @@ namespace BluetoothOnewheelAccess.Classes
         /// </summary>
         /// <param name="uuid">The UUID of the characteristic.</param>
         /// <param name="value">The value of the characteristics.</param>
+        /// <param name="timestamp">A when did the value change?</param>
         /// <param name="updateMockObjects">Whether to update the mock objects</param>
-        private void addCharacteristicToDictionary(Guid uuid, byte[] value, bool shouldUpdateMockObjects)
+        private void addCharacteristicToDictionary(Guid uuid, byte[] value, DateTime timestamp, bool shouldUpdateMockObjects)
         {
             characteristics[uuid] = value;
             BoardCharacteristicChanged?.Invoke(this, new BoardCharacteristicChangedEventArgs(uuid, value));
@@ -384,6 +387,38 @@ namespace BluetoothOnewheelAccess.Classes
             {
                 updateMockObjects(uuid, value);
             }
+
+            // Add battery level values to the DB:
+            if (uuid.Equals(CHARACTERISTIC_BATTERY_LEVEL))
+            {
+                MeasurementsDBManager.INSTANCE.setBatteryMeasurement(new BatteryTable()
+                {
+                    dateTime = timestamp,
+                    value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(value)
+                });
+            }
+            // Add speed values to the DB:
+            else if (uuid.Equals(CHARACTERISTIC_SPEED_RPM))
+            {
+                uint rpm = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(value);
+                MeasurementsDBManager.INSTANCE.setSpeedMeasurement(new SpeedTable()
+                {
+                    dateTime = timestamp,
+                    rpm = rpm,
+                    kilometersPerHour = Utils.rpmToKilometersPerHour(rpm)
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds the given value to the characteristics dictionary and triggers the BoardCharacteristicChanged event.
+        /// </summary>
+        /// <param name="uuid">The UUID of the characteristic.</param>
+        /// <param name="value">The value of the characteristics.</param>
+        /// <param name="updateMockObjects">Whether to update the mock objects</param>
+        private void addCharacteristicToDictionary(Guid uuid, byte[] value, bool shouldUpdateMockObjects)
+        {
+            addCharacteristicToDictionary(uuid, value, DateTime.Now, shouldUpdateMockObjects);
         }
 
         private void updateMockObjects(Guid uuid, byte[] value)
@@ -441,7 +476,7 @@ namespace BluetoothOnewheelAccess.Classes
             }
 
             // Insert characteristic and its value into a dictionary:
-            addCharacteristicToDictionary(sender.Uuid, value, true);
+            addCharacteristicToDictionary(sender.Uuid, value, args.Timestamp.DateTime, true);
         }
 
         #endregion

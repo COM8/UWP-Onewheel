@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3239A757-E34C-45BE-B4B7-3A3046D5D2CE}</ProjectGuid>
+    <ProjectGuid>{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DataManager</RootNamespace>
-    <AssemblyName>DataManager</AssemblyName>
+    <RootNamespace>Thread_Save_Components</RootNamespace>
+    <AssemblyName>Thread_Save_Components</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
@@ -16,7 +16,6 @@
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <AllowCrossPlatformRetargeting>false</AllowCrossPlatformRetargeting>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -107,37 +106,24 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Classes\DBManagers\AbstractDBManager.cs" />
-    <Compile Include="Classes\DBManagers\MeasurementsDBManager.cs" />
-    <Compile Include="Classes\DBTables\BatteryTable.cs" />
-    <Compile Include="Classes\DBTables\DBTableConsts.cs" />
-    <Compile Include="Classes\DBTables\SpeedTable.cs" />
-    <Compile Include="Classes\Settings.cs" />
-    <Compile Include="Classes\SettingsConsts.cs" />
-    <Compile Include="Classes\Utils.cs" />
+    <Compile Include="Classes\Collections\ITimedEntry.cs" />
+    <Compile Include="Classes\Collections\TimedListEntry.cs" />
+    <Compile Include="Classes\Collections\TSTimedList.cs" />
+    <Compile Include="Classes\SQLite\TSSQLiteConnection.cs" />
+    <Compile Include="Classes\Threading\MySemaphoreSlim.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Properties\Thread_Save_Components.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.0.8</Version>
     </PackageReference>
+    <PackageReference Include="sqlite-net-pcl">
+      <Version>1.4.118</Version>
+    </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Logging\Logging.csproj">
-      <Project>{24fef00d-9a32-4edb-944b-1f82877e108e}</Project>
-      <Name>Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Thread_Save_Components\Thread_Save_Components.csproj">
-      <Project>{3efbaf60-5e44-4cda-8765-bf0ca6ae0127}</Project>
-      <Name>Thread_Save_Components</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

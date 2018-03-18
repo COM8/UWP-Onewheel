@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothOnewheelAccess", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BluetoothBackgroundTask", "BluetoothBackgroundTask\BluetoothBackgroundTask.csproj", "{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thread_Save_Components", "Thread_Save_Components\Thread_Save_Components.csproj", "{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "Logging\Logging.csproj", "{24FEF00D-9A32-4EDB-944B-1F82877E108E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +95,38 @@ Global
 		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|x64.Build.0 = Release|x64
 		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|x86.ActiveCfg = Release|x86
 		{3CCA3C0B-D1BD-4E6B-93A3-72AF685EC573}.Release|x86.Build.0 = Release|x86
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|ARM.ActiveCfg = Debug|ARM
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|ARM.Build.0 = Debug|ARM
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|x64.ActiveCfg = Debug|x64
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|x64.Build.0 = Debug|x64
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|x86.ActiveCfg = Debug|x86
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Debug|x86.Build.0 = Debug|x86
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|ARM.ActiveCfg = Release|ARM
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|ARM.Build.0 = Release|ARM
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|x64.ActiveCfg = Release|x64
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|x64.Build.0 = Release|x64
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|x86.ActiveCfg = Release|x86
+		{3EFBAF60-5E44-4CDA-8765-BF0CA6AE0127}.Release|x86.Build.0 = Release|x86
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|ARM.ActiveCfg = Debug|ARM
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|ARM.Build.0 = Debug|ARM
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|x64.ActiveCfg = Debug|x64
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|x64.Build.0 = Debug|x64
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|x86.ActiveCfg = Debug|x86
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Debug|x86.Build.0 = Debug|x86
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|ARM.ActiveCfg = Release|ARM
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|ARM.Build.0 = Release|ARM
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|x64.ActiveCfg = Release|x64
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|x64.Build.0 = Release|x64
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|x86.ActiveCfg = Release|x86
+		{24FEF00D-9A32-4EDB-944B-1F82877E108E}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

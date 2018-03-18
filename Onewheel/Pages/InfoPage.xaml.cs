@@ -1,10 +1,15 @@
 ﻿using BluetoothOnewheelAccess.Classes;
 using BluetoothOnewheelAccess.Classes.Events;
+using DataManager.Classes.DBManagers;
+using DataManager.Classes.DBTables;
 using Microsoft.Toolkit.Uwp.Connectivity;
 using Onewheel.Classes;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System;
 
 namespace Onewheel.Pages
 {
@@ -13,6 +18,7 @@ namespace Onewheel.Pages
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
         private ObservableBluetoothLEDevice board;
+        private ObservableCollection<SpeedTable> speedValues;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -27,6 +33,8 @@ namespace Onewheel.Pages
         {
             this.board = null;
             this.InitializeComponent();
+            this.speedValues = new ObservableCollection<SpeedTable>();
+            loadSpeedValues();
         }
 
         #endregion
@@ -58,6 +66,23 @@ namespace Onewheel.Pages
         #endregion
 
         #region --Misc Methods (Private)--
+        private void loadSpeedValues()
+        {
+            Task.Run(async () =>
+            {
+                List<SpeedTable> values = MeasurementsDBManager.INSTANCE.getAllSpeedMeasurement();
+
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    speedValues.Clear();
+                    foreach (SpeedTable v in values)
+                    {
+                        speedValues.Add(v);
+                    }
+                });
+            });
+        }
+
         private void showBattery()
         {
             uint level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
@@ -127,6 +152,7 @@ namespace Onewheel.Pages
         {
             showBattery();
             showBoard();
+            loadSpeedValues();
         }
 
         #endregion

@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:chart="using:Telerik.UI.Xaml.Controls.Chart"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -40,6 +41,30 @@
 
                 <Button x:Name="printAll_btn" Content="Print all" Margin="0, 10, 0, 0" Click="printAll_btn_Click"/>
                 <Button x:Name="reload_btn" Content="Reload" Margin="0, 10, 0, 0" Click="reload_btn_Click"/>
+
+                <chart:RadCartesianChart Margin="0, 10, 0, 0">
+                    <!-- Axis: -->
+                    <chart:RadCartesianChart.HorizontalAxis>
+                        <chart:DateTimeContinuousAxis MajorStep="1" MajorStepUnit="Minute"/>
+                    </chart:RadCartesianChart.HorizontalAxis>
+                    <chart:RadCartesianChart.VerticalAxis>
+                        <chart:LinearAxis Minimum="0" MajorStep="1"/>
+                    </chart:RadCartesianChart.VerticalAxis>
+
+                    <!-- Misc: -->
+                    <chart:RadCartesianChart.Grid>
+                        <chart:CartesianChartGrid MajorLinesVisibility="XY"/>
+                    </chart:RadCartesianChart.Grid>
+
+                    <chart:PointSeries PointSize="5,5" ItemsSource="{x:Bind speedValues}">
+                        <chart:PointSeries.CategoryBinding>
+                            <chart:PropertyNameDataPointBinding PropertyName="dateTime"/>
+                        </chart:PointSeries.CategoryBinding>
+                        <chart:PointSeries.ValueBinding>
+                            <chart:PropertyNameDataPointBinding PropertyName="kilometersPerHour"/>
+                        </chart:PointSeries.ValueBinding>
+                    </chart:PointSeries>
+                </chart:RadCartesianChart>
             </StackPanel>
         </ScrollViewer>
 
