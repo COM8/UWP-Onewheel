@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.Toolkit.Uwp.Notifications;
+using System;
 using Windows.ApplicationModel.Background;
+using Windows.UI.Notifications;
 
 namespace BluetoothBackgroundTask.Classes
 {
@@ -35,6 +37,7 @@ namespace BluetoothBackgroundTask.Classes
             deferral = taskInstance.GetDeferral();
 
             // Insert async code here
+            popToast();
 
             deferral.Complete();
         }
@@ -42,7 +45,15 @@ namespace BluetoothBackgroundTask.Classes
         #endregion
 
         #region --Misc Methods (Private)--
-
+        private void popToast()
+        {
+            ToastContent c = new ToastContent
+            {
+                Scenario = ToastScenario.Alarm,
+                Header = new ToastHeader("0", "Test", "")
+            };
+            ToastNotificationManager.CreateToastNotifier().Show(new ToastNotification(c.GetXml()));
+        }
 
         #endregion
 

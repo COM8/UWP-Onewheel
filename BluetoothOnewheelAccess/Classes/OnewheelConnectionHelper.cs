@@ -17,9 +17,6 @@ namespace BluetoothOnewheelAccess.Classes
         #region --Attributes--
         public static OnewheelConnectionHelper INSTANCE = new OnewheelConnectionHelper();
 
-        private const string BACKGROUND_TASK_ENTRY_POINT = "BluetoothBackgroundTask.Classes.BackgroundTask";
-        private const string BACKGROUND_TASK_NAME = "onewheel_bluetooth_background_task";
-
         public readonly OnewheelInfo ONEWHEEL_INFO;
         private BluetoothLEHelper bluetoothLEHelper;
         public ObservableBluetoothLEDevice board { get; private set; }
@@ -214,26 +211,6 @@ namespace BluetoothOnewheelAccess.Classes
                     }
                 }
             }
-        }
-
-        public void registerBackgroundTask()
-        {
-            if (BackgroundTaskHelper.IsBackgroundTaskRegistered(BACKGROUND_TASK_NAME))
-            {
-                return;
-            }
-
-            BluetoothLEAdvertisementWatcherTrigger btLEtrigger = new BluetoothLEAdvertisementWatcherTrigger();
-
-            BackgroundTaskRegistration registered = BackgroundTaskHelper.Register(BACKGROUND_TASK_NAME, BACKGROUND_TASK_ENTRY_POINT,
-                btLEtrigger,
-                false, true,
-                new SystemCondition(SystemConditionType.UserNotPresent));
-        }
-
-        public void unregisterBackgroundTask()
-        {
-            BackgroundTaskHelper.Unregister(BACKGROUND_TASK_NAME);
         }
 
         #endregion

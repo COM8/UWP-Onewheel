@@ -247,6 +247,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BluetoothBackgroundTask\BluetoothBackgroundTask.csproj">
+      <Project>{3cca3c0b-d1bd-4e6b-93a3-72af685ec573}</Project>
+      <Name>BluetoothBackgroundTask</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BluetoothOnewheelAccess\BluetoothOnewheelAccess.csproj">
       <Project>{aa2a91ff-40e8-4e8a-a86d-367e7f2d15f6}</Project>
       <Name>BluetoothOnewheelAccess</Name>

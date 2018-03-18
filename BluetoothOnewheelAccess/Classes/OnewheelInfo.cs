@@ -1,10 +1,12 @@
 ﻿using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
 using Microsoft.Toolkit.Uwp.Connectivity;
+using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.Background;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 
@@ -47,8 +49,6 @@ namespace BluetoothOnewheelAccess.Classes
         public static readonly Guid MOCK_TRIP_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000001");
         public static readonly Guid MOCK_LIVETIME_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000002");
 
-
-
         public static readonly Guid[] SUBSCRIBED_CHARACTERISTICS = new Guid[]
         {
             CHARACTERISTIC_SERIAL_NUMBER,
@@ -82,6 +82,9 @@ namespace BluetoothOnewheelAccess.Classes
 
         private Dictionary<Guid, byte[]> characteristics;
         private ObservableBluetoothLEDevice board;
+
+        private const string BACKGROUND_TASK_ENTRY_POINT = "BluetoothBackgroundTask.Classes.BackgroundTask";
+        private const string BACKGROUND_TASK_NAME = "onewheel_bluetooth_background_task";
 
         public delegate void BoardCharacteristicChangedHandler(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args);
 
@@ -241,6 +244,23 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
 
         #region --Misc Methods (Private)--
+        private void registerGATTBackgroundTask(GattCharacteristic c)
+        {
+            if (BackgroundTaskHelper.IsBackgroundTaskRegistered(BACKGROUND_TASK_NAME))
+            {
+                BackgroundTaskHelper.Unregister(BACKGROUND_TASK_NAME);
+            }
+
+            BackgroundTaskBuilder backgroundTaskBuilder = new BackgroundTaskBuilder
+            {
+                Name = BACKGROUND_TASK_NAME,
+                TaskEntryPoint = BACKGROUND_TASK_ENTRY_POINT,
+            };
+            backgroundTaskBuilder.SetTrigger(new GattCharacteristicNotificationTrigger(c));
+
+            BackgroundTaskRegistration backgroundTaskRegistration = backgroundTaskBuilder.Register();
+        }
+
         private void loadBoard()
         {
             OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged;

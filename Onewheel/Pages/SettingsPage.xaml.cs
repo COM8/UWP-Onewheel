@@ -61,12 +61,12 @@ namespace Onewheel.Pages
         #region --Events--
         private void register_btn_Click(object sender, RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.registerBackgroundTask();
+            //OnewheelConnectionHelper.INSTANCE.registerBackgroundTask();
         }
 
         private void unregister_btn_Click(object sender, RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.unregisterBackgroundTask();
+            //OnewheelConnectionHelper.INSTANCE.unregisterBackgroundTask();
         }
 
         #endregion

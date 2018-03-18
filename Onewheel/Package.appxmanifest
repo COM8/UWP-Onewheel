@@ -24,7 +24,7 @@
       <Extensions>
         <Extension Category="windows.backgroundTasks" EntryPoint="BluetoothBackgroundTask.Classes.BackgroundTask">
           <BackgroundTasks>
-            <Task Type="systemEvent" />
+            <Task Type="bluetooth" />
           </BackgroundTasks>
         </Extension>
       </Extensions>
