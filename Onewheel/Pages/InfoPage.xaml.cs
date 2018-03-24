@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
+using System.Linq;
+using Windows.Devices.Bluetooth;
 
 namespace Onewheel.Pages
 {
@@ -17,7 +19,7 @@ namespace Onewheel.Pages
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private ObservableBluetoothLEDevice board;
+        private BluetoothLEDevice board;
         private ObservableCollection<SpeedTable> speedValues;
 
         #endregion
@@ -40,18 +42,18 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setBoard(ObservableBluetoothLEDevice board)
+        public void setBoard(BluetoothLEDevice board)
         {
             if (this.board != null)
             {
-                this.board.PropertyChanged -= Board_PropertyChanged;
+                this.board.NameChanged -= Board_NameChanged;
             }
 
             this.board = board;
 
             if (this.board != null)
             {
-                this.board.PropertyChanged += Board_PropertyChanged;
+                this.board.NameChanged += Board_NameChanged;
             }
 
             showBattery();
@@ -70,7 +72,7 @@ namespace Onewheel.Pages
         {
             Task.Run(async () =>
             {
-                List<SpeedTable> values = MeasurementsDBManager.INSTANCE.getAllSpeedMeasurement();
+                IEnumerable<SpeedTable> values = MeasurementsDBManager.INSTANCE.getAllSpeedMeasurement().Where(x => x.dateTime.Date.CompareTo(DateTime.Now.Date) == 0);
 
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
@@ -100,14 +102,14 @@ namespace Onewheel.Pages
 
         private void showBoard()
         {
-            if (board != null && board.BluetoothLEDevice != null)
+            if (board != null)
             {
                 name_tbx.Text = board.Name;
-                btAddress_tbx.Text = board.BluetoothLEDevice.BluetoothAddress.ToString();
-                btAddressType_tbx.Text = board.BluetoothLEDevice.BluetoothAddressType.ToString();
-                deviceId_tbx.Text = board.BluetoothLEDevice.DeviceId;
-                accessStatus_tbx.Text = board.BluetoothLEDevice.DeviceAccessInformation.CurrentStatus.ToString();
-                connectionStatus_tbx.Text = board.BluetoothLEDevice.ConnectionStatus.ToString();
+                btAddress_tbx.Text = board.BluetoothAddress.ToString();
+                btAddressType_tbx.Text = board.BluetoothAddressType.ToString();
+                deviceId_tbx.Text = board.DeviceId;
+                accessStatus_tbx.Text = board.DeviceAccessInformation.CurrentStatus.ToString();
+                connectionStatus_tbx.Text = board.ConnectionStatus.ToString();
             }
         }
 
@@ -135,17 +137,10 @@ namespace Onewheel.Pages
             Task t = OnewheelConnectionHelper.INSTANCE.printAllAsync();
         }
 
-        private void Board_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Board_NameChanged(BluetoothLEDevice sender, object args)
         {
-            switch (e.PropertyName)
-            {
-                case "BluetoothAddressAsString":
-                case "BluetoothLEDevice":
-                case "Name":
-                    showBattery();
-                    showBoard();
-                    break;
-            }
+            showBattery();
+            showBoard();
         }
 
         private void reload_btn_Click(object sender, RoutedEventArgs e)

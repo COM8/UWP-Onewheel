@@ -6,8 +6,7 @@ using Windows.Storage.Streams;
 using System.Diagnostics;
 using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
-using Windows.ApplicationModel.Background;
-using Microsoft.Toolkit.Uwp.Helpers;
+using Windows.Devices.Bluetooth;
 
 namespace BluetoothOnewheelAccess.Classes
 {
@@ -19,7 +18,7 @@ namespace BluetoothOnewheelAccess.Classes
 
         public readonly OnewheelInfo ONEWHEEL_INFO;
         private BluetoothLEHelper bluetoothLEHelper;
-        public ObservableBluetoothLEDevice board { get; private set; }
+        public BluetoothLEDevice board { get; private set; }
         public bool autoReconnect;
         public bool connectingToLastBoard;
         public OnewheelConnectionState state;
@@ -51,7 +50,7 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        private void setBoard(ObservableBluetoothLEDevice board)
+        private void setBoard(BluetoothLEDevice board)
         {
             if (this.board == board)
             {
@@ -60,14 +59,24 @@ namespace BluetoothOnewheelAccess.Classes
 
             if (this.board != null)
             {
-                board.PropertyChanged -= Board_PropertyChanged;
+                this.board.ConnectionStatusChanged -= Board_ConnectionStatusChanged;
             }
 
             this.board = board;
 
             if (this.board != null)
             {
-                board.PropertyChanged += Board_PropertyChanged;
+                this.board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
+
+                switch (this.board.ConnectionStatus)
+                {
+                    case BluetoothConnectionStatus.Disconnected:
+                        setOnewheelConnectionState(OnewheelConnectionState.DISCONNECTED);
+                        break;
+                    case BluetoothConnectionStatus.Connected:
+                        setOnewheelConnectionState(OnewheelConnectionState.CONNECTED);
+                        break;
+                }
             }
 
             setLastBoard(board);
@@ -91,12 +100,13 @@ namespace BluetoothOnewheelAccess.Classes
             }
         }
 
-        public void setLastBoard(ObservableBluetoothLEDevice lastBoard)
+        public void setLastBoard(BluetoothLEDevice lastBoard)
         {
-            if (board != null && board.BluetoothAddressAsString != null)
+            if (board != null && board.DeviceId != null)
             {
-                Settings.setSetting(SettingsConsts.BOARD_ADDRESS, lastBoard.BluetoothAddressAsString);
+                Settings.setSetting(SettingsConsts.BOARD_ADDRESS, lastBoard.BluetoothAddress.ToString());
                 Settings.setSetting(SettingsConsts.BOARD_NAME, lastBoard.Name);
+                Settings.setSetting(SettingsConsts.BOARD_ID, lastBoard.DeviceId);
             }
         }
 
@@ -110,16 +120,14 @@ namespace BluetoothOnewheelAccess.Classes
             ONEWHEEL_INFO.init();
         }
 
-        public async Task useBoardAsync(ObservableBluetoothLEDevice board)
+        public async Task useBoardAsync(BluetoothLEDevice board)
         {
             setOnewheelConnectionState(OnewheelConnectionState.CONNECTING);
-            await board.ConnectAsync();
             setBoard(board);
-            if (board.IsConnected)
+            if (board.ConnectionStatus == BluetoothConnectionStatus.Connected)
             {
                 setOnewheelConnectionState(OnewheelConnectionState.CONNECTED);
             }
-            stopSearchingForLastBoard();
         }
 
         public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)
@@ -170,27 +178,26 @@ namespace BluetoothOnewheelAccess.Classes
             Task.Run(async () =>
             {
                 connectingToLastBoard = true;
-                if (BluetoothLEHelper.IsBluetoothLESupported && Settings.getSettingString(SettingsConsts.BOARD_ADDRESS) != null)
+                setOnewheelConnectionState(OnewheelConnectionState.SEARCHING);
+
+                string lastBoardId = Settings.getSettingString(SettingsConsts.BOARD_ID);
+                if (string.IsNullOrEmpty(lastBoardId))
                 {
-                    setOnewheelConnectionState(OnewheelConnectionState.SEARCHING);
-
-                    bluetoothLEHelper.StartEnumeration();
-
-                    bluetoothLEHelper.BluetoothLeDevices.CollectionChanged += BluetoothLeDevices_CollectionChanged;
-                    await searchBoardAsync();
+                    setOnewheelConnectionState(OnewheelConnectionState.NO_LAST_BOARD);
                 }
                 else
                 {
-                    setOnewheelConnectionState(OnewheelConnectionState.NO_LAST_BOARD);
+                    BluetoothLEDevice board = await BluetoothLEDevice.FromIdAsync(lastBoardId);
+                    setBoard(board);
                 }
             });
         }
 
         public async Task printAllAsync()
         {
-            if (board != null && board.BluetoothLEDevice != null)
+            if (board != null && board.ConnectionStatus == BluetoothConnectionStatus.Connected)
             {
-                GattDeviceServicesResult sResult = await board.BluetoothLEDevice.GetGattServicesAsync();
+                GattDeviceServicesResult sResult = await board.GetGattServicesAsync();
                 if (sResult.Status == GattCommunicationStatus.Success)
                 {
                     foreach (GattDeviceService s in sResult.Services)
@@ -216,33 +223,7 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
 
         #region --Misc Methods (Private)--
-        private async Task searchBoardAsync()
-        {
-            string boardAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
-            for (int i = 0; i < bluetoothLEHelper.BluetoothLeDevices.Count; i++)
-            {
-                // Searching got canceled:
-                if (!connectingToLastBoard)
-                {
-                    return;
-                }
 
-                if (Equals(bluetoothLEHelper.BluetoothLeDevices[i].BluetoothAddressAsString, boardAddress))
-                {
-                    setOnewheelConnectionState(OnewheelConnectionState.CONNECTING);
-                    await bluetoothLEHelper.BluetoothLeDevices[i].ConnectAsync();
-                    setBoard(bluetoothLEHelper.BluetoothLeDevices[i]);
-                    stopSearchingForLastBoard();
-                }
-            }
-        }
-
-        private void stopSearchingForLastBoard()
-        {
-            bluetoothLEHelper.StopEnumeration();
-            bluetoothLEHelper.BluetoothLeDevices.CollectionChanged -= BluetoothLeDevices_CollectionChanged;
-            connectingToLastBoard = false;
-        }
 
         #endregion
 
@@ -252,24 +233,15 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private async void BluetoothLeDevices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
         {
-            await searchBoardAsync();
-        }
-
-        private void Board_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            switch (e.PropertyName)
+            switch (sender.ConnectionStatus)
             {
-                case "IsConnected":
-                    if (board.IsConnected)
-                    {
-                        setOnewheelConnectionState(OnewheelConnectionState.CONNECTED);
-                    }
-                    else
-                    {
-                        setOnewheelConnectionState(OnewheelConnectionState.DISCONNECTED);
-                    }
+                case BluetoothConnectionStatus.Disconnected:
+                    setOnewheelConnectionState(OnewheelConnectionState.DISCONNECTED);
+                    break;
+                case BluetoothConnectionStatus.Connected:
+                    setOnewheelConnectionState(OnewheelConnectionState.CONNECTED);
                     break;
             }
         }

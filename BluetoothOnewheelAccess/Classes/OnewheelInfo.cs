@@ -2,13 +2,13 @@
 using DataManager.Classes;
 using DataManager.Classes.DBManagers;
 using DataManager.Classes.DBTables;
-using Microsoft.Toolkit.Uwp.Connectivity;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
+using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
@@ -85,7 +85,7 @@ namespace BluetoothOnewheelAccess.Classes
 
         private static object characteristicsLock = new object();
         private Dictionary<Guid, byte[]> characteristics;
-        private ObservableBluetoothLEDevice board;
+        private BluetoothLEDevice board;
 
         public bool isCharging { get; private set; }
         private ThreadPoolTimer isChargingTimer;
@@ -120,18 +120,18 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setBoard(ObservableBluetoothLEDevice board)
+        public void setBoard(BluetoothLEDevice board)
         {
             if (this.board != null)
             {
-                this.board.PropertyChanged -= Board_PropertyChanged;
+                this.board.ConnectionStatusChanged -= Board_ConnectionStatusChanged;
             }
 
             this.board = board;
 
             if (this.board != null)
             {
-                this.board.PropertyChanged += Board_PropertyChanged;
+                this.board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
             }
             loadCharacteristics();
         }
@@ -300,11 +300,6 @@ namespace BluetoothOnewheelAccess.Classes
             setBoard(OnewheelConnectionHelper.INSTANCE.board);
         }
 
-        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
-        {
-            setBoard(args.BOARD);
-        }
-
         private async Task subscribeToCharacteristicAsync(GattCharacteristic c)
         {
             // Check if characteristic supports subscriptions:
@@ -369,41 +364,38 @@ namespace BluetoothOnewheelAccess.Classes
 
         private void loadCharacteristics()
         {
-            if (board != null && board.IsConnected)
+            if (board != null && board.ConnectionStatus == BluetoothConnectionStatus.Connected)
             {
                 Task.Run(async () =>
                 {
-                    if (board != null && board.BluetoothLEDevice != null)
+                    try
                     {
-                        try
+                        // Get all services:
+                        GattDeviceServicesResult sResult = await board.GetGattServicesAsync();
+                        if (sResult.Status == GattCommunicationStatus.Success)
                         {
-                            // Get all services:
-                            GattDeviceServicesResult sResult = await board.BluetoothLEDevice.GetGattServicesAsync();
-                            if (sResult.Status == GattCommunicationStatus.Success)
+                            foreach (GattDeviceService s in sResult.Services)
                             {
-                                foreach (GattDeviceService s in sResult.Services)
+                                // Get all characteristics:
+                                GattCharacteristicsResult cResult = await s.GetCharacteristicsAsync();
+                                if (cResult.Status == GattCommunicationStatus.Success)
                                 {
-                                    // Get all characteristics:
-                                    GattCharacteristicsResult cResult = await s.GetCharacteristicsAsync();
-                                    if (cResult.Status == GattCommunicationStatus.Success)
+                                    foreach (GattCharacteristic c in cResult.Characteristics)
                                     {
-                                        foreach (GattCharacteristic c in cResult.Characteristics)
-                                        {
-                                            await loadCharacteristicValueAsync(c);
+                                        await loadCharacteristicValueAsync(c);
 
-                                            if (SUBSCRIBED_CHARACTERISTICS.Contains(c.Uuid))
-                                            {
-                                                await subscribeToCharacteristicAsync(c);
-                                            }
+                                        if (SUBSCRIBED_CHARACTERISTICS.Contains(c.Uuid))
+                                        {
+                                            await subscribeToCharacteristicAsync(c);
                                         }
                                     }
                                 }
                             }
                         }
-                        catch (Exception)
-                        {
-                            // ToDo: Log exception
-                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ToDo: Log exception
                     }
                 });
             }
@@ -520,11 +512,16 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void Board_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
         {
-            switch (e.PropertyName)
+            setBoard(args.BOARD);
+        }
+
+        private void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+        {
+            switch (board.ConnectionStatus)
             {
-                case "IsConnected" when board.IsConnected:
+                case BluetoothConnectionStatus.Connected:
                     loadCharacteristics();
                     break;
             }

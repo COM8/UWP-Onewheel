@@ -1,5 +1,5 @@
-﻿using Microsoft.Toolkit.Uwp.Connectivity;
-using System;
+﻿using System;
+using Windows.Devices.Bluetooth;
 
 namespace BluetoothOnewheelAccess.Classes.Events
 {
@@ -7,7 +7,7 @@ namespace BluetoothOnewheelAccess.Classes.Events
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public readonly ObservableBluetoothLEDevice BOARD;
+        public readonly BluetoothLEDevice BOARD;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -18,7 +18,7 @@ namespace BluetoothOnewheelAccess.Classes.Events
         /// <history>
         /// 15/03/2018 Created [Fabian Sauter]
         /// </history>
-        public BoardChangedEventArgs(ObservableBluetoothLEDevice board)
+        public BoardChangedEventArgs(BluetoothLEDevice board)
         {
             this.BOARD = board;
         }

@@ -1,10 +1,10 @@
 ﻿using BluetoothOnewheelAccess.Classes;
 using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
-using Microsoft.Toolkit.Uwp.Connectivity;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
+using Windows.Devices.Bluetooth;
 
 namespace Onewheel.Controls
 {
@@ -12,7 +12,7 @@ namespace Onewheel.Controls
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private ObservableBluetoothLEDevice board;
+        private BluetoothLEDevice board;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -31,18 +31,20 @@ namespace Onewheel.Controls
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setBoard(ObservableBluetoothLEDevice board)
+        public void setBoard(BluetoothLEDevice board)
         {
             if (this.board != null)
             {
-                this.board.PropertyChanged -= Board_PropertyChanged;
+                this.board.ConnectionStatusChanged -= Board_ConnectionStatusChanged;
+                this.board.NameChanged -= Board_NameChanged;
             }
 
             this.board = board;
 
             if (this.board != null)
             {
-                this.board.PropertyChanged += Board_PropertyChanged;
+                this.board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
+                this.board.NameChanged += Board_NameChanged;
             }
 
             showBoard();
@@ -65,8 +67,8 @@ namespace Onewheel.Controls
                 if (board != null)
                 {
                     name_tbx.Text = board.Name ?? "-";
-                    btAddress_tbx.Text = board.BluetoothAddressAsString ?? "-";
-                    deviceId_tbx.Text = board.BluetoothLEDevice?.DeviceId ?? "-";
+                    btAddress_tbx.Text = board.BluetoothAddress.ToString() ?? "-";
+                    deviceId_tbx.Text = board.DeviceId ?? "-";
                 }
                 else
                 {
@@ -88,7 +90,7 @@ namespace Onewheel.Controls
 
         private void setVisability()
         {
-            if (board != null && board.IsConnected)
+            if (board != null && board.ConnectionStatus == BluetoothConnectionStatus.Connected)
             {
                 connecting_prgr.Visibility = Visibility.Collapsed;
                 connected_tbx.Visibility = Visibility.Visible;
@@ -119,30 +121,14 @@ namespace Onewheel.Controls
             setBoard(args.BOARD);
         }
 
-        private void Board_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
         {
-            switch (e.PropertyName)
-            {
-                case "BluetoothAddressAsString":
-                case "Name":
-                    showBoard();
-                    break;
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => setVisability()).AsTask();
+        }
 
-                case "BluetoothLEDevice":
-                    setVisability();
-                    showRSSI();
-                    showBoard();
-                    break;
-
-                case "IsConnected":
-                    setVisability();
-                    break;
-
-                case "RSSI":
-                    showRSSI();
-                    break;
-
-            }
+        private void Board_NameChanged(BluetoothLEDevice sender, object args)
+        {
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => showBoard()).AsTask();
         }
 
         #endregion
