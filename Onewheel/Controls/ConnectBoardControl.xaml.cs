@@ -90,7 +90,7 @@ namespace Onewheel.Controls
             {
                 string boardId = bluetoothLEHelper.BluetoothLeDevices[boards_lstv.SelectedIndex].DeviceInfo.Id;
                 BluetoothLEDevice board = await BluetoothLEDevice.FromIdAsync(boardId);
-                await OnewheelConnectionHelper.INSTANCE.useBoardAsync(board);
+                OnewheelConnectionHelper.INSTANCE.useBoard(board);
                 error_stckp.Visibility = Visibility.Collapsed;
             }
             catch (Exception e)

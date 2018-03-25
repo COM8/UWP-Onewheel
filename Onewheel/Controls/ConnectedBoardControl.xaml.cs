@@ -48,7 +48,6 @@ namespace Onewheel.Controls
             }
 
             showBoard();
-            showRSSI();
             setVisability();
         }
 
@@ -77,20 +76,15 @@ namespace Onewheel.Controls
                     {
                         btAddress_tbx.Text = btAddress;
                         name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME);
-                        deviceId_tbx.Text = "-";
+                        deviceId_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_ID);
                     }
                 }
             }).AsTask();
         }
 
-        private void showRSSI()
-        {
-            //rssi_tbx.Text = board?.RSSI.ToString() ?? "-";
-        }
-
         private void setVisability()
         {
-            if (board != null && board.ConnectionStatus == BluetoothConnectionStatus.Connected)
+            if (board != null && OnewheelConnectionHelper.INSTANCE.state == OnewheelConnectionState.CONNECTED)
             {
                 connecting_prgr.Visibility = Visibility.Collapsed;
                 connected_tbx.Visibility = Visibility.Visible;

@@ -122,17 +122,7 @@ namespace BluetoothOnewheelAccess.Classes
         #region --Set-, Get- Methods--
         public void setBoard(BluetoothLEDevice board)
         {
-            if (this.board != null)
-            {
-                this.board.ConnectionStatusChanged -= Board_ConnectionStatusChanged;
-            }
-
             this.board = board;
-
-            if (this.board != null)
-            {
-                this.board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
-            }
             loadCharacteristics();
         }
 
@@ -241,6 +231,7 @@ namespace BluetoothOnewheelAccess.Classes
         public void init()
         {
             OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged1;
+            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionStateChanged += INSTANCE_OnewheelConnectionStateChanged;
             setBoard(OnewheelConnectionHelper.INSTANCE.board);
 
             // Load top RPM:
@@ -364,7 +355,7 @@ namespace BluetoothOnewheelAccess.Classes
 
         private void loadCharacteristics()
         {
-            if (board != null && board.ConnectionStatus == BluetoothConnectionStatus.Connected)
+            if (board != null)
             {
                 Task.Run(async () =>
                 {
@@ -517,11 +508,11 @@ namespace BluetoothOnewheelAccess.Classes
             setBoard(args.BOARD);
         }
 
-        private void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+        private void INSTANCE_OnewheelConnectionStateChanged(OnewheelConnectionHelper sender, OnewheelConnectionStateChangedEventArgs args)
         {
-            switch (board.ConnectionStatus)
+            switch (args.NEW_STATE)
             {
-                case BluetoothConnectionStatus.Connected:
+                case OnewheelConnectionState.CONNECTED:
                     loadCharacteristics();
                     break;
             }

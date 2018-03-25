@@ -362,11 +362,11 @@ namespace Onewheel.Pages
             }
         }
 
-        #endregion
-
         private void editName_btn_Click(object sender, RoutedEventArgs e)
         {
 
         }
+
+        #endregion
     }
 }
