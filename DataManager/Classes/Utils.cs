@@ -65,6 +65,24 @@ namespace DataManager.Classes
             return Math.Round(amp, 2);
         }
 
+        public static double convertToVoltage(uint value)
+        {
+            double voltage = value / 10.0;
+
+            return Math.Round(voltage, 2);
+        }
+
+        public static double[] convertToBatteryCellVoltages(byte[] values)
+        {
+            double[] voltages = new double[values.Length];
+            for (int i = 0; i < values.Length; i++)
+            {
+                voltages[i] = values[i] / 50.0;
+            }
+
+            return voltages;
+        }
+
         #endregion
 
         #region --Misc Methods (Private)--

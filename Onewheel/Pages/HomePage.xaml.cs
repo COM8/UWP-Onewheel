@@ -154,14 +154,13 @@ namespace Onewheel.Pages
         private void showVoltage(BoardInfoControl boardInfoControl, Guid uuid)
         {
             uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(uuid);
-            double ampHours = value / 50.0;
-            ampHours = Math.Round(ampHours, 2);
+            double voltage = Utils.convertToVoltage(value);
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (value >= 0)
                 {
-                    boardInfoControl.ValueText = ampHours.ToString();
+                    boardInfoControl.ValueText = voltage.ToString();
                 }
                 else
                 {
@@ -248,6 +247,22 @@ namespace Onewheel.Pages
             }).AsTask();
         }
 
+        private void showBatteryCellVoltages()
+        {
+            byte[] values = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getRawValue(OnewheelInfo.CHARACTERISTIC_BATTERY_CELL_VOLTAGES);
+            if(values != null)
+            {
+                double[] voltages = Utils.convertToBatteryCellVoltages(values);
+
+                string s = "";
+                for (int i = 0; i < voltages.Length; i++)
+                {
+                    s += voltages[i] + ", ";
+                }
+                //Debug.WriteLine(s);
+            }
+        }
+
         #endregion
 
         #region --Misc Methods (Protected)--
@@ -287,6 +302,9 @@ namespace Onewheel.Pages
             // Temperature:
             showBatteryTemperature();
             showMotorControllerTemperature();
+
+            // Battery voltages:
+            showBatteryCellVoltages();
         }
 
         private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args)
@@ -344,7 +362,7 @@ namespace Onewheel.Pages
             }
             else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_TRIP_AMPERE_HOURS))
             {
-                showAmpereHours(ampereHoursRegenTrip_bic, OnewheelInfo.CHARACTERISTIC_TRIP_AMPERE_HOURS);
+                showAmpereHours(ampereHoursTrip_bic, OnewheelInfo.CHARACTERISTIC_TRIP_AMPERE_HOURS);
             }
             else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS))
             {
@@ -359,6 +377,12 @@ namespace Onewheel.Pages
             else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE))
             {
                 showMotorControllerTemperature();
+            }
+
+            // Battery voltages:
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_BATTERY_CELL_VOLTAGES))
+            {
+                showBatteryCellVoltages();
             }
         }
 

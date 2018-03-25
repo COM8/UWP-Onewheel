@@ -121,11 +121,6 @@ namespace BluetoothOnewheelAccess.Classes
 
         public void useBoard(BluetoothLEDevice board)
         {
-            if(this.board != null && board != null && string.Equals(board.DeviceId, this.board.DeviceId))
-            {
-                return;
-            }
-
             stopSearchingForLastBoard();
 
             setOnewheelConnectionState(OnewheelConnectionState.CONNECTING);
@@ -255,6 +250,13 @@ namespace BluetoothOnewheelAccess.Classes
         #region --Events--
         private void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
         {
+            switch (sender.ConnectionStatus)
+            {
+                case BluetoothConnectionStatus.Disconnected:
+                    connectToLastBoard();
+                    break;
+            }
+
             if (board != null)
             {
                 setOnewheelConnectionState(OnewheelConnectionState.CONNECTED);

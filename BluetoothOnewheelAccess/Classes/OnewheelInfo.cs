@@ -35,6 +35,7 @@ namespace BluetoothOnewheelAccess.Classes
         public static readonly Guid CHARACTERISTIC_BATTERY_TEMPERATUR = Guid.Parse("e659f315-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_VOLTAGE = Guid.Parse("e659f316-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_CURRENT_AMPERE = Guid.Parse("e659f312-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_BATTERY_CELL_VOLTAGES = Guid.Parse("e659f31b-ea98-11e3-ac10-0800200c9a66");
 
         public static readonly Guid CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE = Guid.Parse("e659f310-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIGHTING_MODE = Guid.Parse("e659f30c-ea98-11e3-ac10-0800200c9a66");
@@ -43,8 +44,8 @@ namespace BluetoothOnewheelAccess.Classes
         public static readonly Guid CHARACTERISTIC_SPEED_RPM = Guid.Parse("e659f30b-ea98-11e3-ac10-0800200c9a66");
 
         public static readonly Guid CHARACTERISTIC_TRIP_ODOMETER = Guid.Parse("e659f30a-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_TRIP_AMPERE_HOURS = Guid.Parse("e659f314-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS = Guid.Parse("e659f313-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS = Guid.Parse("e659f314-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_TRIP_AMPERE_HOURS = Guid.Parse("e659f313-ea98-11e3-ac10-0800200c9a66");
 
         public static readonly Guid CHARACTERISTIC_LIFETIME_ODOMETER = Guid.Parse("e659f319-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIFETIME_AMPERE_HOURS = Guid.Parse("e659f31a-ea98-11e3-ac10-0800200c9a66");
@@ -69,6 +70,7 @@ namespace BluetoothOnewheelAccess.Classes
             CHARACTERISTIC_BATTERY_TEMPERATUR,
             CHARACTERISTIC_BATTERY_VOLTAGE,
             CHARACTERISTIC_BATTERY_CURRENT_AMPERE,
+            CHARACTERISTIC_BATTERY_CELL_VOLTAGES,
 
             CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE,
             CHARACTERISTIC_LIGHTING_MODE,
@@ -471,12 +473,12 @@ namespace BluetoothOnewheelAccess.Classes
             {
                 uint ampRaw = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(value);
                 double amp = Utils.convertToAmpere(ampRaw);
-                bool isCharching = lastAmpHoursRegenTrip != 0 && amp > lastAmpHoursRegenTrip;
+                bool isCharching = amp != 0 && amp > lastAmpHoursRegenTrip;
                 if (isCharching)
                 {
                     lastAmpHoursRegenTrip = amp;
+                    setIsCharging(isCharching);
                 }
-                setIsCharging(isCharching);
             }
         }
 
