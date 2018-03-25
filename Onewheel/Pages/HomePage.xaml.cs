@@ -68,11 +68,11 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    boardInfoControl.ValueText = value.ToString();
+                    boardInfoControl.Value = value;
                 }
                 else
                 {
-                    boardInfoControl.ValueText = "0";
+                    boardInfoControl.Value = "0";
                 }
             }).AsTask();
         }
@@ -86,11 +86,11 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    boardInfoControl.ValueText = speed.ToString();
+                    boardInfoControl.Value = speed;
                 }
                 else
                 {
-                    boardInfoControl.ValueText = "0";
+                    boardInfoControl.Value = "0";
                 }
             }).AsTask();
         }
@@ -105,11 +105,11 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    boardInfoControl.ValueText = distance.ToString();
+                    boardInfoControl.Value = distance;
                 }
                 else
                 {
-                    boardInfoControl.ValueText = "0";
+                    boardInfoControl.Value = "0";
                 }
             }).AsTask();
         }
@@ -124,11 +124,11 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    odometerLive_bic.ValueText = distance.ToString();
+                    odometerLive_bic.Value = distance;
                 }
                 else
                 {
-                    odometerLive_bic.ValueText = "0";
+                    odometerLive_bic.Value = "0";
                 }
             }).AsTask();
         }
@@ -142,11 +142,11 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    boardInfoControl.ValueText = amp.ToString();
+                    boardInfoControl.Value = amp;
                 }
                 else
                 {
-                    boardInfoControl.ValueText = "0";
+                    boardInfoControl.Value = "0";
                 }
             }).AsTask();
         }
@@ -160,11 +160,11 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    boardInfoControl.ValueText = voltage.ToString();
+                    boardInfoControl.Value = voltage;
                 }
                 else
                 {
-                    boardInfoControl.ValueText = "0";
+                    boardInfoControl.Value = "0";
                 }
             }).AsTask();
         }
@@ -179,11 +179,11 @@ namespace Onewheel.Pages
             {
                 if (value >= 0)
                 {
-                    boardInfoControl.ValueText = ampHours.ToString();
+                    boardInfoControl.Value = ampHours;
                 }
                 else
                 {
-                    boardInfoControl.ValueText = "0";
+                    boardInfoControl.Value = "0";
                 }
             }).AsTask();
         }
@@ -219,13 +219,13 @@ namespace Onewheel.Pages
             {
                 if (value != null)
                 {
-                    controllerTemp_bic.ValueText = value[0].ToString();
-                    motorTemp_bic.ValueText = value[1].ToString();
+                    controllerTemp_bic.Value = (uint)value[0];
+                    motorTemp_bic.Value = (uint)value[1];
                 }
                 else
                 {
-                    controllerTemp_bic.ValueText = "0";
-                    motorTemp_bic.ValueText = "0";
+                    controllerTemp_bic.Value = "0";
+                    motorTemp_bic.Value = "0";
                 }
             }).AsTask();
         }
@@ -238,11 +238,11 @@ namespace Onewheel.Pages
             {
                 if (value != null)
                 {
-                    batteryTemp_bic.ValueText = value[1].ToString();
+                    batteryTemp_bic.Value = (uint)value[1];
                 }
                 else
                 {
-                    batteryTemp_bic.ValueText = "0";
+                    batteryTemp_bic.Value = "0";
                 }
             }).AsTask();
         }

@@ -111,6 +111,7 @@
     <Compile Include="Controls\SeperatorControl.xaml.cs">
       <DependentUpon>SeperatorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataTemplates\BoardInfoValueConverter.cs" />
     <Compile Include="DataTemplates\ItemCountToEmptyLabelVisibilityConverter.cs" />
     <Compile Include="Pages\ConnectPage.xaml.cs">
       <DependentUpon>ConnectPage.xaml</DependentUpon>

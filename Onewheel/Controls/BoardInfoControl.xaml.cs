@@ -7,12 +7,12 @@ namespace Onewheel.Controls
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public string ValueText
+        public object Value
         {
-            get { return (string)GetValue(ValueTextProperty); }
-            set { SetValue(ValueTextProperty, value); }
+            get { return (object)GetValue(ValueProperty); }
+            set { SetValue(ValueProperty, value); }
         }
-        public static readonly DependencyProperty ValueTextProperty = DependencyProperty.Register("ValueText", typeof(string), typeof(BoardInfoControl), null);
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(BoardInfoControl), null);
 
         public string DescriptionPrimary
         {

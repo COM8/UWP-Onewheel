@@ -4,11 +4,16 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:datatemplates="using:Onewheel.DataTemplates"
     mc:Ignorable="d"
     d:DesignHeight="100"
     d:DesignWidth="110"
     Height="100"
     Width="110">
+
+    <UserControl.Resources>
+        <datatemplates:BoardInfoValueConverter x:Key="boardInfoValueConverter"/>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -19,7 +24,7 @@
         <TextBlock Grid.Row="0"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   Text="{x:Bind ValueText, Mode=OneWay, FallbackValue='-'}"
+                   Text="{x:Bind Value, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardInfoValueConverter}}"
                    FontSize="40"/>
         <StackPanel Grid.Row="1"
                     HorizontalAlignment="Center"

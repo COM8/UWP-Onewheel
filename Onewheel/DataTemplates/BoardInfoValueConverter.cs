@@ -1,10 +1,9 @@
 ﻿using System;
-using Windows.UI.Xaml;
 using Windows.UI.Xaml.Data;
 
 namespace Onewheel.DataTemplates
 {
-    class ItemCountToEmptyLabelVisibilityConverter : IValueConverter
+    class BoardInfoValueConverter : IValueConverter
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
@@ -17,11 +16,10 @@ namespace Onewheel.DataTemplates
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 15/03/2018 Created [Fabian Sauter]
+        /// 25/03/2018 Created [Fabian Sauter]
         /// </history>
-        public ItemCountToEmptyLabelVisibilityConverter()
+        public BoardInfoValueConverter()
         {
-
         }
 
         #endregion
@@ -34,13 +32,26 @@ namespace Onewheel.DataTemplates
         #region --Misc Methods (Public)--
         public object Convert(object value, Type targetType, object parameter, string language)
         {
-            int? itemCount = value as int?;
-            if (itemCount.HasValue)
+            if (value is uint i)
             {
-                return itemCount > 0 ? Visibility.Collapsed : Visibility.Visible;
+                if(i >= 10000)
+                {
+                    return Math.Round((i / 10000.0), 2).ToString() + "K";
+                }
+            }
+            else if (value is double d)
+            {
+                if(d >= 100)
+                {
+                    return Math.Round(d, 0).ToString();
+                }
+                if (d >= 10000)
+                {
+                    return Math.Round((d / 10000.0), 2).ToString() + "K";
+                }
             }
 
-            return Visibility.Collapsed;
+            return value.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

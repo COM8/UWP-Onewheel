@@ -86,13 +86,13 @@
                           Margin="10">
                     <!-- Speed: -->
                     <controls:BoardInfoControl x:Name="speed_bic"
-                                       ValueText="0"
+                                       Value="0"
                                        DescriptionPrimary="KM/H"
                                        DescriptionSecondary="Speed"/>
 
                     <!-- Range: -->
                     <controls:BoardInfoControl x:Name="range_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="KM"
                                        DescriptionSecondary="Range"/>
                 </GridView>
@@ -106,25 +106,25 @@
                           Margin="10">
                     <!-- Top speed trip: -->
                     <controls:BoardInfoControl x:Name="topSpeedTrip_bic"
-                                       ValueText="0"
+                                       Value="0"
                                        DescriptionPrimary="KM/H"
                                        DescriptionSecondary="Top speed"/>
 
                     <!-- Odometer trip: -->
                     <controls:BoardInfoControl x:Name="odometerTrip_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="KM"
                                        DescriptionSecondary="Trip"/>
 
                     <!-- Ampere hours trip: -->
                     <controls:BoardInfoControl x:Name="ampereHoursTrip_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="Ah"
                                        DescriptionSecondary="Trip"/>
 
                     <!-- Ampere hours regen trip: -->
                     <controls:BoardInfoControl x:Name="ampereHoursRegenTrip_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="Ah"
                                        DescriptionSecondary="Regen"/>
                 </GridView>
@@ -138,19 +138,19 @@
                           Margin="10">
                     <!-- Top speed live: -->
                     <controls:BoardInfoControl x:Name="topSpeedLive_bic"
-                                       ValueText="0"
+                                       Value="0"
                                        DescriptionPrimary="KM/H"
                                        DescriptionSecondary="Top speed"/>
 
                     <!-- Odometer live: -->
                     <controls:BoardInfoControl x:Name="odometerLive_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="KM"
                                        DescriptionSecondary="Live"/>
 
                     <!-- Ampere hours live: -->
                     <controls:BoardInfoControl x:Name="ampereHoursLive_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="Ah"
                                        DescriptionSecondary="Live"/>
                 </GridView>
@@ -164,13 +164,13 @@
                           Margin="10">
                     <!-- Battery voltage: -->
                     <controls:BoardInfoControl x:Name="batteryVoltage_bic"
-                                       ValueText="0"
+                                       Value="0"
                                        DescriptionPrimary="V"
                                        DescriptionSecondary="Battery"/>
 
                     <!-- Battery ampere: -->
                     <controls:BoardInfoControl x:Name="batteryAmpere_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="A"
                                        DescriptionSecondary="Battery"/>
                 </GridView>
@@ -185,19 +185,19 @@
                           Margin="10">
                     <!-- Battery temperature: -->
                     <controls:BoardInfoControl x:Name="batteryTemp_bic"
-                                       ValueText="0"
+                                       Value="0"
                                        DescriptionPrimary="°C"
                                        DescriptionSecondary="Battery"/>
 
                     <!-- Motor temperature: -->
                     <controls:BoardInfoControl x:Name="motorTemp_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="°C"
                                        DescriptionSecondary="Motor"/>
 
                     <!-- Controller temperature: -->
                     <controls:BoardInfoControl x:Name="controllerTemp_bic"
-                                       ValueText="-"
+                                       Value="-"
                                        DescriptionPrimary="°C"
                                        DescriptionSecondary="Controller"/>
                 </GridView>
