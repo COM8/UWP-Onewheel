@@ -121,6 +121,11 @@ namespace BluetoothOnewheelAccess.Classes
 
         public void useBoard(BluetoothLEDevice board)
         {
+            if(this.board != null && board != null && string.Equals(board.DeviceId, this.board.DeviceId))
+            {
+                return;
+            }
+
             stopSearchingForLastBoard();
 
             setOnewheelConnectionState(OnewheelConnectionState.CONNECTING);

@@ -2,6 +2,7 @@
 using DataManager.Classes;
 using DataManager.Classes.DBManagers;
 using DataManager.Classes.DBTables;
+using Logging;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
 using System.Collections.Generic;
@@ -122,7 +123,18 @@ namespace BluetoothOnewheelAccess.Classes
         #region --Set-, Get- Methods--
         public void setBoard(BluetoothLEDevice board)
         {
+            if (this.board != null)
+            {
+                this.board.ConnectionStatusChanged -= Board_ConnectionStatusChanged;
+            }
+
             this.board = board;
+
+            if (this.board != null)
+            {
+                this.board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
+            }
+
             loadCharacteristics();
         }
 
@@ -384,14 +396,19 @@ namespace BluetoothOnewheelAccess.Classes
                             }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        // ToDo: Log exception
+                        Logger.Error("Error during loading characteristics from board!", e);
                     }
                 });
             }
         }
 
+        /// <summary>
+        /// Loads the characteristics value from the given GattCharacteristic
+        /// and adds the value to the characteristics dictionary.
+        /// </summary>
+        /// <param name="c">The characteristic the value should get added to the characteristics dictionary.</param>
         private async Task loadCharacteristicValueAsync(GattCharacteristic c)
         {
             byte[] value = null;
@@ -513,6 +530,16 @@ namespace BluetoothOnewheelAccess.Classes
             switch (args.NEW_STATE)
             {
                 case OnewheelConnectionState.CONNECTED:
+                    loadCharacteristics();
+                    break;
+            }
+        }
+
+        private void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+        {
+            switch (sender.ConnectionStatus)
+            {
+                case BluetoothConnectionStatus.Disconnected:
                     loadCharacteristics();
                     break;
             }
