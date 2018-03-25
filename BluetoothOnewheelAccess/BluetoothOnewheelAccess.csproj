@@ -112,6 +112,7 @@
     <Compile Include="Classes\OnewheelConnectionHelper.cs" />
     <Compile Include="Classes\OnewheelConnectionState.cs" />
     <Compile Include="Classes\OnewheelInfo.cs" />
+    <Compile Include="Classes\OnewheelSpeedHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\BluetoothOnewheelAccess.rd.xml" />
   </ItemGroup>

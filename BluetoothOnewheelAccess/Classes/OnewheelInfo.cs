@@ -92,6 +92,7 @@ namespace BluetoothOnewheelAccess.Classes
         private ThreadPoolTimer isChargingTimer;
         private readonly TimeSpan TIMEOUT;
         private double lastAmpHoursRegenTrip;
+        private readonly OnewheelSpeedHandler SPEED_HANDLER;
 
         private const string BACKGROUND_TASK_ENTRY_POINT = "BluetoothBackgroundTask.Classes.BackgroundTask";
         private const string BACKGROUND_TASK_NAME = "onewheel_bluetooth_background_task";
@@ -116,6 +117,7 @@ namespace BluetoothOnewheelAccess.Classes
             this.isChargingTimer = null;
             this.TIMEOUT = TimeSpan.FromSeconds(5);
             this.lastAmpHoursRegenTrip = 0;
+            this.SPEED_HANDLER = new OnewheelSpeedHandler();
         }
 
         #endregion
@@ -135,6 +137,7 @@ namespace BluetoothOnewheelAccess.Classes
                 this.board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
             }
 
+            SPEED_HANDLER.reset();
             loadCharacteristics();
         }
 
@@ -242,7 +245,7 @@ namespace BluetoothOnewheelAccess.Classes
         #region --Misc Methods (Public)--
         public void init()
         {
-            OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged1;
+            OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged;
             OnewheelConnectionHelper.INSTANCE.OnewheelConnectionStateChanged += INSTANCE_OnewheelConnectionStateChanged;
             setBoard(OnewheelConnectionHelper.INSTANCE.board);
 
@@ -461,12 +464,7 @@ namespace BluetoothOnewheelAccess.Classes
             else if (uuid.Equals(CHARACTERISTIC_SPEED_RPM))
             {
                 uint rpm = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(value);
-                MeasurementsDBManager.INSTANCE.setSpeedMeasurement(new SpeedTable()
-                {
-                    dateTime = timestamp,
-                    rpm = rpm,
-                    kilometersPerHour = Utils.rpmToKilometersPerHour(rpm)
-                });
+                SPEED_HANDLER.onRpmChanged(rpm, timestamp);
             }
             // Set Charging:
             else if (uuid.Equals(CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS))
@@ -543,11 +541,6 @@ namespace BluetoothOnewheelAccess.Classes
                     loadCharacteristics();
                     break;
             }
-        }
-
-        private void INSTANCE_BoardChanged1(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
-        {
-            setBoard(args.BOARD);
         }
 
         private void C_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
