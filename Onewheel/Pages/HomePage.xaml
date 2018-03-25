@@ -80,10 +80,10 @@
                 <controls:SeperatorControl Text="General:"
                                            Grid.Row="0"/>
                 <GridView SelectionMode="None"
-                  IsItemClickEnabled="False"
-                  HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          HorizontalAlignment="Center"
                           Grid.Row="1"
-                  Margin="10">
+                          Margin="10">
                     <!-- Speed: -->
                     <controls:BoardInfoControl x:Name="speed_bic"
                                        ValueText="0"
@@ -98,13 +98,12 @@
                 </GridView>
 
                 <controls:SeperatorControl Text="Trip:"
-                                           Margin="0, 10, 0, 0"
                                            Grid.Row="2"/>
                 <GridView SelectionMode="None"
-                  IsItemClickEnabled="False"
-                  HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          HorizontalAlignment="Center"
                           Grid.Row="3"
-                  Margin="10">
+                          Margin="10">
                     <!-- Top speed trip: -->
                     <controls:BoardInfoControl x:Name="topSpeedTrip_bic"
                                        ValueText="0"
@@ -131,13 +130,12 @@
                 </GridView>
 
                 <controls:SeperatorControl Text="Live:"
-                                           Margin="0, 10, 0, 0"
                                            Grid.Row="4"/>
                 <GridView SelectionMode="None"
-                  IsItemClickEnabled="False"
-                  HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          HorizontalAlignment="Center"
                           Grid.Row="5"
-                  Margin="10">
+                          Margin="10">
                     <!-- Top speed live: -->
                     <controls:BoardInfoControl x:Name="topSpeedLive_bic"
                                        ValueText="0"
@@ -158,13 +156,12 @@
                 </GridView>
 
                 <controls:SeperatorControl Text="Battery:"
-                                           Margin="0, 10, 0, 0"
                                            Grid.Row="6"/>
                 <GridView SelectionMode="None"
-                  IsItemClickEnabled="False"
-                  HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          HorizontalAlignment="Center"
                           Grid.Row="7"
-                  Margin="10">
+                          Margin="10">
                     <!-- Battery voltage: -->
                     <controls:BoardInfoControl x:Name="batteryVoltage_bic"
                                        ValueText="0"
@@ -182,10 +179,10 @@
                                            Margin="0, 10, 0, 0"
                                            Grid.Row="8"/>
                 <GridView SelectionMode="None"
-                  IsItemClickEnabled="False"
-                  HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          HorizontalAlignment="Center"
                           Grid.Row="9"
-                  Margin="10">
+                          Margin="10">
                     <!-- Battery temperature: -->
                     <controls:BoardInfoControl x:Name="batteryTemp_bic"
                                        ValueText="0"
