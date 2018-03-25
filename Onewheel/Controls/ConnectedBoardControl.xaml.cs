@@ -75,8 +75,8 @@ namespace Onewheel.Controls
                     if (btAddress != null)
                     {
                         btAddress_tbx.Text = btAddress;
-                        name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME);
-                        deviceId_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_ID);
+                        name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
+                        deviceId_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_ID) ?? "";
                     }
                 }
             }).AsTask();
