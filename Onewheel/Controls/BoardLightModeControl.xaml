@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Onewheel.Controls.BoardRidingModeControl"
+    x:Class="Onewheel.Controls.BoardLightModeControl"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -11,32 +11,31 @@
     Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
-        <datatemplates:BoardRidingModeTextValueConverter x:Key="boardRidingModeTextValueConverter"/>
-        <datatemplates:BoardRidingModeIconValueConverter x:Key="boardRidingModeIconValueConverter"/>
+        <datatemplates:BoardLightModeValueConverter x:Key="boardLightModeValueConverter"/>
     </UserControl.Resources>
 
-    <Grid Tapped="Grid_Tapped">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock HorizontalAlignment="Center"
-                   VerticalAlignment="Center"
-                   Grid.Row="0"
-                   Text="{x:Bind Value, Mode=OneWay, FallbackValue='&#xE11B;', Converter={StaticResource boardRidingModeIconValueConverter}}"
-                   FontSize="30"
-                   FontFamily="Segoe MDL2 Assets"/>
+        <ToggleSwitch x:Name="lightsOn_tggls"
+                      Grid.Row="0"
+                      OnContent=""
+                      OffContent=""
+                      Margin="33, 0, 0, 0"
+                      VerticalAlignment="Center"
+                      IsOn="{x:Bind Value, Mode=TwoWay, Converter={StaticResource boardLightModeValueConverter}}"
+                      Toggled="lightsOn_tggls_Toggled"/>
         <StackPanel Grid.Row="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-            <TextBlock Text="{x:Bind Value, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardRidingModeTextValueConverter}}"
-                       TextWrapping="NoWrap"
-                       TextTrimming="CharacterEllipsis"
+            <TextBlock Text="{x:Bind Value.ToString(), Mode=OneWay}"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"/>
-            <TextBlock Text="Riding mode"
+            <TextBlock Text="Light mode"
                        HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"/>

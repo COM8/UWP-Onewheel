@@ -272,6 +272,12 @@ namespace Onewheel.Pages
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ridingMode_brmc.Value = value).AsTask();
         }
 
+        private void showLightingMode()
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_LIGHTING_MODE);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => lightingMode_blmc.Value = value).AsTask();
+        }
+
         #endregion
 
         #region --Misc Methods (Protected)--
@@ -317,6 +323,9 @@ namespace Onewheel.Pages
 
             // Riding mode:
             showRidingMode();
+
+            // Lighting mode:
+            showLightingMode();
         }
 
         private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args)
@@ -401,6 +410,12 @@ namespace Onewheel.Pages
             else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_RIDING_MODE))
             {
                 showRidingMode();
+            }
+
+            // Lighting mode:
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_LIGHTING_MODE))
+            {
+                showLightingMode();
             }
         }
 

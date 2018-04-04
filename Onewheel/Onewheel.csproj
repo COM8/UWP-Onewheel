@@ -99,6 +99,9 @@
     <Compile Include="Controls\BoardInfoControl.xaml.cs">
       <DependentUpon>BoardInfoControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BoardLightModeControl.xaml.cs">
+      <DependentUpon>BoardLightModeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BoardRidingModeControl.xaml.cs">
       <DependentUpon>BoardRidingModeControl.xaml</DependentUpon>
     </Compile>
@@ -117,6 +120,7 @@
     <Compile Include="Controls\SeperatorControl.xaml.cs">
       <DependentUpon>SeperatorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataTemplates\BoardLightModeValueConverter.cs" />
     <Compile Include="DataTemplates\BoardRidingModeTextValueConverter.cs" />
     <Compile Include="DataTemplates\BoardRidingModeIconValueConverter.cs" />
     <Compile Include="DataTemplates\BoardInfoValueConverter.cs" />
@@ -208,6 +212,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Controls\BoardInfoControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BoardLightModeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
