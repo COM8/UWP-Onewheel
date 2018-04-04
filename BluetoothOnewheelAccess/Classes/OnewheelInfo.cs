@@ -89,6 +89,7 @@ namespace BluetoothOnewheelAccess.Classes
         private static object characteristicsLock = new object();
         private Dictionary<Guid, byte[]> characteristics;
         private BluetoothLEDevice board;
+        private readonly List<GattCharacteristic> SUBSCRIBED_CHARACTERSITICS;
 
         public bool isCharging { get; private set; }
         private ThreadPoolTimer isChargingTimer;
@@ -120,6 +121,7 @@ namespace BluetoothOnewheelAccess.Classes
             this.TIMEOUT = TimeSpan.FromSeconds(5);
             this.lastAmpHoursRegenTrip = 0;
             this.SPEED_HANDLER = new OnewheelSpeedHandler();
+            this.SUBSCRIBED_CHARACTERSITICS = new List<GattCharacteristic>();
         }
 
         #endregion
@@ -339,6 +341,9 @@ namespace BluetoothOnewheelAccess.Classes
             // Add event handler:
             if (status == GattCommunicationStatus.Success)
             {
+                // Add characteristic to global field to prevent it getting disposed:
+                SUBSCRIBED_CHARACTERSITICS.Add(c);
+
                 c.ValueChanged -= C_ValueChanged;
                 c.ValueChanged += C_ValueChanged;
             }
@@ -382,6 +387,7 @@ namespace BluetoothOnewheelAccess.Classes
                         GattDeviceServicesResult sResult = await board.GetGattServicesAsync();
                         if (sResult.Status == GattCommunicationStatus.Success)
                         {
+                            SUBSCRIBED_CHARACTERSITICS.Clear();
                             foreach (GattDeviceService s in sResult.Services)
                             {
                                 // Get all characteristics:

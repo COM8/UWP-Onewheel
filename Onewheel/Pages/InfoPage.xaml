@@ -56,14 +56,14 @@
                         <chart:CartesianChartGrid MajorLinesVisibility="XY"/>
                     </chart:RadCartesianChart.Grid>
 
-                    <chart:PointSeries PointSize="5,5" ItemsSource="{x:Bind speedValues}">
-                        <chart:PointSeries.CategoryBinding>
+                    <chart:SplineSeries ItemsSource="{x:Bind speedValues}">
+                        <chart:SplineSeries.CategoryBinding>
                             <chart:PropertyNameDataPointBinding PropertyName="dateTime"/>
-                        </chart:PointSeries.CategoryBinding>
-                        <chart:PointSeries.ValueBinding>
+                        </chart:SplineSeries.CategoryBinding>
+                        <chart:SplineSeries.ValueBinding>
                             <chart:PropertyNameDataPointBinding PropertyName="kilometersPerHour"/>
-                        </chart:PointSeries.ValueBinding>
-                    </chart:PointSeries>
+                        </chart:SplineSeries.ValueBinding>
+                    </chart:SplineSeries>
                 </chart:RadCartesianChart>
             </StackPanel>
         </ScrollViewer>
