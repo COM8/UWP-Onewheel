@@ -55,6 +55,9 @@ namespace Onewheel.DataTemplates
                         return "MISSION";
 
                     case 7:
+                        return "ELEVATE";
+
+                    case 8:
                         return "DELIRIUM";
                 }
             }

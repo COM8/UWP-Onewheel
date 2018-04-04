@@ -81,7 +81,7 @@ namespace BluetoothOnewheelAccess.Classes
             BoardChanged?.Invoke(this, new BoardChangedEventArgs(board));
         }
 
-        public void setOnewheelConnectionState(OnewheelConnectionState state)
+        private void setOnewheelConnectionState(OnewheelConnectionState state)
         {
             if (this.state == state)
             {

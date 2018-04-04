@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Background;
 using Windows.Devices.Bluetooth;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using Windows.Security.Cryptography;
 using Windows.Storage.Streams;
 using Windows.System.Threading;
 
@@ -261,6 +262,33 @@ namespace BluetoothOnewheelAccess.Classes
             {
                 addCharacteristicToDictionary(MOCK_LIVETIME_TOP_RPM, topRpm, false);
             }
+        }
+
+        public async Task<GattWriteResult> writeDataAsync(object data, Guid uuid)
+        {
+            GattCharacteristic c = SUBSCRIBED_CHARACTERSITICS.Find((car) => car.Uuid.Equals(uuid));
+            if (c != null)
+            {
+                byte[] dataArr = BitConverter.GetBytes((short)data);
+
+                if (BitConverter.IsLittleEndian)
+                {
+                    Array.Reverse(dataArr);
+                }
+
+                IBuffer buffer = CryptographicBuffer.CreateFromByteArray(dataArr);
+                GattWriteResult result = await c.WriteValueWithResultAsync(buffer);
+                if (result.Status == GattCommunicationStatus.Success)
+                {
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        Array.Reverse(dataArr);
+                    }
+                    addCharacteristicToDictionary(uuid, dataArr, true);
+                }
+                return result;
+            }
+            return null;
         }
 
         public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)

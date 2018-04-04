@@ -53,20 +53,27 @@ namespace Onewheel.Controls
             if (!dialog.canceled)
             {
                 uint curSpeed = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
-                if(curSpeed > 0)
+                if(curSpeed <= 0)
                 {
-                    // To fast to change speed
+                    if (OnewheelConnectionHelper.INSTANCE.state == OnewheelConnectionState.CONNECTED)
+                    {
+                        await setRideModeAsync(dialog.selectedRideMode);
+                    }
+                    else
+                    {
+                        // Not connected
+                    }
                 }
                 else
                 {
-                    await setRideModeAsync(dialog.selectedRideMode);
+                    // To fast to change speed
                 }
             }
         }
 
         private async Task setRideModeAsync(uint rideMode)
         {
-            byte[] rideModeArray = BitConverter.GetBytes((short)rideMode);
+            await OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.writeDataAsync((short)rideMode, OnewheelInfo.CHARACTERISTIC_RIDING_MODE);
 
         }
 

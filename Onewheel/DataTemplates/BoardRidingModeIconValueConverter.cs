@@ -45,16 +45,24 @@ namespace Onewheel.DataTemplates
                     case 3:
                         return "\uE803";
 
+                    // SEQUOIA:
                     case 4:
-                        return "\uE81E";
+                        return "\uE9D9";
 
+                    // CRUZ:
                     case 5:
-                        return "\uECE9";
+                        return "\uE1C3";
 
+                    // MISSION:
                     case 6:
                         return "\uE7C1";
 
+                    // ELEVATE:
                     case 7:
+                        return "\uE81E";
+
+                    // DELIRIUM:
+                    case 8:
                         return "\uE81F";
                 }
             }

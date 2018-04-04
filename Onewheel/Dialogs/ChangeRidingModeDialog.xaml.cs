@@ -60,6 +60,7 @@ namespace Onewheel.Dialogs
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 5 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 6 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 7 });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 8 });
                     break;
                 case BoardType.ONEWHEEL_XR:
                     break;
@@ -78,7 +79,49 @@ namespace Onewheel.Dialogs
 
         private void showModeDescription()
         {
+            switch (selectedRideMode)
+            {
+                case 1:
+                    description_tbx.Text = "";
+                    break;
 
+                case 2:
+                    description_tbx.Text = "";
+                    break;
+
+                case 3:
+                    description_tbx.Text = "";
+                    break;
+
+                // SEQUOIA:
+                case 4:
+                    description_tbx.Text = "Max Velocity 20km/h.";
+                    break;
+
+                // CRUZ:
+                case 5:
+                    description_tbx.Text = "Max Velocity 24km/h.";
+                    break;
+
+                // MISSION:
+                case 6:
+                    description_tbx.Text = "Max Velocity 31km/h.";
+                    break;
+
+                // ELEVATE:
+                case 7:
+                    description_tbx.Text = "Max Velocity 31km/h.";
+                    break;
+
+                // DELIRIUM:
+                case 8:
+                    description_tbx.Text = "Max Velocity 32km/h.";
+                    break;
+
+                default:
+                    description_tbx.Text = "";
+                    break;
+            }
         }
 
         #endregion
