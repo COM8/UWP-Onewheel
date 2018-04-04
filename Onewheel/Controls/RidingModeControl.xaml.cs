@@ -3,30 +3,16 @@ using Windows.UI.Xaml.Controls;
 
 namespace Onewheel.Controls
 {
-    public sealed partial class BoardInfoControl : UserControl
+    public sealed partial class RidingModeControl : UserControl
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public object Value
+        public uint RidingMode
         {
-            get { return GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
+            get { return (uint)GetValue(RidingModeProperty); }
+            set { SetValue(RidingModeProperty, value); }
         }
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(BoardInfoControl), null);
-
-        public string DescriptionPrimary
-        {
-            get { return (string)GetValue(DescriptionPrimaryProperty); }
-            set { SetValue(DescriptionPrimaryProperty, value); }
-        }
-        public static readonly DependencyProperty DescriptionPrimaryProperty = DependencyProperty.Register("DescriptionPrimary", typeof(string), typeof(BoardInfoControl), null);
-
-        public string DescriptionSecondary
-        {
-            get { return (string)GetValue(DescriptionSecondaryProperty); }
-            set { SetValue(DescriptionSecondaryProperty, value); }
-        }
-        public static readonly DependencyProperty DescriptionSecondaryProperty = DependencyProperty.Register("DescriptionSecondary", typeof(string), typeof(BoardInfoControl), null);
+        public static readonly DependencyProperty RidingModeProperty = DependencyProperty.Register("RidingMode", typeof(uint), typeof(RidingModeControl), new PropertyMetadata(0));
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -35,9 +21,9 @@ namespace Onewheel.Controls
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 17/03/2018 Created [Fabian Sauter]
+        /// 04/04/2018 Created [Fabian Sauter]
         /// </history>
-        public BoardInfoControl()
+        public RidingModeControl()
         {
             this.InitializeComponent();
         }

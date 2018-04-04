@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="Onewheel.Controls.RidingModeControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:datatemplates="using:Onewheel.DataTemplates"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <datatemplates:BoardRidingModeTextValueConverter x:Key="boardRidingModeTextValueConverter"/>
+        <datatemplates:BoardRidingModeIconValueConverter x:Key="boardRidingModeIconValueConverter"/>
+    </UserControl.Resources>
+
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Text="{x:Bind RidingMode, Mode=OneWay, FallbackValue='&#xE11B;', Converter={StaticResource boardRidingModeIconValueConverter}}"
+                   VerticalAlignment="Center"
+                   FontFamily="Segoe MDL2 Assets"/>
+        <TextBlock Text="{x:Bind RidingMode, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardRidingModeTextValueConverter}}"
+                   VerticalAlignment="Center"
+                   Margin="10, 0, 0, 0"/>
+    </StackPanel>
+</UserControl>

@@ -96,6 +96,7 @@ namespace BluetoothOnewheelAccess.Classes
         private readonly TimeSpan TIMEOUT;
         private double lastAmpHoursRegenTrip;
         private readonly OnewheelSpeedHandler SPEED_HANDLER;
+        public BoardType boardType;
 
         private const string BACKGROUND_TASK_ENTRY_POINT = "BluetoothBackgroundTask.Classes.BackgroundTask";
         private const string BACKGROUND_TASK_NAME = "onewheel_bluetooth_background_task";
@@ -122,6 +123,7 @@ namespace BluetoothOnewheelAccess.Classes
             this.lastAmpHoursRegenTrip = 0;
             this.SPEED_HANDLER = new OnewheelSpeedHandler();
             this.SUBSCRIBED_CHARACTERSITICS = new List<GattCharacteristic>();
+            this.boardType = BoardType.ONEWHEEL_PLUS;
         }
 
         #endregion

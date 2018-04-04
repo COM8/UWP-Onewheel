@@ -99,6 +99,9 @@
     <Compile Include="Controls\BoardInfoControl.xaml.cs">
       <DependentUpon>BoardInfoControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\BoardRidingModeControl.xaml.cs">
+      <DependentUpon>BoardRidingModeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ConnectBoardControl.xaml.cs">
       <DependentUpon>ConnectBoardControl.xaml</DependentUpon>
     </Compile>
@@ -108,11 +111,20 @@
     <Compile Include="Controls\IconTextBlockControl.xaml.cs">
       <DependentUpon>IconTextBlockControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\RidingModeControl.xaml.cs">
+      <DependentUpon>RidingModeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SeperatorControl.xaml.cs">
       <DependentUpon>SeperatorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DataTemplates\BoardRidingModeTextValueConverter.cs" />
+    <Compile Include="DataTemplates\BoardRidingModeIconValueConverter.cs" />
     <Compile Include="DataTemplates\BoardInfoValueConverter.cs" />
     <Compile Include="DataTemplates\ItemCountToEmptyLabelVisibilityConverter.cs" />
+    <Compile Include="DataTemplates\RidingModeDataTemplate.cs" />
+    <Compile Include="Dialogs\ChangeRidingModeDialog.xaml.cs">
+      <DependentUpon>ChangeRidingModeDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\ConnectPage.xaml.cs">
       <DependentUpon>ConnectPage.xaml</DependentUpon>
     </Compile>
@@ -199,6 +211,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\BoardRidingModeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ConnectBoardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -211,7 +227,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\RidingModeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\SeperatorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ChangeRidingModeDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

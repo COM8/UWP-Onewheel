@@ -1,9 +1,13 @@
-﻿using Windows.UI.Xaml;
+﻿using Onewheel.Dialogs;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using System;
+using System.Threading.Tasks;
+using BluetoothOnewheelAccess.Classes;
 
 namespace Onewheel.Controls
 {
-    public sealed partial class BoardInfoControl : UserControl
+    public sealed partial class BoardRidingModeControl : UserControl
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
@@ -12,21 +16,7 @@ namespace Onewheel.Controls
             get { return GetValue(ValueProperty); }
             set { SetValue(ValueProperty, value); }
         }
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(BoardInfoControl), null);
-
-        public string DescriptionPrimary
-        {
-            get { return (string)GetValue(DescriptionPrimaryProperty); }
-            set { SetValue(DescriptionPrimaryProperty, value); }
-        }
-        public static readonly DependencyProperty DescriptionPrimaryProperty = DependencyProperty.Register("DescriptionPrimary", typeof(string), typeof(BoardInfoControl), null);
-
-        public string DescriptionSecondary
-        {
-            get { return (string)GetValue(DescriptionSecondaryProperty); }
-            set { SetValue(DescriptionSecondaryProperty, value); }
-        }
-        public static readonly DependencyProperty DescriptionSecondaryProperty = DependencyProperty.Register("DescriptionSecondary", typeof(string), typeof(BoardInfoControl), null);
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(BoardRidingModeControl), null);
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -35,9 +25,9 @@ namespace Onewheel.Controls
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 17/03/2018 Created [Fabian Sauter]
+        /// 04/04/2018 Created [Fabian Sauter]
         /// </history>
-        public BoardInfoControl()
+		public BoardRidingModeControl()
         {
             this.InitializeComponent();
         }
@@ -55,7 +45,30 @@ namespace Onewheel.Controls
         #endregion
 
         #region --Misc Methods (Private)--
+        private async Task showChangeRidingModeDialogAsync()
+        {
+            ChangeRidingModeDialog dialog = new ChangeRidingModeDialog();
+            await dialog.ShowAsync();
 
+            if (!dialog.canceled)
+            {
+                uint curSpeed = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+                if(curSpeed > 0)
+                {
+                    // To fast to change speed
+                }
+                else
+                {
+                    await setRideModeAsync(dialog.selectedRideMode);
+                }
+            }
+        }
+
+        private async Task setRideModeAsync(uint rideMode)
+        {
+            byte[] rideModeArray = BitConverter.GetBytes((short)rideMode);
+
+        }
 
         #endregion
 
@@ -65,7 +78,10 @@ namespace Onewheel.Controls
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-
+        private async void Grid_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
+        {
+            await showChangeRidingModeDialogAsync();
+        }
 
         #endregion
     }

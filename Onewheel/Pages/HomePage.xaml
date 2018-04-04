@@ -95,6 +95,8 @@
                                        Value="-"
                                        DescriptionPrimary="KM"
                                        DescriptionSecondary="Range"/>
+                    <!-- Riding mode:-->
+                    <controls:BoardRidingModeControl x:Name="ridingMode_brmc"/>
                 </GridView>
 
                 <controls:SeperatorControl Text="Trip:"

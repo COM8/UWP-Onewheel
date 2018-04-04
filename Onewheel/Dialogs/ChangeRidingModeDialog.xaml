@@ -1,0 +1,38 @@
+﻿<ContentDialog
+    x:Class="Onewheel.Dialogs.ChangeRidingModeDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:Onewheel.Controls"
+    xmlns:datatemplates="using:Onewheel.DataTemplates"
+    mc:Ignorable="d"
+    Title="Change riding mode:"
+    PrimaryButtonText="Cancel"
+    SecondaryButtonText="Accept"
+    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+    SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+    Loaded="ContentDialog_Loaded"
+    Unloaded="ContentDialog_Unloaded">
+
+    <ContentDialog.Resources>
+        <DataTemplate x:Key="ridingModeTemplate" x:DataType="datatemplates:RidingModeDataTemplate">
+            <controls:RidingModeControl RidingMode="{x:Bind ridingMode}"/>
+        </DataTemplate>
+    </ContentDialog.Resources>
+
+    <ScrollViewer>
+        <StackPanel>
+            <ComboBox x:Name="ridingModes_cmbbx"
+                      HorizontalAlignment="Stretch"
+                      PlaceholderText="Select riding mode..."
+                      ItemTemplate="{StaticResource ridingModeTemplate}"
+                      ItemsSource="{x:Bind MODES}"
+                      SelectionChanged="ridingModes_cmbbx_SelectionChanged"/>
+            <TextBlock x:Name="description_tbx"
+                       TextWrapping="Wrap"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="0, 10, 0, 0"/>
+        </StackPanel>
+    </ScrollViewer>
+</ContentDialog>

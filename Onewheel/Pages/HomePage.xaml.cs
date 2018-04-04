@@ -250,7 +250,7 @@ namespace Onewheel.Pages
         private void showBatteryCellVoltages()
         {
             byte[] values = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getRawValue(OnewheelInfo.CHARACTERISTIC_BATTERY_CELL_VOLTAGES);
-            if(values != null)
+            if (values != null)
             {
                 double[] voltages = Utils.convertToBatteryCellVoltages(values);
 
@@ -261,6 +261,12 @@ namespace Onewheel.Pages
                 }
                 //Debug.WriteLine(s);
             }
+        }
+
+        private void showRidingMode()
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_RIDING_MODE);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ridingMode_brmc.Value = value).AsTask();
         }
 
         #endregion
@@ -305,6 +311,9 @@ namespace Onewheel.Pages
 
             // Battery voltages:
             showBatteryCellVoltages();
+
+            // Riding mode:
+            showRidingMode();
         }
 
         private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args)
@@ -383,6 +392,12 @@ namespace Onewheel.Pages
             else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_BATTERY_CELL_VOLTAGES))
             {
                 showBatteryCellVoltages();
+            }
+
+            // Riding mode:
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_RIDING_MODE))
+            {
+                showRidingMode();
             }
         }
 
