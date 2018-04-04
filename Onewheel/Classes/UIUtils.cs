@@ -1,4 +1,7 @@
-﻿namespace Onewheel.Classes
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+
+namespace Onewheel.Classes
 {
     class UIUtils
     {
@@ -56,7 +59,18 @@
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        /// <summary>
+        /// Source: https://social.msdn.microsoft.com/Forums/sqlserver/en-US/0cc87160-5b0c-4fc1-b685-ff50117984f7/uwp-access-control-on-parent-page-through-frame-object?forum=wpdevelop
+        /// </summary>
+        public static T findParent<T>(DependencyObject dependencyObject) where T : DependencyObject
+        {
+            var parent = VisualTreeHelper.GetParent(dependencyObject);
 
+            if (parent == null) return null;
+
+            var parentT = parent as T;
+            return parentT ?? findParent<T>(parent);
+        }
 
         #endregion
 

@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:controls="using:Onewheel.Controls"
+    xmlns:controls1="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d"
     Loaded="Page_Loaded">
 
@@ -205,5 +206,8 @@
                 </GridView>
             </Grid>
         </ScrollViewer>
+
+        <controls1:InAppNotification x:Name="info_notification"
+                                    Grid.Row="1"/>
     </Grid>
 </Page>

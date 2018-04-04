@@ -37,7 +37,10 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-
+        public void showInfo(string text, int duration)
+        {
+            info_notification.Show(text, duration);
+        }
 
         #endregion
 

@@ -7,7 +7,8 @@
     xmlns:datatemplates="using:Onewheel.DataTemplates"
     mc:Ignorable="d"
     Height="100"
-    Width="110">
+    Width="110"
+    Loaded="UserControl_Loaded">
 
     <UserControl.Resources>
         <datatemplates:BoardRidingModeTextValueConverter x:Key="boardRidingModeTextValueConverter"/>
