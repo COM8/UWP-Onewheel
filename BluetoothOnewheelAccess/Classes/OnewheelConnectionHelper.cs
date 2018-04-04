@@ -225,7 +225,7 @@ namespace BluetoothOnewheelAccess.Classes
                             foreach (GattCharacteristic c in cResult.Characteristics)
                             {
                                 string value = await readStringFromCharacteristicAsync(c);
-                                Debug.WriteLine("\tUUID: " + c.Uuid + ", Value: " + value + ", Handle: " + c.AttributeHandle);
+                                Debug.WriteLine("\tUUID: " + c.Uuid + ", Value: " + value + ", Handle: " + c.AttributeHandle + ", Description: " + c.UserDescription);
 
                                 Debug.WriteLine("\t\tProperties: " + c.CharacteristicProperties.ToString());
                             }
