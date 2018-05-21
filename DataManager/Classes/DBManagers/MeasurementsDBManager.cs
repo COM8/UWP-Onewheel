@@ -42,7 +42,7 @@ namespace DataManager.Classes.DBManagers
 
         public List<SpeedTable> getAllSpeedMeasurement()
         {
-            return dB.Query<SpeedTable>("SELECT * FROM " + DBTableConsts.SPEED_TABLE + ";");
+            return dB.Query<SpeedTable>("SELECT * FROM " + DBTableConsts.SPEED_TABLE + " ORDER BY dateTime;");
         }
 
         #endregion

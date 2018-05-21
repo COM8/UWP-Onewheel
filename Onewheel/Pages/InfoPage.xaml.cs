@@ -2,7 +2,6 @@
 using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes.DBManagers;
 using DataManager.Classes.DBTables;
-using Microsoft.Toolkit.Uwp.Connectivity;
 using Onewheel.Classes;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
