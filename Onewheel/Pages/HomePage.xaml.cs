@@ -275,7 +275,7 @@ namespace Onewheel.Pages
         private void showLightingMode()
         {
             uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_LIGHTING_MODE);
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => lightingMode_blmc.Value = value).AsTask();
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => lightingMode_blmc.setLightMode(value)).AsTask();
         }
 
         #endregion

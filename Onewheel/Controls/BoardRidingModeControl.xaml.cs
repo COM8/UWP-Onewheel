@@ -58,11 +58,11 @@ namespace Onewheel.Controls
             if (!dialog.canceled)
             {
                 uint curSpeed = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
-                if(curSpeed <= 0)
+                if (curSpeed <= 0)
                 {
                     if (OnewheelConnectionHelper.INSTANCE.state == OnewheelConnectionState.CONNECTED)
                     {
-                        await setRideModeAsync(dialog.selectedRideMode);
+                        setRideMode(dialog.selectedRideMode);
                     }
                     else
                     {
@@ -78,17 +78,27 @@ namespace Onewheel.Controls
             }
         }
 
-        private async Task setRideModeAsync(uint rideMode)
+        private void setRideMode(uint rideMode)
         {
-            GattWriteResult result = await OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.writeDataAsync((short)rideMode, OnewheelInfo.CHARACTERISTIC_RIDING_MODE);
-            if (result != null && result.Status == GattCommunicationStatus.Success)
+            main_grid.IsTapEnabled = false;
+            Task.Run(async () =>
             {
-                showInfo("Ride mode updated!", 5000);
-            }
-            else
-            {
-                showInfo("Failed to update ride mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
-            }
+                GattWriteResult result = await OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.writeDataAsync((short)rideMode, OnewheelInfo.CHARACTERISTIC_RIDING_MODE);
+
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    if (result != null && result.Status == GattCommunicationStatus.Success)
+                    {
+                        showInfo("Ride mode updated!", 5000);
+                    }
+                    else
+                    {
+                        showInfo("Failed to update ride mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
+                    }
+                    main_grid.IsTapEnabled = true;
+                });
+            });
+
         }
 
         private void showInfo(string text, int duration)

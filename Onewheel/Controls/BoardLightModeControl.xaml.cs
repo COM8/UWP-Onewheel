@@ -1,20 +1,11 @@
-﻿using Onewheel.Classes;
+﻿using BluetoothOnewheelAccess.Classes;
+using Onewheel.Classes;
 using Onewheel.Pages;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
 
 namespace Onewheel.Controls
 {
@@ -22,12 +13,7 @@ namespace Onewheel.Controls
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public object Value
-        {
-            get { return GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
-        }
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(BoardLightModeControl), null);
+        private uint lightMode;
 
         private HomePage homePage;
 
@@ -48,7 +34,17 @@ namespace Onewheel.Controls
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-
+        public void setLightMode(uint lightMode)
+        {
+            if (this.lightMode != lightMode)
+            {
+                this.lightMode = lightMode;
+                lightsOn_tggls.Toggled -= lightsOn_tggls_Toggled;
+                lightsOn_tggls.IsOn = lightMode != 0;
+                mode_tbx.Text = lightMode.ToString();
+                lightsOn_tggls.Toggled += lightsOn_tggls_Toggled;
+            }
+        }
 
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
@@ -68,12 +64,28 @@ namespace Onewheel.Controls
             homePage = UIUtils.findParent<HomePage>(this);
         }
 
-        private async Task writeLighModeAsync()
+        private void writeLighMode(uint lightMode)
         {
-            if(Value is uint i)
-            {
+            lightsOn_tggls.IsEnabled = false;
 
-            }
+            Task.Run(async () =>
+            {
+                GattWriteResult result = await OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.writeDataAsync((short)lightMode, OnewheelInfo.CHARACTERISTIC_LIGHTING_MODE);
+
+                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                {
+                    if (result != null && result.Status == GattCommunicationStatus.Success)
+                    {
+                        showInfo("Light mode updated!", 5000);
+                    }
+                    else
+                    {
+                        showInfo("Failed to update light mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
+                    }
+
+                    lightsOn_tggls.IsEnabled = true;
+                });
+            });
         }
 
         #endregion
@@ -89,9 +101,11 @@ namespace Onewheel.Controls
             loadHomePage();
         }
 
-        private async void lightsOn_tggls_Toggled(object sender, RoutedEventArgs e)
+        private void lightsOn_tggls_Toggled(object sender, RoutedEventArgs e)
         {
-            await writeLighModeAsync();
+            uint lightMode = (uint)(lightsOn_tggls.IsOn ? 1 : 0);
+            setLightMode(lightMode);
+            writeLighMode(lightMode);
         }
 
         #endregion

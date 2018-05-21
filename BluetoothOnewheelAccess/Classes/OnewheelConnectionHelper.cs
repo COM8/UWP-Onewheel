@@ -205,6 +205,7 @@ namespace BluetoothOnewheelAccess.Classes
                         if (board != null)
                         {
                             setBoard(board);
+                            return;
                         }
                     }
                 }, searchingToken.Token);

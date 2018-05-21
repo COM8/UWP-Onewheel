@@ -46,9 +46,9 @@ namespace Onewheel.DataTemplates
         {
             if (value is bool b)
             {
-                return b ? 1 : 0;
+                return b ? (uint)1 : (uint)0;
             }
-            return 0;
+            return (uint)0;
         }
 
         #endregion

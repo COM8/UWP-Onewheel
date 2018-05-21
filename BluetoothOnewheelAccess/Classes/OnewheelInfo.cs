@@ -266,7 +266,7 @@ namespace BluetoothOnewheelAccess.Classes
 
         public async Task<GattWriteResult> writeDataAsync(object data, Guid uuid)
         {
-            GattCharacteristic c = SUBSCRIBED_CHARACTERSITICS.Find((car) => car.Uuid.Equals(uuid));
+            GattCharacteristic c = SUBSCRIBED_CHARACTERSITICS.Find((car) => car.Uuid.CompareTo(uuid) == 0);
             if (c != null)
             {
                 byte[] dataArr = BitConverter.GetBytes((short)data);
