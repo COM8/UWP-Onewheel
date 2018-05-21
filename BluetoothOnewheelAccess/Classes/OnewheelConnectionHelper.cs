@@ -197,12 +197,15 @@ namespace BluetoothOnewheelAccess.Classes
                 searchingToken = new CancellationTokenSource();
                 BluetoothLEDevice board = null;
 
-                Task.Factory.StartNew(async () =>
+                Task.Run(async () =>
                 {
-                    board = await BluetoothLEDevice.FromIdAsync(autoReconnectBoardId);
-                    if (board != null)
+                    while(autoReconnectBoardId != null)
                     {
-                        setBoard(board);
+                        board = await BluetoothLEDevice.FromIdAsync(autoReconnectBoardId);
+                        if (board != null)
+                        {
+                            setBoard(board);
+                        }
                     }
                 }, searchingToken.Token);
             });

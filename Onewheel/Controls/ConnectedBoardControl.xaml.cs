@@ -47,8 +47,11 @@ namespace Onewheel.Controls
                 this.board.NameChanged += Board_NameChanged;
             }
 
-            showBoard();
-            setVisability();
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                showBoard();
+                setVisability();
+            }).AsTask();
         }
 
         #endregion
@@ -61,25 +64,22 @@ namespace Onewheel.Controls
         #region --Misc Methods (Private)--
         private void showBoard()
         {
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            if (board != null)
             {
-                if (board != null)
+                name_tbx.Text = board.Name ?? "-";
+                btAddress_tbx.Text = board.BluetoothAddress.ToString() ?? "-";
+                deviceId_tbx.Text = board.DeviceId ?? "-";
+            }
+            else
+            {
+                string btAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
+                if (btAddress != null)
                 {
-                    name_tbx.Text = board.Name ?? "-";
-                    btAddress_tbx.Text = board.BluetoothAddress.ToString() ?? "-";
-                    deviceId_tbx.Text = board.DeviceId ?? "-";
+                    btAddress_tbx.Text = btAddress;
+                    name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
+                    deviceId_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_ID) ?? "";
                 }
-                else
-                {
-                    string btAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
-                    if (btAddress != null)
-                    {
-                        btAddress_tbx.Text = btAddress;
-                        name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
-                        deviceId_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_ID) ?? "";
-                    }
-                }
-            }).AsTask();
+            }
         }
 
         private void setVisability()
