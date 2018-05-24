@@ -2,9 +2,11 @@
 A simple UWP Onewheel companion App for all of those who are still sticking to their Windows Phones (like me ;D)
 or just want something to tweak some settings for their Onewheel on a Windows 10 UWP device.
 
-
 **This App is far from being perfect!**
 If you want to help, feel free to do so. Help is always appreciated 🥓.
+
+## Supported boards:
+* Onewheel+
 
 ## Get it from the Windows Store:
 Currently not available through the Microsoft Store. Let me know if ther is interest!
