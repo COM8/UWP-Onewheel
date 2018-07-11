@@ -1,4 +1,5 @@
 ﻿using BluetoothOnewheelAccess.Classes;
+using Logging;
 using Onewheel.Pages;
 using System;
 using Windows.ApplicationModel;
@@ -22,6 +23,7 @@ namespace Onewheel
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            Logger.logLevel = LogLevel.DEBUG;
         }
 
         /// <summary>

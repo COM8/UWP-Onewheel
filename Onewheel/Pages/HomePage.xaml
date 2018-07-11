@@ -206,6 +206,8 @@
                                        Value="-"
                                        DescriptionPrimary="°C"
                                        DescriptionSecondary="Controller"/>
+                    <!-- Prevent screen lock -->
+                    <controls:PreventScreenLockControl/>
                 </GridView>
             </Grid>
         </ScrollViewer>

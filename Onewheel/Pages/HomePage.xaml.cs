@@ -4,6 +4,7 @@ using DataManager.Classes;
 using Onewheel.Classes;
 using Onewheel.Controls;
 using System;
+using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -262,7 +263,6 @@ namespace Onewheel.Pages
                 {
                     s += voltages[i] + ", ";
                 }
-                //Debug.WriteLine(s);
             }
         }
 
@@ -330,6 +330,12 @@ namespace Onewheel.Pages
 
         private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args)
         {
+            /*if(!args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_UART_SERIAL_READ))
+            {
+                string hex = BitConverter.ToString(args.VALUE);
+                Debug.WriteLine("Read Value: " + hex + " " + args.UUID);
+            }*/
+
             // General:
             if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL))
             {
