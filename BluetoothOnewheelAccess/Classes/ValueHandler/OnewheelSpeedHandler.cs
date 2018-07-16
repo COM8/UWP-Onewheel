@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using Windows.System.Threading;
 
-namespace BluetoothOnewheelAccess.Classes
+namespace BluetoothOnewheelAccess.Classes.ValueHandler
 {
     class OnewheelSpeedHandler
     {

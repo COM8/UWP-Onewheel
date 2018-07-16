@@ -1,7 +1,6 @@
 ﻿using BluetoothOnewheelAccess.Classes.Events;
+using BluetoothOnewheelAccess.Classes.ValueHandler;
 using DataManager.Classes;
-using DataManager.Classes.DBManagers;
-using DataManager.Classes.DBTables;
 using Logging;
 using Microsoft.Toolkit.Uwp.Helpers;
 using System;
@@ -51,6 +50,9 @@ namespace BluetoothOnewheelAccess.Classes
         public static readonly Guid CHARACTERISTIC_LIFETIME_ODOMETER = Guid.Parse("e659f319-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LIFETIME_AMPERE_HOURS = Guid.Parse("e659f31a-ea98-11e3-ac10-0800200c9a66");
 
+        public static readonly Guid CHARACTERISTIC_UART_SERIAL_WRITE = Guid.Parse("e659f3ff-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_UART_SERIAL_READ = Guid.Parse("e659f3fe-ea98-11e3-ac10-0800200c9a66");
+
         // Mock UUID objects:
         public static readonly Guid MOCK_TRIP_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000001");
         public static readonly Guid MOCK_LIVETIME_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000002");
@@ -84,10 +86,13 @@ namespace BluetoothOnewheelAccess.Classes
             CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS,
 
             CHARACTERISTIC_LIFETIME_ODOMETER,
-            CHARACTERISTIC_LIFETIME_AMPERE_HOURS
+            CHARACTERISTIC_LIFETIME_AMPERE_HOURS,
+
+            //CHARACTERISTIC_UART_SERIAL_WRITE,
+            //CHARACTERISTIC_UART_SERIAL_READ,
         };
 
-        private static object characteristicsLock = new object();
+        private static readonly object characteristicsLock = new object();
         private Dictionary<Guid, byte[]> characteristics;
         private BluetoothLEDevice board;
         private readonly List<GattCharacteristic> SUBSCRIBED_CHARACTERSITICS;
@@ -97,6 +102,8 @@ namespace BluetoothOnewheelAccess.Classes
         private readonly TimeSpan TIMEOUT;
         private double lastAmpHoursRegenTrip;
         private readonly OnewheelSpeedHandler SPEED_HANDLER;
+        private readonly OnewheelThermalHandler THERMAL_HANDLER;
+        private readonly OnewheelBatteryHandler BATTERY_HANDLER;
         public BoardType boardType;
 
         private const string BACKGROUND_TASK_ENTRY_POINT = "BluetoothBackgroundTask.Classes.BackgroundTask";
@@ -123,6 +130,8 @@ namespace BluetoothOnewheelAccess.Classes
             this.TIMEOUT = TimeSpan.FromSeconds(5);
             this.lastAmpHoursRegenTrip = 0;
             this.SPEED_HANDLER = new OnewheelSpeedHandler();
+            this.THERMAL_HANDLER = new OnewheelThermalHandler();
+            this.BATTERY_HANDLER = new OnewheelBatteryHandler();
             this.SUBSCRIBED_CHARACTERSITICS = new List<GattCharacteristic>();
             this.boardType = BoardType.ONEWHEEL_PLUS;
         }
@@ -145,6 +154,7 @@ namespace BluetoothOnewheelAccess.Classes
             }
 
             SPEED_HANDLER.reset();
+            THERMAL_HANDLER.reset();
             loadCharacteristics();
         }
 
@@ -492,11 +502,7 @@ namespace BluetoothOnewheelAccess.Classes
             // Add battery level values to the DB:
             if (uuid.Equals(CHARACTERISTIC_BATTERY_LEVEL))
             {
-                MeasurementsDBManager.INSTANCE.setBatteryMeasurement(new BatteryTable()
-                {
-                    dateTime = timestamp,
-                    value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(value)
-                });
+                BATTERY_HANDLER.onBatteryChargeLeftChanged(OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(value), timestamp);
             }
             // Add speed values to the DB:
             else if (uuid.Equals(CHARACTERISTIC_SPEED_RPM))
@@ -515,6 +521,16 @@ namespace BluetoothOnewheelAccess.Classes
                     lastAmpHoursRegenTrip = amp;
                     setIsCharging(isCharching);
                 }
+            }
+            else if (uuid.Equals(CHARACTERISTIC_BATTERY_TEMPERATUR))
+            {
+                THERMAL_HANDLER.onTempChanged(OnewheelThermalHandler.BATTERY_TEMP, value[1], timestamp);
+            }
+            else if (uuid.Equals(CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE))
+            {
+
+                THERMAL_HANDLER.onTempChanged(OnewheelThermalHandler.CONTROLLER_TEMP, value[0], timestamp);
+                THERMAL_HANDLER.onTempChanged(OnewheelThermalHandler.MOTOR_TEMP, value[1], timestamp);
             }
         }
 

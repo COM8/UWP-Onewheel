@@ -23,6 +23,7 @@ namespace BluetoothOnewheelAccess.Classes
         public BluetoothLEDevice board { get; private set; }
         public string autoReconnectBoardId;
         public OnewheelConnectionState state;
+        public UARTHelper uartHelper;
 
         public delegate void BoardChangedHandler(OnewheelConnectionHelper sender, BoardChangedEventArgs args);
         public delegate void OnewheelConnectionStateChangedHandler(OnewheelConnectionHelper sender, OnewheelConnectionStateChangedEventArgs args);
@@ -42,6 +43,7 @@ namespace BluetoothOnewheelAccess.Classes
         public OnewheelConnectionHelper()
         {
             this.ONEWHEEL_INFO = new OnewheelInfo();
+            this.uartHelper = new UARTHelper(ONEWHEEL_INFO);
             this.bluetoothLEHelper = null;
             this.searchingToken = null;
             this.autoReconnectBoardId = null;
@@ -137,18 +139,24 @@ namespace BluetoothOnewheelAccess.Classes
 
         public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)
         {
-            GattReadResult vRes = await characteristic.ReadValueAsync();
-            if (vRes.Status == GattCommunicationStatus.Success)
+            try
             {
-                DataReader reader = DataReader.FromBuffer(vRes.Value);
-                byte[] data = new byte[reader.UnconsumedBufferLength];
-                reader.ReadBytes(data);
-
-                if (BitConverter.IsLittleEndian)
+                GattReadResult vRes = await characteristic.ReadValueAsync();
+                if (vRes.Status == GattCommunicationStatus.Success)
                 {
-                    Array.Reverse(data);
+                    DataReader reader = DataReader.FromBuffer(vRes.Value);
+                    byte[] data = new byte[reader.UnconsumedBufferLength];
+                    reader.ReadBytes(data);
+
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        Array.Reverse(data);
+                    }
+                    return data;
                 }
-                return data;
+            }
+            catch (Exception)
+            {
             }
             return null;
         }
