@@ -7,7 +7,7 @@ namespace BluetoothOnewheelAccess.Classes.ValueHandler
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private const uint TEMERATURE_THRESHOLD = 45;
+        private const uint TEMERATURE_THRESHOLD = 80;
         private const uint TOAST_POP_TIMEOUT_SECONDS = 300;
         public const ushort BATTERY_TEMP = 0;
         public const ushort MOTOR_TEMP = 1;
