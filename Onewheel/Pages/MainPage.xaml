@@ -41,6 +41,7 @@
                                 Loaded="main_hbm_Loaded">
             <controls:HamburgerMenu.ItemsSource>
                 <controls:HamburgerMenuItemCollection>
+                    <controls:HamburgerMenuGlyphItem Label="Home2" Glyph="&#xE10F;" Tag="home2"/>
                     <controls:HamburgerMenuGlyphItem Label="Home" Glyph="&#xE10F;" Tag="home"/>
                     <controls:HamburgerMenuGlyphItem Label="Info" Glyph="&#xE946;" Tag="info"/>
                     <controls:HamburgerMenuGlyphItem Label="Connect" Glyph="&#xE702;" Tag="connect"/>

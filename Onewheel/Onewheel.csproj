@@ -11,7 +11,7 @@
     <AssemblyName>Onewheel</AssemblyName>
     <DefaultLanguage>de-DE</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17134.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\SpeedMeasurement.cs" />
     <Compile Include="Classes\UIUtils.cs" />
     <Compile Include="Controls\BoardInfoControl.xaml.cs">
       <DependentUpon>BoardInfoControl.xaml</DependentUpon>
@@ -123,6 +124,12 @@
     <Compile Include="Controls\SeperatorControl.xaml.cs">
       <DependentUpon>SeperatorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SpeedGraph.xaml.cs">
+      <DependentUpon>SpeedGraph.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\SpeedGaugeControl.xaml.cs">
+      <DependentUpon>SpeedGaugeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DataTemplates\BoardLightModeValueConverter.cs" />
     <Compile Include="DataTemplates\BoardRidingModeTextValueConverter.cs" />
     <Compile Include="DataTemplates\BoardRidingModeIconValueConverter.cs" />
@@ -137,6 +144,9 @@
     </Compile>
     <Compile Include="Pages\HomePage.xaml.cs">
       <DependentUpon>HomePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\HomePage2.xaml.cs">
+      <DependentUpon>HomePage2.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\InfoPage.xaml.cs">
       <DependentUpon>InfoPage.xaml</DependentUpon>
@@ -250,6 +260,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SpeedGraph.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SpeedGaugeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\ChangeRidingModeDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -259,6 +277,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\HomePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Pages\HomePage2.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -293,9 +315,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>4.0.0</Version>
-    </PackageReference>
-    <PackageReference Include="Telerik.UI.for.UniversalWindowsPlatform">
-      <Version>1.0.1</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>

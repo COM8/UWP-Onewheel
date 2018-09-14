@@ -51,6 +51,10 @@ namespace Onewheel.Pages
                     contentFrame.Navigate(typeof(HomePage));
                     break;
 
+                case "home2":
+                    contentFrame.Navigate(typeof(HomePage2));
+                    break;
+
                 case "info":
                     contentFrame.Navigate(typeof(InfoPage));
                     break;
@@ -84,7 +88,7 @@ namespace Onewheel.Pages
 
         private void main_hbm_Loaded(object sender, RoutedEventArgs e)
         {
-            contentFrame.Navigate(typeof(HomePage));
+            contentFrame.Navigate(typeof(HomePage2));
         }
 
         #endregion

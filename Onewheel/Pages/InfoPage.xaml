@@ -41,30 +41,6 @@
 
                 <Button x:Name="printAll_btn" Content="Print all" Margin="0, 10, 0, 0" Click="printAll_btn_Click"/>
                 <Button x:Name="reload_btn" Content="Reload" Margin="0, 10, 0, 0" Click="reload_btn_Click"/>
-
-                <chart:RadCartesianChart Margin="0, 10, 0, 0">
-                    <!-- Axis: -->
-                    <chart:RadCartesianChart.HorizontalAxis>
-                        <chart:DateTimeContinuousAxis MajorStep="1" MajorStepUnit="Minute"/>
-                    </chart:RadCartesianChart.HorizontalAxis>
-                    <chart:RadCartesianChart.VerticalAxis>
-                        <chart:LinearAxis Minimum="0" MajorStep="1"/>
-                    </chart:RadCartesianChart.VerticalAxis>
-
-                    <!-- Misc: -->
-                    <chart:RadCartesianChart.Grid>
-                        <chart:CartesianChartGrid MajorLinesVisibility="XY"/>
-                    </chart:RadCartesianChart.Grid>
-
-                    <chart:SplineSeries ItemsSource="{x:Bind speedValues}">
-                        <chart:SplineSeries.CategoryBinding>
-                            <chart:PropertyNameDataPointBinding PropertyName="dateTime"/>
-                        </chart:SplineSeries.CategoryBinding>
-                        <chart:SplineSeries.ValueBinding>
-                            <chart:PropertyNameDataPointBinding PropertyName="kilometersPerHour"/>
-                        </chart:SplineSeries.ValueBinding>
-                    </chart:SplineSeries>
-                </chart:RadCartesianChart>
             </StackPanel>
         </ScrollViewer>
 
