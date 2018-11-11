@@ -4,7 +4,6 @@ using DataManager.Classes;
 using Onewheel.Classes;
 using Onewheel.Controls;
 using System;
-using System.Diagnostics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
