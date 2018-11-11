@@ -65,17 +65,22 @@
 
         <ScrollViewer Grid.Row="1">
             <StackPanel>
-                <Grid>
+                <Grid MaxHeight="300"
+                      Margin="10,10,10,0">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <controls:SpeedGraph x:Name="speed_sg"
-                                         Grid.Row="0"/>
-                    <controls:SpeedGaugeControl x:Name="speed_gc"
-                                                Grid.Row="0"
-                                                Height="200"
-                                                Margin="10,0,10,0"
-                                                HorizontalAlignment="Stretch"/>
+                                         Grid.Row="0"
+                                         VerticalAlignment="Bottom"/>
+                    <controls1:RadialGauge x:Name="speed_rg"
+                                           Grid.Row="0"
+                                           VerticalAlignment="Bottom"
+                                           IsInteractive="False"
+                                           Maximum="50"
+                                           Minimum="0"
+                                           TickSpacing="5"
+                                           Unit="KM/H"/>
                 </Grid>
             </StackPanel>
         </ScrollViewer>

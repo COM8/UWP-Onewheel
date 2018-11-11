@@ -85,7 +85,7 @@ namespace Onewheel.Pages
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                speed_gc.setValue((int)speed);
+                speed_rg.Value = speed;
                 speed_sg.addValue(value);
             }).AsTask();
         }

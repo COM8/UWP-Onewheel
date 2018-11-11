@@ -128,7 +128,7 @@ namespace Onewheel.Controls
         #region --Events--
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            // TIMER.Start();
+            TIMER.Start();
         }
 
         private void TimerOnTick(object sender, object eventArgs)
@@ -150,19 +150,17 @@ namespace Onewheel.Controls
                 }
                 SPEED_VALUE_CACHE_SEMA.Release();
 
-                if(sum < 0)
+                if (sum < 0 || double.IsNaN(sum))
                 {
                     sum = 0;
                 }
 
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                addSpeedMeasurement(new SpeedMeasurement
                 {
-                    addSpeedMeasurement(new SpeedMeasurement
-                    {
-                        DateTime = now,
-                        Value = 0
-                    });
-                });
+                    DateTime = now,
+                    Value = sum
+                }));
             });
         }
 

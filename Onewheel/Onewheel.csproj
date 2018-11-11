@@ -127,9 +127,6 @@
     <Compile Include="Controls\SpeedGraph.xaml.cs">
       <DependentUpon>SpeedGraph.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SpeedGaugeControl.xaml.cs">
-      <DependentUpon>SpeedGaugeControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DataTemplates\BoardLightModeValueConverter.cs" />
     <Compile Include="DataTemplates\BoardRidingModeTextValueConverter.cs" />
     <Compile Include="DataTemplates\BoardRidingModeIconValueConverter.cs" />
@@ -261,10 +258,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SpeedGraph.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SpeedGaugeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
