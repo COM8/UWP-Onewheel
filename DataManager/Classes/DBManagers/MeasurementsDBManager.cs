@@ -37,12 +37,12 @@ namespace DataManager.Classes.DBManagers
 
         public List<BatteryTable> getAllBatteryMeasurement()
         {
-            return dB.Query<BatteryTable>("SELECT * FROM " + DBTableConsts.BATTERY_TABLE + ";");
+            return dB.Query<BatteryTable>(true, "SELECT * FROM " + DBTableConsts.BATTERY_TABLE + ";");
         }
 
         public List<SpeedTable> getAllSpeedMeasurement()
         {
-            return dB.Query<SpeedTable>("SELECT * FROM " + DBTableConsts.SPEED_TABLE + " ORDER BY dateTime;");
+            return dB.Query<SpeedTable>(true, "SELECT * FROM " + DBTableConsts.SPEED_TABLE + " ORDER BY dateTime;");
         }
 
         #endregion
