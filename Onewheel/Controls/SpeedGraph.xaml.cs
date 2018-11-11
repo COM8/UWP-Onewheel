@@ -24,14 +24,14 @@ namespace Onewheel.Controls
                 OnPropertyChanged(nameof(AxisMin));
             }
         }
-        public static readonly DependencyProperty AxisMinProperty = DependencyProperty.Register(nameof(AxisMin), typeof(double), typeof(SpeedGraph), new PropertyMetadata(0));
+        public static readonly DependencyProperty AxisMinProperty = DependencyProperty.Register(nameof(AxisMin), typeof(double), typeof(SpeedGraph), new PropertyMetadata(0.0d));
 
         public double AxisMax
         {
             get { return (double)GetValue(AxisMaxProperty); }
             set { SetValue(AxisMaxProperty, value); }
         }
-        public static readonly DependencyProperty AxisMaxProperty = DependencyProperty.Register(nameof(AxisMax), typeof(double), typeof(SpeedGraph), new PropertyMetadata(0));
+        public static readonly DependencyProperty AxisMaxProperty = DependencyProperty.Register(nameof(AxisMax), typeof(double), typeof(SpeedGraph), new PropertyMetadata(0.0d));
 
         private readonly ChartValues<SpeedMeasurement> CHART_VALUES;
         private readonly DispatcherTimer TIMER;
@@ -85,8 +85,8 @@ namespace Onewheel.Controls
         #region --Set-, Get- Methods--
         private void SetAxisLimits(DateTime now)
         {
-            AxisMax = now.Ticks + TimeSpan.FromSeconds(0).Ticks; // lets force the axis to be 0 seconds ahead
-            AxisMin = now.Ticks - TimeSpan.FromSeconds(60).Ticks; //we only care about the last 60 seconds
+            AxisMax = now.Ticks + TimeSpan.FromSeconds(0).Ticks; // Lets force the axis to be 0 seconds ahead
+            AxisMin = now.Ticks - TimeSpan.FromSeconds(60).Ticks; // We only care about the last 60 seconds
         }
 
         #endregion
@@ -110,7 +110,10 @@ namespace Onewheel.Controls
         private void addSpeedMeasurement(SpeedMeasurement measurement)
         {
             CHART_VALUES.Add(measurement);
-            SetAxisLimits(measurement.DateTime);
+            if (TIMER.IsEnabled)
+            {
+                SetAxisLimits(measurement.DateTime);
+            }
 
             if (DateTime.Now.Subtract(CHART_VALUES.Last().DateTime).TotalSeconds > 60)
             {
@@ -129,6 +132,11 @@ namespace Onewheel.Controls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             TIMER.Start();
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            TIMER.Stop();
         }
 
         private void TimerOnTick(object sender, object eventArgs)
