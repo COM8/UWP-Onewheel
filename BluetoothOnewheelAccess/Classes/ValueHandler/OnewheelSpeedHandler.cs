@@ -1,5 +1,4 @@
-﻿using DataManager.Classes;
-using DataManager.Classes.DBManagers;
+﻿using DataManager.Classes.DBManagers;
 using DataManager.Classes.DBTables;
 using System;
 using System.Threading;

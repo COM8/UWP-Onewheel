@@ -8,6 +8,7 @@ using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
 using Windows.Devices.Bluetooth;
 using System.Threading;
+using Logging;
 
 namespace BluetoothOnewheelAccess.Classes
 {
@@ -137,50 +138,6 @@ namespace BluetoothOnewheelAccess.Classes
             }
         }
 
-        public async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic characteristic)
-        {
-            try
-            {
-                GattReadResult vRes = await characteristic.ReadValueAsync();
-                if (vRes.Status == GattCommunicationStatus.Success)
-                {
-                    DataReader reader = DataReader.FromBuffer(vRes.Value);
-                    byte[] data = new byte[reader.UnconsumedBufferLength];
-                    reader.ReadBytes(data);
-
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        Array.Reverse(data);
-                    }
-                    return data;
-                }
-            }
-            catch (Exception)
-            {
-            }
-            return null;
-        }
-
-        public async Task<string> readStringFromCharacteristicAsync(GattCharacteristic characteristic)
-        {
-            byte[] data = await readBytesFromCharacteristicAsync(characteristic);
-            if (data != null)
-            {
-                return BitConverter.ToString(data);
-            }
-            return null;
-        }
-
-        public async Task<int> readIntFromCharacteristicAsync(GattCharacteristic characteristic)
-        {
-            byte[] data = await readBytesFromCharacteristicAsync(characteristic);
-            if (data != null)
-            {
-                return BitConverter.ToInt16(data, 0);
-            }
-            return -1;
-        }
-
         private void stopSearchingForLastBoard()
         {
             if (searchingToken != null)
@@ -207,7 +164,7 @@ namespace BluetoothOnewheelAccess.Classes
 
                 Task.Run(async () =>
                 {
-                    while(autoReconnectBoardId != null)
+                    while (autoReconnectBoardId != null)
                     {
                         board = await BluetoothLEDevice.FromIdAsync(autoReconnectBoardId);
                         if (board != null)
@@ -229,17 +186,14 @@ namespace BluetoothOnewheelAccess.Classes
                 {
                     foreach (GattDeviceService s in sResult.Services)
                     {
-                        Debug.WriteLine("UUID: " + s.Uuid + ", Handle: " + s.AttributeHandle);
+                        Logger.Info("UUID: " + s.Uuid + ", Handle: " + s.AttributeHandle);
 
                         GattCharacteristicsResult cResult = await s.GetCharacteristicsAsync();
                         if (cResult.Status == GattCommunicationStatus.Success)
                         {
                             foreach (GattCharacteristic c in cResult.Characteristics)
                             {
-                                string value = await readStringFromCharacteristicAsync(c);
-                                Debug.WriteLine("\tUUID: " + c.Uuid + ", Value: " + value + ", Handle: " + c.AttributeHandle + ", Description: " + c.UserDescription);
-
-                                Debug.WriteLine("\t\tProperties: " + c.CharacteristicProperties.ToString());
+                               await  Utils.printGattCharacteristicAsync(c);
                             }
                         }
                     }

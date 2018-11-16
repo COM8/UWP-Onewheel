@@ -131,9 +131,9 @@ namespace Onewheel.Pages
             setBoard(args.BOARD);
         }
 
-        private void printAll_btn_Click(object sender, RoutedEventArgs e)
+        private async void printAll_btn_Click(object sender, RoutedEventArgs e)
         {
-            Task t = OnewheelConnectionHelper.INSTANCE.printAllAsync();
+            await OnewheelConnectionHelper.INSTANCE.printAllAsync();
         }
 
         private void Board_NameChanged(BluetoothLEDevice sender, object args)

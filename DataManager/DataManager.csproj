@@ -114,7 +114,6 @@
     <Compile Include="Classes\DBTables\SpeedTable.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\SettingsConsts.cs" />
-    <Compile Include="Classes\Utils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -442,6 +442,11 @@ namespace BluetoothOnewheelAccess.Classes
                                         {
                                             await subscribeToCharacteristicAsync(c);
                                         }
+                                        else
+                                        {
+                                            Logger.Info("New characteristic found: " + c.Uuid);
+                                            await Utils.printGattCharacteristicAsync(c);
+                                        }
                                     }
                                 }
                             }

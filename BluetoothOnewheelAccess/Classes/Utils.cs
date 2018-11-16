@@ -1,26 +1,16 @@
-﻿using System;
+﻿using Logging;
+using System;
+using System.Threading.Tasks;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using Windows.Storage.Streams;
 
-namespace DataManager.Classes
+namespace BluetoothOnewheelAccess.Classes
 {
-    public class Utils
+    public static class Utils
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
 
-
-        #endregion
-        //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
-        #region --Constructors--
-        /// <summary>
-        /// Basic Constructor
-        /// </summary>
-        /// <history>
-        /// 17/03/2018 Created [Fabian Sauter]
-        /// </history>
-        public Utils()
-        {
-
-        }
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
@@ -30,6 +20,61 @@ namespace DataManager.Classes
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public static async Task printGattCharacteristicAsync(GattCharacteristic c)
+        {
+            string value = await readStringFromCharacteristicAsync(c);
+            Logger.Info("\tUUID: " + c.Uuid + ", Value: " + value + ", Handle: " + c.AttributeHandle + ", Description: " + c.UserDescription);
+            Logger.Info("\t\tProperties: " + c.CharacteristicProperties.ToString());
+        }
+
+        public static async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic c)
+        {
+            try
+            {
+                GattReadResult vRes = await c.ReadValueAsync();
+                if (vRes.Status == GattCommunicationStatus.Success)
+                {
+                    byte[] data = null;
+                    using (DataReader reader = DataReader.FromBuffer(vRes.Value))
+                    {
+                        data = new byte[reader.UnconsumedBufferLength];
+                        reader.ReadBytes(data);
+                    }
+
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        Array.Reverse(data);
+                    }
+                    return data;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to read bytes from characteristic " + c.Uuid, e);
+            }
+            return null;
+        }
+
+        public static async Task<string> readStringFromCharacteristicAsync(GattCharacteristic c)
+        {
+            byte[] data = await readBytesFromCharacteristicAsync(c);
+            if (data != null)
+            {
+                return BitConverter.ToString(data);
+            }
+            return null;
+        }
+
+        public static async Task<int> readIntFromCharacteristicAsync(GattCharacteristic c)
+        {
+            byte[] data = await readBytesFromCharacteristicAsync(c);
+            if (data != null)
+            {
+                return BitConverter.ToInt16(data, 0);
+            }
+            return -1;
+        }
+
         public static double rpmToKilometersPerHour(uint rpm)
         {
             return Math.Round(rpmToKilometers(rpm) * 60, 2);
