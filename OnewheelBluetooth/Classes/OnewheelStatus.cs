@@ -4,14 +4,14 @@
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private readonly bool RIDER_DETECTED = false;
-        private readonly bool RIDER_DETECTED_PAD_1 = false;
-        private readonly bool RIDER_DETECTED_PAD_2 = false;
-        private readonly bool ICSU_FAULT = false;
-        private readonly bool ICSV_FAULT = false;
-        private readonly bool CHARGING = false;
-        private readonly bool BMS_CTRL_COMMS = false;
-        private readonly bool BROKEN_CAPACITOR = false;
+        public readonly bool RIDER_DETECTED = false;
+        public readonly bool RIDER_DETECTED_PAD_1 = false;
+        public readonly bool RIDER_DETECTED_PAD_2 = false;
+        public readonly bool ICSU_FAULT = false;
+        public readonly bool ICSV_FAULT = false;
+        public readonly bool CHARGING = false;
+        public readonly bool BMS_CTRL_COMMS = false;
+        public readonly bool BROKEN_CAPACITOR = false;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -24,7 +24,7 @@
         /// </history>
         public OnewheelStatus(byte[] data)
         {
-            if (data.Length > 0)
+            if (!(data is null) && data.Length > 0)
             {
                 this.RIDER_DETECTED = IsBitSet(data[0], 0);
                 this.RIDER_DETECTED_PAD_1 = IsBitSet(data[0], 1);

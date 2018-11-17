@@ -121,9 +121,10 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Classes\BoardType.cs" />
+    <Compile Include="Classes\OnewheelType.cs" />
+    <Compile Include="Classes\OnewheelCharacteristicsCache.cs" />
     <Compile Include="Classes\Events\OnewheelChangedEventArgs.cs" />
-    <Compile Include="Classes\Events\OnewheelCharacteristicChangedEventArgs.cs" />
+    <Compile Include="Classes\Events\CharacteristicChangedEventArgs.cs" />
     <Compile Include="Classes\Events\OnewheelConnectionHelperStateChangedEventArgs.cs" />
     <Compile Include="Classes\OnewheelConnectionHelper.cs" />
     <Compile Include="Classes\OnewheelConnectionHelperState.cs" />

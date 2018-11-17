@@ -42,7 +42,7 @@ namespace Onewheel.Pages
         #endregion
 
         #region --Misc Methods (Private)--
-        private void navigateTo(HamburgerMenuGlyphItem item)
+        private void NavigateTo(HamburgerMenuGlyphItem item)
         {
             HeaderText = item.Label;
             switch (item.Tag)
@@ -77,7 +77,7 @@ namespace Onewheel.Pages
         {
             if (e.ClickedItem is HamburgerMenuGlyphItem)
             {
-                navigateTo(e.ClickedItem as HamburgerMenuGlyphItem);
+                NavigateTo(e.ClickedItem as HamburgerMenuGlyphItem);
             }
         }
 

@@ -90,21 +90,21 @@ namespace OnewheelBluetooth.Classes
             return miles * 1.60934;
         }
 
-        public static double ToAmpere(uint value, BoardType type)
+        public static double ToAmpere(uint value, OnewheelType type)
         {
             double multiplier = 0;
 
             switch (type)
             {
-                case BoardType.ONEWHEEL:
+                case OnewheelType.ONEWHEEL:
                     multiplier = 0.9;
                     break;
 
-                case BoardType.ONEWHEEL_PLUS:
+                case OnewheelType.ONEWHEEL_PLUS:
                     multiplier = 1.8;
                     break;
 
-                case BoardType.ONEWHEEL_XR:
+                case OnewheelType.ONEWHEEL_XR:
                     multiplier = 1.8; // Not validated
                     break;
             }

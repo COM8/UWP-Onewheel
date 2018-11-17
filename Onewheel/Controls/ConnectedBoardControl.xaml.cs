@@ -11,7 +11,7 @@ namespace Onewheel.Controls
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private BluetoothLEDevice board;
+        private OnewheelBoard onewheel;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -30,26 +30,16 @@ namespace Onewheel.Controls
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setBoard(Onewheel onewheel)
+        public void SetOnewheel(OnewheelBoard onewheel)
         {
-            if (this.board != null)
-            {
-                this.board.ConnectionStatusChanged -= Board_ConnectionStatusChanged;
-                this.board.NameChanged -= Board_NameChanged;
-            }
-
-            this.board = board;
-
-            if (this.board != null)
-            {
-                this.board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
-                this.board.NameChanged += Board_NameChanged;
-            }
+            UnsubscribeFromEvents();
+            this.onewheel = onewheel;
+            SubscribeToEvents();
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                showBoard();
-                setVisability();
+                ShowOnewheel();
+                SetVisability();
             }).AsTask();
         }
 
@@ -61,10 +51,31 @@ namespace Onewheel.Controls
         #endregion
 
         #region --Misc Methods (Private)--
-        private void showBoard()
+        private void SubscribeToEvents()
         {
-            if (board != null)
+            if (this.onewheel != null)
             {
+                BluetoothLEDevice board = onewheel.GetBoard();
+                board.ConnectionStatusChanged += Board_ConnectionStatusChanged;
+                board.NameChanged += Board_NameChanged;
+            }
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            if (this.onewheel != null)
+            {
+                BluetoothLEDevice board = onewheel.GetBoard();
+                board.ConnectionStatusChanged -= Board_ConnectionStatusChanged;
+                board.NameChanged -= Board_NameChanged;
+            }
+        }
+
+        private void ShowOnewheel()
+        {
+            if (onewheel != null)
+            {
+                BluetoothLEDevice board = onewheel.GetBoard();
                 name_tbx.Text = board.Name ?? "-";
                 btAddress_tbx.Text = board.BluetoothAddress.ToString() ?? "-";
                 deviceId_tbx.Text = board.DeviceId ?? "-";
@@ -81,9 +92,9 @@ namespace Onewheel.Controls
             }
         }
 
-        private void setVisability()
+        private void SetVisability()
         {
-            if (board != null && OnewheelConnectionHelper.INSTANCE.state == OnewheelConnectionState.CONNECTED)
+            if (!(onewheel is null) && OnewheelConnectionHelper.INSTANCE.GetState() == OnewheelConnectionHelperState.CONNECTED)
             {
                 connecting_prgr.Visibility = Visibility.Collapsed;
                 connected_tbx.Visibility = Visibility.Visible;
@@ -106,7 +117,7 @@ namespace Onewheel.Controls
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             OnewheelConnectionHelper.INSTANCE.OnewheelChanged += INSTANCE_OnewheelChanged;
-            setBoard(OnewheelConnectionHelper.INSTANCE.GetOnewheel());
+            SetOnewheel(OnewheelConnectionHelper.INSTANCE.GetOnewheel());
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
@@ -116,22 +127,17 @@ namespace Onewheel.Controls
 
         private void INSTANCE_OnewheelChanged(OnewheelConnectionHelper sender, OnewheelBluetooth.Classes.Events.OnewheelChangedEventArgs args)
         {
-            throw new NotImplementedException();
+            SetOnewheel(args.ONEWHEEL);
         }
 
-        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
+        private async void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
         {
-            setBoard(args.BOARD);
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => SetVisability());
         }
 
-        private void Board_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
+        private async void Board_NameChanged(BluetoothLEDevice sender, object args)
         {
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => setVisability()).AsTask();
-        }
-
-        private void Board_NameChanged(BluetoothLEDevice sender, object args)
-        {
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => showBoard()).AsTask();
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ShowOnewheel());
         }
 
         #endregion

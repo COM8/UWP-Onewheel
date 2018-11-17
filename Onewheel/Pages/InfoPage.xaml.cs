@@ -1,16 +1,8 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using BluetoothOnewheelAccess.Classes.Events;
-using DataManager.Classes.DBManagers;
-using DataManager.Classes.DBTables;
-using Onewheel.Classes;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+﻿using Onewheel.Classes;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System;
-using System.Linq;
 using Windows.Devices.Bluetooth;
+using OnewheelBluetooth.Classes;
 
 namespace Onewheel.Pages
 {
@@ -18,8 +10,7 @@ namespace Onewheel.Pages
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private BluetoothLEDevice board;
-        private ObservableCollection<SpeedTable> speedValues;
+        private OnewheelBoard onewheel = null;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -32,31 +23,20 @@ namespace Onewheel.Pages
         /// </history>
         public InfoPage()
         {
-            this.board = null;
             this.InitializeComponent();
-            this.speedValues = new ObservableCollection<SpeedTable>();
-            loadSpeedValues();
         }
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setBoard(BluetoothLEDevice board)
+        public void SetBoard(OnewheelBoard onewheel)
         {
-            if (this.board != null)
-            {
-                this.board.NameChanged -= Board_NameChanged;
-            }
+            UnSubscribeFromEvents();
+            this.onewheel = onewheel;
+            SubscribeToEvents();
 
-            this.board = board;
-
-            if (this.board != null)
-            {
-                this.board.NameChanged += Board_NameChanged;
-            }
-
-            showBattery();
-            showBoard();
+            ShowBattery();
+            ShowBoard();
         }
 
         #endregion
@@ -67,26 +47,27 @@ namespace Onewheel.Pages
         #endregion
 
         #region --Misc Methods (Private)--
-        private void loadSpeedValues()
+        private void SubscribeToEvents()
         {
-            Task.Run(async () =>
+            if (onewheel != null)
             {
-                IEnumerable<SpeedTable> values = MeasurementsDBManager.INSTANCE.getAllSpeedMeasurement().Where(x => x.dateTime.Date.CompareTo(DateTime.Now.Date) == 0);
-
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                {
-                    speedValues.Clear();
-                    foreach (SpeedTable v in values)
-                    {
-                        speedValues.Add(v);
-                    }
-                });
-            });
+                BluetoothLEDevice board = onewheel.GetBoard();
+                board.NameChanged += Board_NameChanged;
+            }
         }
 
-        private void showBattery()
+        private void UnSubscribeFromEvents()
         {
-            uint level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
+            if (onewheel != null)
+            {
+                BluetoothLEDevice board = onewheel.GetBoard();
+                board.NameChanged -= Board_NameChanged;
+            }
+        }
+
+        private void ShowBattery()
+        {
+            uint level = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL);
             if (level >= 0 && level <= 100)
             {
                 batteryPercent_tbx.Text = level + "%";
@@ -99,10 +80,11 @@ namespace Onewheel.Pages
             }
         }
 
-        private void showBoard()
+        private void ShowBoard()
         {
-            if (board != null)
+            if (onewheel != null)
             {
+                BluetoothLEDevice board = onewheel.GetBoard();
                 name_tbx.Text = board.Name;
                 btAddress_tbx.Text = board.BluetoothAddress.ToString();
                 btAddressType_tbx.Text = board.BluetoothAddressType.ToString();
@@ -122,31 +104,31 @@ namespace Onewheel.Pages
         #region --Events--
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged;
-            setBoard(OnewheelConnectionHelper.INSTANCE.board);
+            OnewheelConnectionHelper.INSTANCE.OnewheelChanged += INSTANCE_OnewheelChanged;
+            SetBoard(OnewheelConnectionHelper.INSTANCE.GetOnewheel());
         }
 
-        private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)
+        private void INSTANCE_OnewheelChanged(OnewheelConnectionHelper sender, OnewheelBluetooth.Classes.Events.OnewheelChangedEventArgs args)
         {
-            setBoard(args.BOARD);
+            SetBoard(args.ONEWHEEL);
         }
 
         private async void printAll_btn_Click(object sender, RoutedEventArgs e)
         {
-            await OnewheelConnectionHelper.INSTANCE.printAllAsync();
+            OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
+            await onewheel?.PrintAllCharacteristicsAsync();
         }
 
         private void Board_NameChanged(BluetoothLEDevice sender, object args)
         {
-            showBattery();
-            showBoard();
+            ShowBattery();
+            ShowBoard();
         }
 
         private void reload_btn_Click(object sender, RoutedEventArgs e)
         {
-            showBattery();
-            showBoard();
-            loadSpeedValues();
+            ShowBattery();
+            ShowBoard();
         }
 
         #endregion

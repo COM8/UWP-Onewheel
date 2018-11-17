@@ -97,7 +97,7 @@ namespace Onewheel.Controls
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public void addValue(double value)
+        public void AddValue(double value)
         {
             SPEED_VALUE_CACHE_SEMA.Wait();
             SPEED_VALUE_CACHE.Add(value);
@@ -107,7 +107,7 @@ namespace Onewheel.Controls
         #endregion
 
         #region --Misc Methods (Private)--
-        private void addSpeedMeasurement(SpeedMeasurement measurement)
+        private void AddSpeedMeasurement(SpeedMeasurement measurement)
         {
             CHART_VALUES.Add(measurement);
             if (TIMER.IsEnabled)
@@ -164,7 +164,7 @@ namespace Onewheel.Controls
                 }
 
                 await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                addSpeedMeasurement(new SpeedMeasurement
+                AddSpeedMeasurement(new SpeedMeasurement
                 {
                     DateTime = now,
                     Value = sum

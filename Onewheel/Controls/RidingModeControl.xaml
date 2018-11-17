@@ -1,11 +1,10 @@
-﻿<UserControl
-    x:Class="Onewheel.Controls.RidingModeControl"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:datatemplates="using:Onewheel.DataTemplates"
-    mc:Ignorable="d">
+﻿<UserControl x:Class="Onewheel.Controls.RidingModeControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:datatemplates="using:Onewheel.DataTemplates"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d">
 
     <UserControl.Resources>
         <datatemplates:BoardRidingModeTextValueConverter x:Key="boardRidingModeTextValueConverter"/>
@@ -13,11 +12,11 @@
     </UserControl.Resources>
 
     <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{x:Bind RidingMode, Mode=OneWay, FallbackValue='&#xE11B;', Converter={StaticResource boardRidingModeIconValueConverter}}"
+        <TextBlock VerticalAlignment="Center"
+                   FontFamily="Segoe MDL2 Assets"
+                   Text="{x:Bind RidingMode, Mode=OneWay, FallbackValue='&#xE11B;', Converter={StaticResource boardRidingModeIconValueConverter}}"/>
+        <TextBlock Margin="10,0,0,0"
                    VerticalAlignment="Center"
-                   FontFamily="Segoe MDL2 Assets"/>
-        <TextBlock Text="{x:Bind RidingMode, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardRidingModeTextValueConverter}}"
-                   VerticalAlignment="Center"
-                   Margin="10, 0, 0, 0"/>
+                   Text="{x:Bind RidingMode, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardRidingModeTextValueConverter}}"/>
     </StackPanel>
 </UserControl>

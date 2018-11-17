@@ -1,9 +1,9 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using Microsoft.Toolkit.Uwp.Connectivity;
+﻿using Microsoft.Toolkit.Uwp.Connectivity;
 using Windows.Devices.Bluetooth;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
+using OnewheelBluetooth.Classes;
 
 namespace Onewheel.Controls
 {
@@ -90,7 +90,7 @@ namespace Onewheel.Controls
             {
                 string boardId = bluetoothLEHelper.BluetoothLeDevices[boards_lstv.SelectedIndex].DeviceInfo.Id;
                 BluetoothLEDevice board = await BluetoothLEDevice.FromIdAsync(boardId);
-                OnewheelConnectionHelper.INSTANCE.useBoard(board);
+                OnewheelConnectionHelper.INSTANCE.UseAsBoard(board);
                 error_stckp.Visibility = Visibility.Collapsed;
             }
             catch (Exception e)

@@ -1,12 +1,10 @@
-﻿<Page
-    x:Class="Onewheel.Pages.InfoPage"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:chart="using:Telerik.UI.Xaml.Controls.Chart"
-    mc:Ignorable="d"
-    Loaded="Page_Loaded">
+﻿<Page x:Class="Onewheel.Pages.InfoPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      Loaded="Page_Loaded"
+      mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
@@ -15,32 +13,64 @@
 
         <ScrollViewer Grid.Row="0">
             <StackPanel>
-                <TextBlock Text="Name:" FontSize="20"/>
-                <TextBlock x:Name="name_tbx" TextWrapping="Wrap"/>
+                <TextBlock FontSize="20"
+                           Text="Name:"/>
+                <TextBlock x:Name="name_tbx"
+                           TextWrapping="Wrap"/>
 
-                <TextBlock Text="BluetoothAddress:" FontSize="20" Margin="0, 10, 0, 0"/>
-                <TextBlock x:Name="btAddress_tbx" TextWrapping="Wrap"/>
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
+                           Text="BluetoothAddress:"/>
+                <TextBlock x:Name="btAddress_tbx"
+                           TextWrapping="Wrap"/>
 
-                <TextBlock Text="Bluetooth address type:" FontSize="20" Margin="0, 10, 0, 0"/>
-                <TextBlock x:Name="btAddressType_tbx" TextWrapping="Wrap"/>
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
+                           Text="Bluetooth address type:"/>
+                <TextBlock x:Name="btAddressType_tbx"
+                           TextWrapping="Wrap"/>
 
-                <TextBlock Text="Connection status:" FontSize="20" Margin="0, 10, 0, 0"/>
-                <TextBlock x:Name="connectionStatus_tbx" TextWrapping="Wrap"/>
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
+                           Text="Connection status:"/>
+                <TextBlock x:Name="connectionStatus_tbx"
+                           TextWrapping="Wrap"/>
 
-                <TextBlock Text="Device access status:" FontSize="20" Margin="0, 10, 0, 0"/>
-                <TextBlock x:Name="accessStatus_tbx" TextWrapping="Wrap"/>
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
+                           Text="Device access status:"/>
+                <TextBlock x:Name="accessStatus_tbx"
+                           TextWrapping="Wrap"/>
 
-                <TextBlock Text="Device ID:" FontSize="20" Margin="0, 10, 0, 0"/>
-                <TextBlock x:Name="deviceId_tbx" TextWrapping="Wrap"/>
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
+                           Text="Device ID:"/>
+                <TextBlock x:Name="deviceId_tbx"
+                           TextWrapping="Wrap"/>
 
-                <TextBlock Text="Battery:" FontSize="20" Margin="0, 10, 0, 0"/>
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
+                           Text="Battery:"/>
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock x:Name="batteryIcon_tbx" Text="&#xEC02;" FontSize="20" FontFamily="Segoe MDL2 Assets" VerticalAlignment="Center"/>
-                    <TextBlock x:Name="batteryPercent_tbx" Text="Unknown" Margin="10, 0, 0, 0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="batteryIcon_tbx"
+                               VerticalAlignment="Center"
+                               FontFamily="Segoe MDL2 Assets"
+                               FontSize="20"
+                               Text="&#xEC02;"/>
+                    <TextBlock x:Name="batteryPercent_tbx"
+                               Margin="10,0,0,0"
+                               VerticalAlignment="Center"
+                               Text="Unknown"/>
                 </StackPanel>
 
-                <Button x:Name="printAll_btn" Content="Print all" Margin="0, 10, 0, 0" Click="printAll_btn_Click"/>
-                <Button x:Name="reload_btn" Content="Reload" Margin="0, 10, 0, 0" Click="reload_btn_Click"/>
+                <Button x:Name="printAll_btn"
+                        Margin="0,10,0,0"
+                        Click="printAll_btn_Click"
+                        Content="Print all"/>
+                <Button x:Name="reload_btn"
+                        Margin="0,10,0,0"
+                        Click="reload_btn_Click"
+                        Content="Reload"/>
             </StackPanel>
         </ScrollViewer>
 

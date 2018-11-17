@@ -3,10 +3,10 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
 using System.Threading.Tasks;
-using BluetoothOnewheelAccess.Classes;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Onewheel.Pages;
 using Onewheel.Classes;
+using OnewheelBluetooth.Classes;
 
 namespace Onewheel.Controls
 {
@@ -50,65 +50,73 @@ namespace Onewheel.Controls
         #endregion
 
         #region --Misc Methods (Private)--
-        private async Task showChangeRidingModeDialogAsync()
+        private async Task ShowChangeRidingModeDialogAsync()
         {
             ChangeRidingModeDialog dialog = new ChangeRidingModeDialog();
             await dialog.ShowAsync();
 
             if (!dialog.canceled)
             {
-                uint curSpeed = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_SPEED_RPM);
+                uint curSpeed = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM);
                 if (curSpeed <= 0)
                 {
-                    if (OnewheelConnectionHelper.INSTANCE.state == OnewheelConnectionState.CONNECTED)
+                    OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
+                    if (onewheel is null || onewheel.GetBoard().ConnectionStatus == Windows.Devices.Bluetooth.BluetoothConnectionStatus.Disconnected)
                     {
-                        setRideMode(dialog.selectedRideMode);
+                        // Not connected:
+                        ShowInfo("Not connected to Onewheel!", 5000);
                     }
                     else
                     {
-                        // Not connected:
-                        showInfo("Not connected to Onewheel!", 5000);
+                        SetRideMode(dialog.selectedRideMode);
                     }
                 }
                 else
                 {
                     // To fast to change ride mode:
-                    showInfo("To fast to change ride mode!", 5000);
+                    ShowInfo("To fast to change ride mode!", 5000);
                 }
             }
         }
 
-        private void setRideMode(uint rideMode)
+        private void SetRideMode(uint rideMode)
         {
             main_grid.IsTapEnabled = false;
             Task.Run(async () =>
             {
-                GattWriteResult result = await OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.writeDataAsync((short)rideMode, OnewheelInfo.CHARACTERISTIC_RIDING_MODE);
-
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
+                if (onewheel is null)
                 {
-                    if (result != null && result.Status == GattCommunicationStatus.Success)
+                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ShowInfo("Failed to update ride mode: not connected!", 5000));
+                }
+                else
+                {
+                    GattWriteResult result = await onewheel.WriteShortAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE, (short)rideMode);
+                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                     {
-                        showInfo("Ride mode updated!", 5000);
-                    }
-                    else
-                    {
-                        showInfo("Failed to update ride mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
-                    }
-                    main_grid.IsTapEnabled = true;
-                });
+                        if (result != null && result.Status == GattCommunicationStatus.Success)
+                        {
+                            ShowInfo("Ride mode updated!", 5000);
+                        }
+                        else
+                        {
+                            ShowInfo("Failed to update ride mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
+                        }
+                        main_grid.IsTapEnabled = true;
+                    });
+                }
             });
 
         }
 
-        private void showInfo(string text, int duration)
+        private void ShowInfo(string text, int duration)
         {
-            homePage?.showInfo(text, duration);
+            homePage?.ShowInfo(text, duration);
         }
 
         private void loadHomePage()
         {
-            homePage = UIUtils.findParent<HomePage>(this);
+            homePage = UIUtils.FindParent<HomePage>(this);
         }
 
         #endregion
@@ -121,7 +129,7 @@ namespace Onewheel.Controls
         #region --Events--
         private async void Grid_Tapped(object sender, Windows.UI.Xaml.Input.TappedRoutedEventArgs e)
         {
-            await showChangeRidingModeDialogAsync();
+            await ShowChangeRidingModeDialogAsync();
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)

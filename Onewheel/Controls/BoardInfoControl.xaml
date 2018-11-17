@@ -1,13 +1,12 @@
-﻿<UserControl
-    x:Class="Onewheel.Controls.BoardInfoControl"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:datatemplates="using:Onewheel.DataTemplates"
-    mc:Ignorable="d"
-    Height="100"
-    Width="110">
+﻿<UserControl x:Class="Onewheel.Controls.BoardInfoControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:datatemplates="using:Onewheel.DataTemplates"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             Width="110"
+             Height="100"
+             mc:Ignorable="d">
 
     <UserControl.Resources>
         <datatemplates:BoardInfoValueConverter x:Key="boardInfoValueConverter"/>
@@ -22,19 +21,19 @@
         <TextBlock Grid.Row="0"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
-                   Text="{x:Bind Value, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardInfoValueConverter}}"
-                   FontSize="40"/>
+                   FontSize="40"
+                   Text="{x:Bind Value, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardInfoValueConverter}}"/>
         <StackPanel Grid.Row="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
-            <TextBlock Text="{x:Bind DescriptionPrimary, Mode=OneWay, FallbackValue=''}"
-                       HorizontalAlignment="Center"
+            <TextBlock HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"/>
-            <TextBlock Text="{x:Bind DescriptionSecondary, Mode=OneWay, FallbackValue=''}"
-                       HorizontalAlignment="Center"
+                       Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"
+                       Text="{x:Bind DescriptionPrimary, Mode=OneWay, FallbackValue=''}"/>
+            <TextBlock HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"/>
+                       Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"
+                       Text="{x:Bind DescriptionSecondary, Mode=OneWay, FallbackValue=''}"/>
         </StackPanel>
     </Grid>
 </UserControl>

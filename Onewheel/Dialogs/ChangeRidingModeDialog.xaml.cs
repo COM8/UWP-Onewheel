@@ -1,8 +1,8 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using Onewheel.DataTemplates;
+﻿using Onewheel.DataTemplates;
 using System.Collections.ObjectModel;
 using Windows.UI.Xaml.Controls;
 using System;
+using OnewheelBluetooth.Classes;
 
 namespace Onewheel.Dialogs
 {
@@ -47,26 +47,28 @@ namespace Onewheel.Dialogs
         private void loadRidingModes()
         {
             MODES.Clear();
-            switch (OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.boardType)
+            OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
+            switch (onewheel is null ? OnewheelType.ONEWHEEL_PLUS : onewheel.TYPE)
             {
-                case BoardType.ONEWHEEL:
+                case OnewheelType.ONEWHEEL:
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 1 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 2 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 3 });
                     break;
 
-                case BoardType.ONEWHEEL_PLUS:
+                case OnewheelType.ONEWHEEL_PLUS:
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 4 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 5 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 6 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 7 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 8 });
                     break;
-                case BoardType.ONEWHEEL_XR:
+
+                case OnewheelType.ONEWHEEL_XR:
                     break;
             }
 
-            selectedRideMode = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_RIDING_MODE);
+            selectedRideMode = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE);
             for (int i = 0; i < MODES.Count; i++)
             {
                 if (MODES[i].ridingMode == selectedRideMode)
@@ -144,14 +146,13 @@ namespace Onewheel.Dialogs
 
         private void ContentDialog_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged -= ONEWHEEL_INFO_BoardCharacteristicChanged;
-            OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged += ONEWHEEL_INFO_BoardCharacteristicChanged;
+            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
             loadRidingModes();
         }
 
-        private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, BluetoothOnewheelAccess.Classes.Events.BoardCharacteristicChangedEventArgs args)
+        private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
         {
-            if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_RIDING_MODE))
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE))
             {
                 Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => loadRidingModes()).AsTask();
             }
@@ -159,7 +160,7 @@ namespace Onewheel.Dialogs
 
         private void ContentDialog_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged -= ONEWHEEL_INFO_BoardCharacteristicChanged;
+            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
         }
 
         private void ridingModes_cmbbx_SelectionChanged(object sender, SelectionChangedEventArgs e)

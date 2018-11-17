@@ -1,6 +1,6 @@
 ﻿namespace OnewheelBluetooth.Classes
 {
-    public enum BoardType
+    public enum OnewheelType
     {
         ONEWHEEL = 0,
         ONEWHEEL_PLUS = 1,

@@ -1,6 +1,6 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using Onewheel.Classes;
+﻿using Onewheel.Classes;
 using Onewheel.Pages;
+using OnewheelBluetooth.Classes;
 using System;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
@@ -34,7 +34,7 @@ namespace Onewheel.Controls
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setLightMode(uint lightMode)
+        public void SetLightMode(uint lightMode)
         {
             if (this.lightMode != lightMode)
             {
@@ -54,37 +54,45 @@ namespace Onewheel.Controls
         #endregion
 
         #region --Misc Methods (Private)--
-        private void showInfo(string text, int duration)
+        private void ShowInfo(string text, int duration)
         {
-            homePage?.showInfo(text, duration);
+            homePage?.ShowInfo(text, duration);
         }
 
-        private void loadHomePage()
+        private void LoadHomePage()
         {
-            homePage = UIUtils.findParent<HomePage>(this);
+            homePage = UIUtils.FindParent<HomePage>(this);
         }
 
-        private void writeLighMode(uint lightMode)
+        private void WriteLighMode(uint lightMode)
         {
             lightsOn_tggls.IsEnabled = false;
 
             Task.Run(async () =>
             {
-                GattWriteResult result = await OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.writeDataAsync((short)lightMode, OnewheelInfo.CHARACTERISTIC_LIGHTING_MODE);
-
-                await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
+                if (onewheel is null)
                 {
-                    if (result != null && result.Status == GattCommunicationStatus.Success)
-                    {
-                        showInfo("Light mode updated!", 5000);
-                    }
-                    else
-                    {
-                        showInfo("Failed to update light mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
-                    }
+                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ShowInfo("Updating light mode failed - not connected!", 5000));
+                }
+                else
+                {
+                    GattWriteResult result = await onewheel.WriteShortAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_MODE, (short)lightMode);
 
-                    lightsOn_tggls.IsEnabled = true;
-                });
+                    await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                    {
+                        if (result != null && result.Status == GattCommunicationStatus.Success)
+                        {
+                            ShowInfo("Light mode updated!", 5000);
+                        }
+                        else
+                        {
+                            ShowInfo("Failed to update light mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
+                        }
+
+                        lightsOn_tggls.IsEnabled = true;
+                    });
+                }
             });
         }
 
@@ -98,14 +106,14 @@ namespace Onewheel.Controls
         #region --Events--
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            loadHomePage();
+            LoadHomePage();
         }
 
         private void lightsOn_tggls_Toggled(object sender, RoutedEventArgs e)
         {
             uint lightMode = (uint)(lightsOn_tggls.IsOn ? 1 : 0);
-            setLightMode(lightMode);
-            writeLighMode(lightMode);
+            SetLightMode(lightMode);
+            WriteLighMode(lightMode);
         }
 
         #endregion

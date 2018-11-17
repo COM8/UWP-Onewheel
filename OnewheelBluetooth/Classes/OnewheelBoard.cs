@@ -1,5 +1,4 @@
 ﻿using Logging;
-using OnewheelBluetooth.Classes.Events;
 using OnewheelBluetooth.Classes.Handler;
 using System;
 using System.Collections.Generic;
@@ -20,15 +19,9 @@ namespace OnewheelBluetooth.Classes
         private readonly List<GattCharacteristic> SUBSCRIBED_CHARACTERISTICS = new List<GattCharacteristic>();
         private readonly CancellationTokenSource REQUEST_SUBS_CANCEL_TOKEN = new CancellationTokenSource();
 
-        public readonly BoardType TYPE = BoardType.ONEWHEEL_PLUS; // Just the + is supported right now
+        public readonly OnewheelType TYPE = OnewheelType.ONEWHEEL_PLUS; // Just the + is supported right now
         private readonly BluetoothLEDevice BOARD;
-        private readonly OnewheelSpeedHandler SPEED_HANDLER;
-        private readonly OnewheelThermalHandler THERMAL_HANDLER;
-        private readonly OnewheelBatteryHandler BATTERY_HANDLER;
         public bool characteristicsLoaded = false;
-
-        public delegate void BoardCharacteristicChangedHandler(OnewheelBoard sender, OnewheelCharacteristicChangedEventArgs args);
-        public event BoardCharacteristicChangedHandler CharacteristicChanged;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -39,7 +32,7 @@ namespace OnewheelBluetooth.Classes
         /// <history>
         /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        internal OnewheelBoard(BluetoothLEDevice board, OnewheelSpeedHandler speedHandler, OnewheelThermalHandler thermalHandler, OnewheelBatteryHandler batteryHandler)
+        internal OnewheelBoard(BluetoothLEDevice board)
         {
             if (board is null)
             {
@@ -47,9 +40,6 @@ namespace OnewheelBluetooth.Classes
             }
             this.BOARD = board;
             this.BOARD.ConnectionStatusChanged += BOARD_ConnectionStatusChanged;
-            this.SPEED_HANDLER = speedHandler;
-            this.THERMAL_HANDLER = thermalHandler;
-            this.BATTERY_HANDLER = batteryHandler;
 
             RequestCharacteristics();
         }
@@ -85,7 +75,7 @@ namespace OnewheelBluetooth.Classes
                     {
                         Array.Reverse(dataArr);
                     }
-                    OnewheelConnectionHelper.INSTANCE.AddToDictionary(uuid, dataArr, true);
+                    OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(uuid, dataArr, true);
                 }
                 return result;
             }
@@ -170,7 +160,7 @@ namespace OnewheelBluetooth.Classes
                                 {
                                     await LoadCharacteristicValueAsync(c);
 
-                                    if (OnewheelConnectionHelper.SUBSCRIBE_TO_CHARACTERISTICS.Contains(c.Uuid))
+                                    if (OnewheelCharacteristicsCache.SUBSCRIBE_TO_CHARACTERISTICS.Contains(c.Uuid))
                                     {
                                         await SubscribeToCharacteristicAsync(c);
                                     }
@@ -218,7 +208,7 @@ namespace OnewheelBluetooth.Classes
             }
 
             // Insert characteristic and its value into a dictionary:
-            OnewheelConnectionHelper.INSTANCE.AddToDictionary(c.Uuid, value, true);
+            OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(c.Uuid, value, true);
         }
 
         /// <summary>
@@ -297,7 +287,7 @@ namespace OnewheelBluetooth.Classes
             byte[] bytes = ReadBytesFromBuffer(args.CharacteristicValue);
 
             // Insert characteristic and its value into a dictionary:
-            OnewheelConnectionHelper.INSTANCE.AddToDictionary(sender.Uuid, bytes, args.Timestamp.DateTime, true);
+            OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(sender.Uuid, bytes, args.Timestamp.DateTime, true);
         }
 
         private void BOARD_ConnectionStatusChanged(BluetoothLEDevice sender, object args)

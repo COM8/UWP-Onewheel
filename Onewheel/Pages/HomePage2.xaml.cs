@@ -1,7 +1,6 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using BluetoothOnewheelAccess.Classes.Events;
-using DataManager.Classes;
+﻿using DataManager.Classes;
 using Onewheel.Classes;
+using OnewheelBluetooth.Classes;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -41,9 +40,9 @@ namespace Onewheel.Pages
         #endregion
 
         #region --Misc Methods (Private)--
-        private void showBoadName()
+        private void ShowBoadName()
         {
-            string name = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsString(OnewheelInfo.CHARACTERISTIC_CUSTOM_NAME);
+            string name = OnewheelConnectionHelper.INSTANCE.CACHE.GetString(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_NAME);
             if (name == null)
             {
                 name = Settings.getSettingString(SettingsConsts.BOARD_NAME);
@@ -64,9 +63,10 @@ namespace Onewheel.Pages
             }).AsTask();
         }
 
-        private void showSpeed(uint value)
+        private void ShowSpeed()
         {
-            double speed = Utils.rpmToKilometersPerHour(value);
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM);
+            double speed = Utils.RpmToKilometersPerHour(value);
             if (speed < 0)
             {
                 speed = 0;
@@ -75,20 +75,21 @@ namespace Onewheel.Pages
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 speed_rg.Value = speed;
-                speed_sg.addValue(value);
+                speed_sg.AddValue(value);
             }).AsTask();
         }
 
-        private void showBatteryLevel()
+        private void ShowBatteryLevel()
         {
-            uint level = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL);
+            uint level = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL);
+            byte[] status = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_STATUS);
+            OnewheelStatus onewheelStatus = new OnewheelStatus(status);
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                bool isCharching = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.isCharging;
                 if (level >= 0 && level <= 100)
                 {
                     batteryPerc_tbx.Text = level + "%";
-                    batteryIcon_tbx.Text = isCharching ? UIUtils.BATTERY_CHARCHING_LEVEL_ICONS[level / 10] : UIUtils.BATTERY_LEVEL_ICONS[level / 10];
+                    batteryIcon_tbx.Text = onewheelStatus.CHARGING ? UIUtils.BATTERY_CHARCHING_LEVEL_ICONS[level / 10] : UIUtils.BATTERY_LEVEL_ICONS[level / 10];
                 }
                 else
                 {
@@ -108,41 +109,42 @@ namespace Onewheel.Pages
         #region --Events--
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged -= ONEWHEEL_INFO_BoardCharacteristicChanged;
-            OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged += ONEWHEEL_INFO_BoardCharacteristicChanged;
+            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
 
             // General:
-            showBatteryLevel();
-            showBoadName();
+            ShowBatteryLevel();
+            ShowBoadName();
+        }
+
+        private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
+        {
+            // Battery:
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL))
+            {
+                ShowBatteryLevel();
+            }
+
+            // General:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_NAME))
+            {
+                ShowBoadName();
+            }
+
+            // Speed:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM))
+            {
+                ShowSpeed();
+            }
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.BoardCharacteristicChanged -= ONEWHEEL_INFO_BoardCharacteristicChanged;
+            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
         }
 
         private void editName_btn_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        private void ONEWHEEL_INFO_BoardCharacteristicChanged(OnewheelInfo sender, BoardCharacteristicChangedEventArgs args)
-        {
-            // General:
-            if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_BATTERY_LEVEL))
-            {
-                showBatteryLevel();
-            }
-            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_CUSTOM_NAME))
-            {
-                showBoadName();
-            }
-
-            // Speed:
-            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_SPEED_RPM))
-            {
-                showSpeed(sender.getCharacteristicAsUInt(args.UUID));
-            }
         }
 
         #endregion

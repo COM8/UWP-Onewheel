@@ -2,7 +2,7 @@
 
 namespace OnewheelBluetooth.Classes.Events
 {
-    public class OnewheelCharacteristicChangedEventArgs
+    public class CharacteristicChangedEventArgs
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
@@ -18,7 +18,7 @@ namespace OnewheelBluetooth.Classes.Events
         /// <history>
         /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        public OnewheelCharacteristicChangedEventArgs(Guid uuid, byte[] value)
+        public CharacteristicChangedEventArgs(Guid uuid, byte[] value)
         {
             this.UUID = uuid;
             this.VALUE = value;
