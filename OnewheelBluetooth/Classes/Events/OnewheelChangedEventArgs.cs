@@ -1,13 +1,10 @@
-﻿using System;
-using Windows.Devices.Bluetooth;
-
-namespace BluetoothOnewheelAccess.Classes.Events
+﻿namespace OnewheelBluetooth.Classes.Events
 {
-    public class BoardChangedEventArgs : EventArgs
+    public class OnewheelChangedEventArgs
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public readonly BluetoothLEDevice BOARD;
+        public readonly Onewheel ONEWHEEL;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -16,11 +13,11 @@ namespace BluetoothOnewheelAccess.Classes.Events
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 15/03/2018 Created [Fabian Sauter]
+        /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        public BoardChangedEventArgs(BluetoothLEDevice board)
+        public OnewheelChangedEventArgs(Onewheel onewheel)
         {
-            this.BOARD = board;
+            this.ONEWHEEL = onewheel;
         }
 
         #endregion

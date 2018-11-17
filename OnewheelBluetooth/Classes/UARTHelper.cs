@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace BluetoothOnewheelAccess.Classes
+namespace OnewheelBluetooth.Classes
 {
-    public class UARTHelper
+    public class UartHelper
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private string ascii;
+        private string ascii = "";
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -20,12 +16,11 @@ namespace BluetoothOnewheelAccess.Classes
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 10/06/2018 Created [Fabian Sauter]
+        /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        public UARTHelper(OnewheelInfo info)
+        public UartHelper(Onewheel onewheel)
         {
-            this.ascii = "";
-            info.BoardCharacteristicChanged += Info_BoardCharacteristicChanged;
+            onewheel.CharacteristicChanged += Onewheel_CharacteristicChanged;
         }
 
         #endregion
@@ -41,7 +36,7 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
 
         #region --Misc Methods (Private)--
-        private void printByteArray(byte[] data)
+        private void PrintByteArray(byte[] data)
         {
             /*string dec = "";
             for (int i = 0; i < data.Length; i++)
@@ -62,22 +57,22 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void Info_BoardCharacteristicChanged(OnewheelInfo sender, Events.BoardCharacteristicChangedEventArgs args)
+        private void Onewheel_CharacteristicChanged(Onewheel sender, Events.OnewheelCharacteristicChangedEventArgs args)
         {
-            if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_UART_SERIAL_READ))
+            if (args.UUID.Equals(Onewheel.CHARACTERISTIC_UART_SERIAL_READ))
             {
-                byte[] data = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getRawValue(OnewheelInfo.CHARACTERISTIC_UART_SERIAL_READ);
+                byte[] data = sender.GetBytes(Onewheel.CHARACTERISTIC_UART_SERIAL_READ);
                 if (data != null)
                 {
-                    printByteArray(data);
+                    PrintByteArray(data);
                 }
             }
-            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_UART_SERIAL_WRITE))
+            else if (args.UUID.Equals(Onewheel.CHARACTERISTIC_UART_SERIAL_WRITE))
             {
-                byte[] data = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getRawValue(OnewheelInfo.CHARACTERISTIC_UART_SERIAL_WRITE);
+                byte[] data = sender.GetBytes(Onewheel.CHARACTERISTIC_UART_SERIAL_WRITE);
                 if (data != null)
                 {
-                    printByteArray(data);
+                    PrintByteArray(data);
                 }
             }
         }

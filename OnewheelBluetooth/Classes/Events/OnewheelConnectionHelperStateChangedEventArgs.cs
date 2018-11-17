@@ -1,13 +1,11 @@
-﻿using System;
-
-namespace BluetoothOnewheelAccess.Classes.Events
+﻿namespace OnewheelBluetooth.Classes.Events
 {
-    public class BoardCharacteristicChangedEventArgs : EventArgs
+    public class OnewheelConnectionHelperStateChangedEventArgs
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public readonly Guid UUID;
-        public readonly byte[] VALUE;
+        public readonly OnewheelConnectionHelperState OLD_STATE;
+        public readonly OnewheelConnectionHelperState NEW_STATE;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -16,12 +14,12 @@ namespace BluetoothOnewheelAccess.Classes.Events
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 15/03/2018 Created [Fabian Sauter]
+        /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        public BoardCharacteristicChangedEventArgs(Guid uuid, byte[] value)
+        public OnewheelConnectionHelperStateChangedEventArgs(OnewheelConnectionHelperState oldState, OnewheelConnectionHelperState newState)
         {
-            this.UUID = uuid;
-            this.VALUE = value;
+            this.OLD_STATE = oldState;
+            this.NEW_STATE = newState;
         }
 
         #endregion

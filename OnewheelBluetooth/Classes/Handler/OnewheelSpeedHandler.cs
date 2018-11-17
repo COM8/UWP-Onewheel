@@ -4,7 +4,7 @@ using System;
 using System.Threading;
 using Windows.System.Threading;
 
-namespace BluetoothOnewheelAccess.Classes.ValueHandler
+namespace OnewheelBluetooth.Classes.Handler
 {
     class OnewheelSpeedHandler
     {
@@ -24,7 +24,7 @@ namespace BluetoothOnewheelAccess.Classes.ValueHandler
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 15/03/2018 Created [Fabian Sauter]
+        /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
         public OnewheelSpeedHandler()
         {
@@ -96,7 +96,7 @@ namespace BluetoothOnewheelAccess.Classes.ValueHandler
             {
                 dateTime = timestamp,
                 rpm = rpm,
-                kilometersPerHour = Utils.rpmToKilometersPerHour(rpm)
+                kilometersPerHour = Utils.RpmToKilometersPerHour(rpm)
             });
         }
 

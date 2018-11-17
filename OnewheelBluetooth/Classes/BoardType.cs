@@ -1,4 +1,4 @@
-﻿namespace BluetoothOnewheelAccess.Classes
+﻿namespace OnewheelBluetooth.Classes
 {
     public enum BoardType
     {

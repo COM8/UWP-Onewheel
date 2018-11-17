@@ -1,7 +1,7 @@
 ﻿using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 
-namespace BluetoothOnewheelAccess.Classes.ValueHandler
+namespace OnewheelBluetooth.Classes.Handler
 {
     class OnewheelThermalHandler : AbstractValueHandler
     {
@@ -23,7 +23,7 @@ namespace BluetoothOnewheelAccess.Classes.ValueHandler
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 17/03/2018 Created [Fabian Sauter]
+        /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
         public OnewheelThermalHandler()
         {

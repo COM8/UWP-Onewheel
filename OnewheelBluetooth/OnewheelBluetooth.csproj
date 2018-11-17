@@ -4,18 +4,19 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AA2A91FF-40E8-4E8A-A86D-367E7F2D15F6}</ProjectGuid>
+    <ProjectGuid>{3006D751-EBA6-4FB2-A784-0B25B5CA0DDD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BluetoothOnewheelAccess</RootNamespace>
-    <AssemblyName>BluetoothOnewheelAccess</AssemblyName>
-    <DefaultLanguage>de-DE</DefaultLanguage>
+    <RootNamespace>OnewheelBluetooth</RootNamespace>
+    <AssemblyName>OnewheelBluetooth</AssemblyName>
+    <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.16299.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.17763.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <AllowCrossPlatformRetargeting>false</AllowCrossPlatformRetargeting>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,7 +44,6 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -54,7 +54,6 @@
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -65,7 +64,6 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -76,7 +74,26 @@
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>ARM</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM64'">
+    <PlatformTarget>ARM64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\ARM64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>full</DebugType>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|ARM64'">
+    <PlatformTarget>ARM64</PlatformTarget>
+    <OutputPath>bin\ARM64\Release\</OutputPath>
+    <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
+    <Optimize>true</Optimize>
+    <NoWarn>;2008</NoWarn>
+    <DebugType>pdbonly</DebugType>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -87,7 +104,6 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -98,7 +114,6 @@
     <Optimize>true</Optimize>
     <NoWarn>;2008</NoWarn>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
@@ -107,24 +122,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Classes\BoardType.cs" />
-    <Compile Include="Classes\Events\BoardChangedEventArgs.cs" />
-    <Compile Include="Classes\Events\BoardCharacteristicChangedEventArgs.cs" />
-    <Compile Include="Classes\Events\OnewheelConnectionStateChangedEventArgs.cs" />
+    <Compile Include="Classes\Events\OnewheelChangedEventArgs.cs" />
+    <Compile Include="Classes\Events\OnewheelCharacteristicChangedEventArgs.cs" />
+    <Compile Include="Classes\Events\OnewheelConnectionHelperStateChangedEventArgs.cs" />
     <Compile Include="Classes\OnewheelConnectionHelper.cs" />
-    <Compile Include="Classes\OnewheelConnectionState.cs" />
-    <Compile Include="Classes\OnewheelInfo.cs" />
+    <Compile Include="Classes\OnewheelConnectionHelperState.cs" />
+    <Compile Include="Classes\OnewheelStatus.cs" />
+    <Compile Include="Classes\UartHelper.cs" />
     <Compile Include="Classes\Utils.cs" />
-    <Compile Include="Classes\ValueHandler\AbstractValueHandler.cs" />
-    <Compile Include="Classes\ValueHandler\OnewheelBatteryHandler.cs" />
-    <Compile Include="Classes\ValueHandler\OnewheelSpeedHandler.cs" />
-    <Compile Include="Classes\ValueHandler\OnewheelThermalHandler.cs" />
-    <Compile Include="Classes\UARTHelper.cs" />
+    <Compile Include="Classes\Handler\AbstractValueHandler.cs" />
+    <Compile Include="Classes\Handler\OnewheelBatteryHandler.cs" />
+    <Compile Include="Classes\Handler\OnewheelSpeedHandler.cs" />
+    <Compile Include="Classes\Handler\OnewheelThermalHandler.cs" />
+    <Compile Include="Classes\Onewheel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\BluetoothOnewheelAccess.rd.xml" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.1.9</Version>
+      <Version>6.2.2</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp">
       <Version>4.0.0</Version>
@@ -137,10 +152,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BluetoothBackgroundTask\BluetoothBackgroundTask.csproj">
-      <Project>{3cca3c0b-d1bd-4e6b-93a3-72af685ec573}</Project>
-      <Name>BluetoothBackgroundTask</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DataManager\DataManager.csproj">
       <Project>{3239a757-e34c-45be-b4b7-3a3046d5d2ce}</Project>
       <Name>DataManager</Name>
@@ -150,8 +161,12 @@
       <Name>Logging</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

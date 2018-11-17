@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.Storage.Streams;
 
-namespace BluetoothOnewheelAccess.Classes
+namespace OnewheelBluetooth.Classes
 {
     public static class Utils
     {
@@ -20,14 +20,14 @@ namespace BluetoothOnewheelAccess.Classes
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-        public static async Task printGattCharacteristicAsync(GattCharacteristic c)
+        public static async Task PrintAsync(GattCharacteristic c)
         {
-            string value = await readStringFromCharacteristicAsync(c);
+            string value = await ReadStringAsync(c);
             Logger.Info("\tUUID: " + c.Uuid + ", Value: " + value + ", Handle: " + c.AttributeHandle + ", Description: " + c.UserDescription);
             Logger.Info("\t\tProperties: " + c.CharacteristicProperties.ToString());
         }
 
-        public static async Task<byte[]> readBytesFromCharacteristicAsync(GattCharacteristic c)
+        public static async Task<byte[]> ReadBytesAsync(GattCharacteristic c)
         {
             try
             {
@@ -55,9 +55,9 @@ namespace BluetoothOnewheelAccess.Classes
             return null;
         }
 
-        public static async Task<string> readStringFromCharacteristicAsync(GattCharacteristic c)
+        public static async Task<string> ReadStringAsync(GattCharacteristic c)
         {
-            byte[] data = await readBytesFromCharacteristicAsync(c);
+            byte[] data = await ReadBytesAsync(c);
             if (data != null)
             {
                 return BitConverter.ToString(data);
@@ -65,9 +65,9 @@ namespace BluetoothOnewheelAccess.Classes
             return null;
         }
 
-        public static async Task<int> readIntFromCharacteristicAsync(GattCharacteristic c)
+        public static async Task<int> ReadIntAsync(GattCharacteristic c)
         {
-            byte[] data = await readBytesFromCharacteristicAsync(c);
+            byte[] data = await ReadBytesAsync(c);
             if (data != null)
             {
                 return BitConverter.ToInt16(data, 0);
@@ -75,34 +75,38 @@ namespace BluetoothOnewheelAccess.Classes
             return -1;
         }
 
-        public static double rpmToKilometersPerHour(uint rpm)
+        public static double RpmToKilometersPerHour(uint rpm)
         {
-            return Math.Round(rpmToKilometers(rpm) * 60, 2);
+            return Math.Round(RpmToKilometers(rpm) * 60, 2);
         }
 
-        public static double rpmToKilometers(uint rpm)
+        public static double RpmToKilometers(uint rpm)
         {
             return (35.0 * rpm) / 39370.1;
         }
 
-        public static double milesToKilometers(double miles)
+        public static double MilesToKilometers(double miles)
         {
             return miles * 1.60934;
         }
 
-        public static double convertToAmpere(uint value)
+        public static double ToAmpere(uint value, BoardType type)
         {
             double multiplier = 0;
 
-            if (true)
+            switch (type)
             {
-                // Onewheel+:
-                multiplier = 1.8;
-            }
-            else
-            {
-                // Onewheel:
-                multiplier = 0.9;
+                case BoardType.ONEWHEEL:
+                    multiplier = 0.9;
+                    break;
+
+                case BoardType.ONEWHEEL_PLUS:
+                    multiplier = 1.8;
+                    break;
+
+                case BoardType.ONEWHEEL_XR:
+                    multiplier = 1.8; // Not validated
+                    break;
             }
 
             double amp = value / 1000.0 * multiplier;
@@ -110,14 +114,14 @@ namespace BluetoothOnewheelAccess.Classes
             return Math.Round(amp, 2);
         }
 
-        public static double convertToVoltage(uint value)
+        public static double ToVoltage(uint value)
         {
             double voltage = value / 10.0;
 
             return Math.Round(voltage, 2);
         }
 
-        public static double[] convertToBatteryCellVoltages(byte[] values)
+        public static double[] ToBatteryCellVoltages(byte[] values)
         {
             double[] voltages = new double[values.Length];
             for (int i = 0; i < values.Length; i++)

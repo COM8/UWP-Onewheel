@@ -3,7 +3,7 @@ using DataManager.Classes.DBTables;
 using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 
-namespace BluetoothOnewheelAccess.Classes.ValueHandler
+namespace OnewheelBluetooth.Classes.Handler
 {
     class OnewheelBatteryHandler : AbstractValueHandler
     {
@@ -32,7 +32,7 @@ namespace BluetoothOnewheelAccess.Classes.ValueHandler
         /// Basic Constructor
         /// </summary>
         /// <history>
-        /// 16/07/2018 Created [Fabian Sauter]
+        /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
         public OnewheelBatteryHandler()
         {
@@ -69,7 +69,7 @@ namespace BluetoothOnewheelAccess.Classes.ValueHandler
             lastValue = uint.MaxValue;
         }
 
-        public void onBatteryChargeLeftChanged(uint value, DateTime timestamp)
+        public void onBatteryChargeChanged(uint value, DateTime timestamp)
         {
             if(value == lastValue)
             {
