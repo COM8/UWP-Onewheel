@@ -6,7 +6,7 @@ or just want something to tweak some settings for their Onewheel on a Windows 10
 If you want to help, feel free to do so. Help is always appreciated 🥓.
 
 ## Supported boards:
-* Onewheel+
+* Onewheel+ (Andromeda)
 
 ## Get it from the Windows Store:
 Currently not available through the Microsoft Store. Let me know if ther is interest!
