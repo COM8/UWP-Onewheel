@@ -1,7 +1,7 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
+using OnewheelBluetooth.Classes;
 
 namespace Onewheel.Pages
 {
@@ -50,11 +50,16 @@ namespace Onewheel.Pages
         #region --Events--
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionStateChanged += INSTANCE_OnewheelConnectionStateChanged;
-            status_tbx.Text = OnewheelConnectionHelper.INSTANCE.state.ToString();
+            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionHelperStateChanged += INSTANCE_OnewheelConnectionHelperStateChanged;
+            status_tbx.Text = OnewheelConnectionHelper.INSTANCE.GetState().ToString();
         }
 
-        private async void INSTANCE_OnewheelConnectionStateChanged(OnewheelConnectionHelper sender, BluetoothOnewheelAccess.Classes.Events.OnewheelConnectionStateChangedEventArgs args)
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionHelperStateChanged -= INSTANCE_OnewheelConnectionHelperStateChanged;
+        }
+
+        private async void INSTANCE_OnewheelConnectionHelperStateChanged(OnewheelConnectionHelper sender, OnewheelBluetooth.Classes.Events.OnewheelConnectionHelperStateChangedEventArgs args)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => status_tbx.Text = args.NEW_STATE.ToString());
         }

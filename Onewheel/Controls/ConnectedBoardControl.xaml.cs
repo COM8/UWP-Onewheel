@@ -1,10 +1,9 @@
-﻿using BluetoothOnewheelAccess.Classes;
-using BluetoothOnewheelAccess.Classes.Events;
-using DataManager.Classes;
+﻿using DataManager.Classes;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using System;
 using Windows.Devices.Bluetooth;
+using OnewheelBluetooth.Classes;
 
 namespace Onewheel.Controls
 {
@@ -31,7 +30,7 @@ namespace Onewheel.Controls
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public void setBoard(BluetoothLEDevice board)
+        public void setBoard(Onewheel onewheel)
         {
             if (this.board != null)
             {
@@ -106,8 +105,18 @@ namespace Onewheel.Controls
         #region --Events--
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            OnewheelConnectionHelper.INSTANCE.BoardChanged += INSTANCE_BoardChanged;
-            setBoard(OnewheelConnectionHelper.INSTANCE.board);
+            OnewheelConnectionHelper.INSTANCE.OnewheelChanged += INSTANCE_OnewheelChanged;
+            setBoard(OnewheelConnectionHelper.INSTANCE.GetOnewheel());
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            OnewheelConnectionHelper.INSTANCE.OnewheelChanged -= INSTANCE_OnewheelChanged;
+        }
+
+        private void INSTANCE_OnewheelChanged(OnewheelConnectionHelper sender, OnewheelBluetooth.Classes.Events.OnewheelChangedEventArgs args)
+        {
+            throw new NotImplementedException();
         }
 
         private void INSTANCE_BoardChanged(OnewheelConnectionHelper helper, BoardChangedEventArgs args)

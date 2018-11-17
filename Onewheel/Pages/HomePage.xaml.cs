@@ -1,6 +1,7 @@
 ﻿using BluetoothOnewheelAccess.Classes;
 using BluetoothOnewheelAccess.Classes.Events;
 using DataManager.Classes;
+using Logging;
 using Onewheel.Classes;
 using Onewheel.Controls;
 using System;
@@ -422,11 +423,17 @@ namespace Onewheel.Pages
             {
                 showLightingMode();
             }
+
+            // Status:
+            else if (args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_STATUS))
+            {
+                uint value = OnewheelConnectionHelper.INSTANCE.ONEWHEEL_INFO.getCharacteristicAsUInt(OnewheelInfo.CHARACTERISTIC_STATUS);
+                Logger.Debug("CHARACTERISTIC_STATUS: " + value);
+            }
         }
 
         private void editName_btn_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         #endregion

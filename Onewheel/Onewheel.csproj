@@ -315,10 +315,6 @@
       <Project>{3cca3c0b-d1bd-4e6b-93a3-72af685ec573}</Project>
       <Name>BluetoothBackgroundTask</Name>
     </ProjectReference>
-    <ProjectReference Include="..\BluetoothOnewheelAccess\BluetoothOnewheelAccess.csproj">
-      <Project>{aa2a91ff-40e8-4e8a-a86d-367e7f2d15f6}</Project>
-      <Name>BluetoothOnewheelAccess</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DataManager\DataManager.csproj">
       <Project>{3239a757-e34c-45be-b4b7-3a3046d5d2ce}</Project>
       <Name>DataManager</Name>
@@ -326,6 +322,10 @@
     <ProjectReference Include="..\Logging\Logging.csproj">
       <Project>{24FEF00D-9A32-4EDB-944B-1F82877E108E}</Project>
       <Name>Logging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OnewheelBluetooth\OnewheelBluetooth.csproj">
+      <Project>{3006d751-eba6-4fb2-a784-0b25b5ca0ddd}</Project>
+      <Name>OnewheelBluetooth</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

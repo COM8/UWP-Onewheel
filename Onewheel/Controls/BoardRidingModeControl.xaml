@@ -10,14 +10,15 @@
              mc:Ignorable="d">
 
     <UserControl.Resources>
-        <datatemplates:BoardRidingModeTextValueConverter x:Key="boardRidingModeTextValueConverter" />
-        <datatemplates:BoardRidingModeIconValueConverter x:Key="boardRidingModeIconValueConverter" />
+        <datatemplates:BoardRidingModeTextValueConverter x:Key="boardRidingModeTextValueConverter"/>
+        <datatemplates:BoardRidingModeIconValueConverter x:Key="boardRidingModeIconValueConverter"/>
     </UserControl.Resources>
 
-    <Grid x:Name="main_grid" Tapped="Grid_Tapped">
+    <Grid x:Name="main_grid"
+          Tapped="Grid_Tapped">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
@@ -25,7 +26,7 @@
                    VerticalAlignment="Center"
                    FontFamily="Segoe MDL2 Assets"
                    FontSize="30"
-                   Text="{x:Bind Value, Mode=OneWay, FallbackValue='&#xE11B;', Converter={StaticResource boardRidingModeIconValueConverter}}" />
+                   Text="{x:Bind Value, Mode=OneWay, FallbackValue='&#xE11B;', Converter={StaticResource boardRidingModeIconValueConverter}}"/>
         <StackPanel Grid.Row="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
@@ -34,11 +35,11 @@
                        Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"
                        Text="{x:Bind Value, Mode=OneWay, FallbackValue='-', Converter={StaticResource boardRidingModeTextValueConverter}}"
                        TextTrimming="CharacterEllipsis"
-                       TextWrapping="NoWrap" />
+                       TextWrapping="NoWrap"/>
             <TextBlock HorizontalAlignment="Center"
                        VerticalAlignment="Center"
                        Foreground="{StaticResource SystemControlBackgroundBaseMediumBrush}"
-                       Text="Riding mode" />
+                       Text="Riding mode"/>
         </StackPanel>
 
     </Grid>

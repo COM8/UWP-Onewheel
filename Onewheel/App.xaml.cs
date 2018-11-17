@@ -1,6 +1,7 @@
-﻿using BluetoothOnewheelAccess.Classes;
+﻿using DataManager.Classes;
 using Logging;
 using Onewheel.Pages;
+using OnewheelBluetooth.Classes;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -10,15 +11,21 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Onewheel
 {
-    /// <summary>
-    /// Stellt das anwendungsspezifische Verhalten bereit, um die Standardanwendungsklasse zu ergänzen.
-    /// </summary>
     sealed partial class App : Application
     {
+        //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
+        #region --Attributes--
+
+
+        #endregion
+        //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
+        #region --Constructors--
         /// <summary>
-        /// Initialisiert das Singletonanwendungsobjekt. Dies ist die erste Zeile von erstelltem Code
-        /// und daher das logische Äquivalent von main() bzw. WinMain().
+        /// Basic Constructor
         /// </summary>
+        /// <history>
+        /// 17/11/2018 Created [Fabian Sauter]
+        /// </history>
         public App()
         {
             this.InitializeComponent();
@@ -26,33 +33,44 @@ namespace Onewheel
             Logger.logLevel = LogLevel.DEBUG;
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Anwendung durch den Endbenutzer normal gestartet wird. Weitere Einstiegspunkte
-        /// werden z. B. verwendet, wenn die Anwendung gestartet wird, um eine bestimmte Datei zu öffnen.
-        /// </summary>
-        /// <param name="e">Details über Startanforderung und -prozess.</param>
+        #endregion
+        //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
+        #region --Set-, Get- Methods--
+
+
+        #endregion
+        //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
+        #region --Misc Methods (Public)--
+
+
+        #endregion
+
+        #region --Misc Methods (Private)--
+
+
+        #endregion
+
+        #region --Misc Methods (Protected)--
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             // Init onewheel helper:
-            OnewheelConnectionHelper.INSTANCE.init();
-
-            Frame rootFrame = Window.Current.Content as Frame;
-
-            // App-Initialisierung nicht wiederholen, wenn das Fenster bereits Inhalte enthält.
-            // Nur sicherstellen, dass das Fenster aktiv ist.
-            if (rootFrame == null)
+            string lastBoardId = Settings.getSettingString(SettingsConsts.BOARD_ID);
+            if (!string.IsNullOrEmpty(lastBoardId))
             {
-                // Frame erstellen, der als Navigationskontext fungiert und zum Parameter der ersten Seite navigieren
+                OnewheelConnectionHelper.INSTANCE.SearchForBoard(lastBoardId);
+            }
+
+
+            if (!(Window.Current.Content is Frame rootFrame))
+            {
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    //TODO: Zustand von zuvor angehaltener Anwendung laden
+                    //TODO: Load state from terminated application
                 }
-
-                // Den Frame im aktuellen Fenster platzieren
                 Window.Current.Content = rootFrame;
             }
 
@@ -60,38 +78,27 @@ namespace Onewheel
             {
                 if (rootFrame.Content == null)
                 {
-                    // Wenn der Navigationsstapel nicht wiederhergestellt wird, zur ersten Seite navigieren
-                    // und die neue Seite konfigurieren, indem die erforderlichen Informationen als Navigationsparameter
-                    // übergeben werden
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
-                // Sicherstellen, dass das aktuelle Fenster aktiv ist
                 Window.Current.Activate();
             }
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Navigation auf eine bestimmte Seite fehlschlägt
-        /// </summary>
-        /// <param name="sender">Der Rahmen, bei dem die Navigation fehlgeschlagen ist</param>
-        /// <param name="e">Details über den Navigationsfehler</param>
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+        #endregion
+        //--------------------------------------------------------Events:---------------------------------------------------------------------\\
+        #region --Events--
+        private void OnSuspending(object sender, SuspendingEventArgs e)
+        {
+            var deferral = e.SuspendingOperation.GetDeferral();
+            //TODO: Save current state and cancel all background activities
+            deferral.Complete();
+        }
+
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        /// <summary>
-        /// Wird aufgerufen, wenn die Ausführung der Anwendung angehalten wird.  Der Anwendungszustand wird gespeichert,
-        /// ohne zu wissen, ob die Anwendung beendet oder fortgesetzt wird und die Speicherinhalte dabei
-        /// unbeschädigt bleiben.
-        /// </summary>
-        /// <param name="sender">Die Quelle der Anhalteanforderung.</param>
-        /// <param name="e">Details zur Anhalteanforderung.</param>
-        private void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Anwendungszustand speichern und alle Hintergrundaktivitäten beenden
-            deferral.Complete();
-        }
+        #endregion
     }
 }

@@ -131,7 +131,7 @@ namespace Onewheel.Controls
         #region --Events--
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            TIMER.Start();
+            //TIMER.Start();
         }
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
