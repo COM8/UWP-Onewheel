@@ -4,7 +4,7 @@
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public readonly Onewheel ONEWHEEL;
+        public readonly OnewheelBoard ONEWHEEL;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -15,7 +15,7 @@
         /// <history>
         /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        public OnewheelChangedEventArgs(Onewheel onewheel)
+        public OnewheelChangedEventArgs(OnewheelBoard onewheel)
         {
             this.ONEWHEEL = onewheel;
         }

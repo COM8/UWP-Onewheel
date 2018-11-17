@@ -134,7 +134,7 @@
     <Compile Include="Classes\Handler\OnewheelBatteryHandler.cs" />
     <Compile Include="Classes\Handler\OnewheelSpeedHandler.cs" />
     <Compile Include="Classes\Handler\OnewheelThermalHandler.cs" />
-    <Compile Include="Classes\Onewheel.cs" />
+    <Compile Include="Classes\OnewheelBoard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

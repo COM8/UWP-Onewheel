@@ -18,7 +18,7 @@ namespace OnewheelBluetooth.Classes
         /// <history>
         /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        public UartHelper(Onewheel onewheel)
+        public UartHelper(OnewheelBoard onewheel)
         {
             onewheel.CharacteristicChanged += Onewheel_CharacteristicChanged;
         }
@@ -57,19 +57,19 @@ namespace OnewheelBluetooth.Classes
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void Onewheel_CharacteristicChanged(Onewheel sender, Events.OnewheelCharacteristicChangedEventArgs args)
+        private void Onewheel_CharacteristicChanged(OnewheelBoard sender, Events.OnewheelCharacteristicChangedEventArgs args)
         {
-            if (args.UUID.Equals(Onewheel.CHARACTERISTIC_UART_SERIAL_READ))
+            if (args.UUID.Equals(OnewheelBoard.CHARACTERISTIC_UART_SERIAL_READ))
             {
-                byte[] data = sender.GetBytes(Onewheel.CHARACTERISTIC_UART_SERIAL_READ);
+                byte[] data = sender.GetBytes(OnewheelBoard.CHARACTERISTIC_UART_SERIAL_READ);
                 if (data != null)
                 {
                     PrintByteArray(data);
                 }
             }
-            else if (args.UUID.Equals(Onewheel.CHARACTERISTIC_UART_SERIAL_WRITE))
+            else if (args.UUID.Equals(OnewheelBoard.CHARACTERISTIC_UART_SERIAL_WRITE))
             {
-                byte[] data = sender.GetBytes(Onewheel.CHARACTERISTIC_UART_SERIAL_WRITE);
+                byte[] data = sender.GetBytes(OnewheelBoard.CHARACTERISTIC_UART_SERIAL_WRITE);
                 if (data != null)
                 {
                     PrintByteArray(data);
