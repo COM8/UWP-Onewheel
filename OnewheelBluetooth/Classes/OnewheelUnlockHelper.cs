@@ -1,14 +1,12 @@
 ﻿using Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace OnewheelBluetooth.Classes
 {
-    class OnewheelUnlockHelper : IDisposable
+    public class OnewheelUnlockHelper : IDisposable
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
@@ -63,30 +61,13 @@ namespace OnewheelBluetooth.Classes
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
         }
 
+        /// <summary>
+        /// Sends the Gemini firmware revision to the board to request a challenge.
+        /// </summary>
         public async Task SendFirmwareRevisionAsync()
         {
             await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_BYTES);
             Logger.Debug("Sent firmware revision.");
-        }
-
-        #endregion
-
-        #region --Misc Methods (Private)--
-        private bool DoFirstBytesMatch()
-        {
-            return SERIAL_READ_CACHE.Count >= 2
-                && SERIAL_READ_CACHE[0] == CHALLENGE_FIRT_BYTES[0]
-                && SERIAL_READ_CACHE[1] == CHALLENGE_FIRT_BYTES[1]
-                && SERIAL_READ_CACHE[2] == CHALLENGE_FIRT_BYTES[2];
-        }
-
-        private void AddSerialReadDataToCache(byte[] data)
-        {
-            if(SERIAL_READ_CACHE.Count > 20)
-            {
-                SERIAL_READ_CACHE.RemoveRange(0, data.Length);
-            }
-            SERIAL_READ_CACHE.AddRange(data);
         }
 
         /// <summary>
@@ -95,7 +76,7 @@ namespace OnewheelBluetooth.Classes
         /// </summary>
         /// <param name="challenge">The challenge send by the Onewheel.</param>
         /// <returns>The response for the given challenge.</returns>
-        private byte[] CalcResponse(byte[] challenge)
+        public byte[] CalcResponse(byte[] challenge)
         {
             List<byte> response = new List<byte>(20);
             response.AddRange(CHALLENGE_FIRT_BYTES);
@@ -119,6 +100,26 @@ namespace OnewheelBluetooth.Classes
             return response.ToArray();
         }
 
+        #endregion
+
+        #region --Misc Methods (Private)--
+        private bool DoFirstBytesMatch()
+        {
+            return SERIAL_READ_CACHE.Count >= 2
+                && SERIAL_READ_CACHE[0] == CHALLENGE_FIRT_BYTES[0]
+                && SERIAL_READ_CACHE[1] == CHALLENGE_FIRT_BYTES[1]
+                && SERIAL_READ_CACHE[2] == CHALLENGE_FIRT_BYTES[2];
+        }
+
+        private void AddSerialReadDataToCache(byte[] data)
+        {
+            if (SERIAL_READ_CACHE.Count > 20)
+            {
+                SERIAL_READ_CACHE.RemoveRange(0, data.Length);
+            }
+            SERIAL_READ_CACHE.AddRange(data);
+        }
+
         private async Task CalcAndSendResponseAsync()
         {
             byte[] challenge = SERIAL_READ_CACHE.ToArray();
@@ -126,22 +127,6 @@ namespace OnewheelBluetooth.Classes
 
             await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_WRITE, response);
             Logger.Info("Send response to Onewheel challenge.");
-        }
-
-        private byte[] HexStringToByteArray(string hex)
-        {
-            return Enumerable.Range(0, hex.Length)
-                             .Where(x => x % 2 == 0)
-                             .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-                             .ToArray();
-        }
-
-        private static string ByteArrayToHexString(byte[] data)
-        {
-            StringBuilder hex = new StringBuilder(data.Length * 2);
-            foreach (byte b in data)
-                hex.AppendFormat("{0:x2}", b);
-            return hex.ToString();
         }
 
         #endregion
@@ -154,10 +139,10 @@ namespace OnewheelBluetooth.Classes
         #region --Events--
         private async void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, Events.CharacteristicChangedEventArgs args)
         {
-            if(args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ) && args.VALUE.Length > 0)
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ) && args.VALUE.Length > 0)
             {
                 AddSerialReadDataToCache(args.VALUE);
-                if(DoFirstBytesMatch())
+                if (DoFirstBytesMatch())
                 {
                     await CalcAndSendResponseAsync();
                 }
