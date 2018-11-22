@@ -1,5 +1,4 @@
 ﻿using Logging;
-using OnewheelBluetooth.Classes.Handler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +18,11 @@ namespace OnewheelBluetooth.Classes
         private readonly List<GattCharacteristic> SUBSCRIBED_CHARACTERISTICS = new List<GattCharacteristic>();
         private readonly CancellationTokenSource REQUEST_SUBS_CANCEL_TOKEN = new CancellationTokenSource();
 
-        public readonly OnewheelType TYPE = OnewheelType.ONEWHEEL_PLUS; // Just the + is supported right now
+        /// <summary>
+        /// Just the ow+ is supported right now.
+        /// </summary>
+        public readonly OnewheelType TYPE = OnewheelType.ONEWHEEL_PLUS;
+        private readonly OnewheelUnlockHelper UNLOCK_HELPER;
         private readonly BluetoothLEDevice BOARD;
         public bool characteristicsLoaded = false;
 
@@ -40,8 +43,13 @@ namespace OnewheelBluetooth.Classes
             }
             this.BOARD = board;
             this.BOARD.ConnectionStatusChanged += BOARD_ConnectionStatusChanged;
+            this.UNLOCK_HELPER = new OnewheelUnlockHelper(this);
 
             RequestCharacteristics();
+            if (board.ConnectionStatus == BluetoothConnectionStatus.Connected)
+            {
+
+            }
         }
 
         #endregion
@@ -57,25 +65,29 @@ namespace OnewheelBluetooth.Classes
         #region --Misc Methods (Public)--
         public async Task<GattWriteResult> WriteShortAsync(Guid uuid, short data)
         {
+            byte[] dataArr = BitConverter.GetBytes(data);
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(dataArr);
+            }
+
+            return await WriteBytesAsync(uuid, dataArr);
+        }
+
+        public async Task<GattWriteResult> WriteBytesAsync(Guid uuid, byte[] data)
+        {
             GattCharacteristic c = SUBSCRIBED_CHARACTERISTICS.Find((car) => car.Uuid.CompareTo(uuid) == 0);
             if (c != null)
             {
-                byte[] dataArr = BitConverter.GetBytes(data);
-
-                if (BitConverter.IsLittleEndian)
-                {
-                    Array.Reverse(dataArr);
-                }
-
-                IBuffer buffer = CryptographicBuffer.CreateFromByteArray(dataArr);
+                IBuffer buffer = CryptographicBuffer.CreateFromByteArray(data);
                 GattWriteResult result = await c.WriteValueWithResultAsync(buffer);
                 if (result.Status == GattCommunicationStatus.Success)
                 {
                     if (BitConverter.IsLittleEndian)
                     {
-                        Array.Reverse(dataArr);
+                        Array.Reverse(data);
                     }
-                    OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(uuid, dataArr, true);
+                    OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(uuid, data, true);
                 }
                 return result;
             }
@@ -127,6 +139,12 @@ namespace OnewheelBluetooth.Classes
         #endregion
 
         #region --Misc Methods (Private)--
+        private async Task sendSerialInitHelloAsync()
+        {
+            byte[] data = { 0x0f, 0x2c };
+            await WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, data);
+        }
+
         /// <summary>
         /// Starts a new Task and tries to subscribe to all characteristics stored in SUBSCRIBE_TO_CHARACTERISTICS.
         /// Can only be called once!
@@ -136,7 +154,13 @@ namespace OnewheelBluetooth.Classes
             if (characteristicsLoaded)
             {
                 Logger.Warn("Requesting characteristics failed - already loaded!");
-                return;
+                // return;
+            }
+
+            if (BOARD.ConnectionStatus != BluetoothConnectionStatus.Connected)
+            {
+                Logger.Warn("Requesting characteristics failed - not connected!");
+                // return;
             }
             characteristicsLoaded = true;
 
@@ -178,6 +202,8 @@ namespace OnewheelBluetooth.Classes
                     {
                         Logger.Warn("Failed to request GetGattServicesAsync() for " + BOARD.DeviceId + " - " + sResult.Status.ToString());
                     }
+
+                    await UNLOCK_HELPER.SendFirmwareRevisionAsync();
                 }
                 catch (Exception e)
                 {
@@ -249,9 +275,14 @@ namespace OnewheelBluetooth.Classes
             {
                 // Add characteristic to global field to prevent it getting disposed:
                 SUBSCRIBED_CHARACTERISTICS.Add(c);
+                Logger.Debug("Subscribed to characteristic: " + c.Uuid);
 
                 c.ValueChanged -= C_ValueChanged;
                 c.ValueChanged += C_ValueChanged;
+            }
+            else
+            {
+                Logger.Warn("Failed to subscribe to characteristic " + c.Uuid + " with " + status);
             }
         }
 
@@ -285,6 +316,15 @@ namespace OnewheelBluetooth.Classes
         {
             // Read bytes:
             byte[] bytes = ReadBytesFromBuffer(args.CharacteristicValue);
+
+            foreach (byte b in bytes)
+            {
+                if (b != 0)
+                {
+                    Logger.Info("Non 0 characteristic found: " + sender.Uuid);
+                    break;
+                }
+            }
 
             // Insert characteristic and its value into a dictionary:
             OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(sender.Uuid, bytes, args.Timestamp.DateTime, true);

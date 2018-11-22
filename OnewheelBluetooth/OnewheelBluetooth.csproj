@@ -129,6 +129,7 @@
     <Compile Include="Classes\OnewheelConnectionHelper.cs" />
     <Compile Include="Classes\OnewheelConnectionHelperState.cs" />
     <Compile Include="Classes\OnewheelStatus.cs" />
+    <Compile Include="Classes\OnewheelUnlockHelper.cs" />
     <Compile Include="Classes\UartHelper.cs" />
     <Compile Include="Classes\Utils.cs" />
     <Compile Include="Classes\Handler\AbstractValueHandler.cs" />
