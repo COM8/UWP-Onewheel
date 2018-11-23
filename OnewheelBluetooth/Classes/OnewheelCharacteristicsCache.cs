@@ -112,8 +112,8 @@ namespace OnewheelBluetooth.Classes
             CHARACTERISTIC_LIFETIME_ODOMETER,
             CHARACTERISTIC_LIFETIME_AMPERE_HOURS,
 
-            CHARACTERISTIC_UART_SERIAL_WRITE,
-            CHARACTERISTIC_UART_SERIAL_READ,
+            // CHARACTERISTIC_UART_SERIAL_WRITE,
+            // CHARACTERISTIC_UART_SERIAL_READ,
         };
 
         private readonly Dictionary<Guid, byte[]> CHARACTERISTICS = new Dictionary<Guid, byte[]>();

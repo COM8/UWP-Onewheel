@@ -56,18 +56,46 @@ namespace OnewheelBluetooth.Classes
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        /// <summary>
+        /// Starts a new Task, requests the firmware revision and starts the unlock process.
+        /// </summary>
+        public void Start()
+        {
+            Task.Run(async () =>
+            {
+                Logger.Info("Requesting firmware version for Gemini unlock...");
+                byte[] data = await ONEWHEEL.ReadBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION);
+
+                if(data == null || data[0] != FIRMWARE_REVISION_BYTES[0] || data[1] != FIRMWARE_REVISION_BYTES[1])
+                {
+                    Logger.Info("Unlock failed - Gemini firmware does not match: " + (data is null ? "null" : Utils.ByteArrayToHexString(data)));
+                    return;
+                }
+
+                Logger.Info("Received firmware version for Gemini unlock.");
+
+                bool result = await ONEWHEEL.SubscribeToCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION);
+                if (!result)
+                {
+                    Logger.Error("Failed to unlock Onewheel - subscribe to firmware revision failed.");
+                    return;
+                }
+
+                result = await ONEWHEEL.SubscribeToCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ);
+                if (!result)
+                {
+                    Logger.Error("Failed to unlock Onewheel - subscribe to serial read failed.");
+                    return;
+                }
+
+                await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, data);
+                Logger.Debug("Sent firmware revision.");
+            });
+        }
+
         public void Dispose()
         {
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
-        }
-
-        /// <summary>
-        /// Sends the Gemini firmware revision to the board to request a challenge.
-        /// </summary>
-        public async Task SendFirmwareRevisionAsync()
-        {
-            await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_BYTES);
-            Logger.Debug("Sent firmware revision.");
         }
 
         /// <summary>
@@ -105,7 +133,7 @@ namespace OnewheelBluetooth.Classes
         #region --Misc Methods (Private)--
         private bool DoFirstBytesMatch()
         {
-            return SERIAL_READ_CACHE.Count >= 2
+            return SERIAL_READ_CACHE.Count >= 3
                 && SERIAL_READ_CACHE[0] == CHALLENGE_FIRT_BYTES[0]
                 && SERIAL_READ_CACHE[1] == CHALLENGE_FIRT_BYTES[1]
                 && SERIAL_READ_CACHE[2] == CHALLENGE_FIRT_BYTES[2];
@@ -127,6 +155,10 @@ namespace OnewheelBluetooth.Classes
 
             await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_WRITE, response);
             Logger.Info("Send response to Onewheel challenge.");
+
+            // await ONEWHEEL.UnsubscribeFromCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ);
+
+            await ONEWHEEL.SubscribeToCharacteristicsAsync(OnewheelCharacteristicsCache.SUBSCRIBE_TO_CHARACTERISTICS);
         }
 
         #endregion
@@ -139,13 +171,14 @@ namespace OnewheelBluetooth.Classes
         #region --Events--
         private async void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, Events.CharacteristicChangedEventArgs args)
         {
-            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ) && args.VALUE.Length > 0)
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ) && !(args.VALUE is null) && args.VALUE.Length > 0)
             {
                 AddSerialReadDataToCache(args.VALUE);
-                if (DoFirstBytesMatch())
+                if (DoFirstBytesMatch() && SERIAL_READ_CACHE.Count == 20)
                 {
                     await CalcAndSendResponseAsync();
                 }
+                Logger.Info("dssdf: " + (args.VALUE is null ? "null" : Utils.ByteArrayToHexString(args.VALUE)));
             }
         }
 
