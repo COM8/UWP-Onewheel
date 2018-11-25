@@ -17,7 +17,6 @@ namespace OnewheelBluetooth.Classes
 
         public readonly OnewheelCharacteristicsCache CACHE = new OnewheelCharacteristicsCache();
         private readonly BluetoothLEHelper BLE_HELPER = BluetoothLEHelper.Context;
-        private CancellationTokenSource searchingToken;
 
         private OnewheelBoard onewheel = null;
         private string boardId = null;
@@ -96,7 +95,8 @@ namespace OnewheelBluetooth.Classes
         {
             if (state == OnewheelConnectionHelperState.SEARCHING)
             {
-                searchingToken.Cancel();
+                state = OnewheelConnectionHelperState.DISCONNECTED;
+                BLE_HELPER.BluetoothLeDevices.CollectionChanged -= BluetoothLeDevices_CollectionChanged;
             }
             Logger.Info("Stopped searching for: " + boardId);
         }
@@ -116,44 +116,49 @@ namespace OnewheelBluetooth.Classes
                 Logger.Info("Already searching. Just updated the board id.");
             }
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 SetState(OnewheelConnectionHelperState.SEARCHING);
 
-                searchingToken = new CancellationTokenSource();
-                BluetoothLEDevice board = null;
-
-                try
-                {
-                    Task.Run(async () =>
-                    {
-                        while (!string.IsNullOrEmpty(boardId))
-                        {
-                            Logger.Info("Searching for: " + boardId);
-                            CancellationTokenSource loadDeviceTimeout = new CancellationTokenSource(1000);
-                            try
-                            {
-                                board = await BluetoothLEDevice.FromIdAsync(boardId).AsTask(loadDeviceTimeout.Token);
-                            }
-                            catch (TaskCanceledException e)
-                            {
-                                Logger.Error("Failed to load bluetooth device - timeout.", e);
-                            }
-                            if (board != null)
-                            {
-                                Logger.Info("Found: " + boardId);
-                                SetBoard(board);
-                                return;
-                            }
-                        }
-                    }, searchingToken.Token);
-                }
-                catch (TaskCanceledException)
-                {
-                    Logger.Info("Searching for boardId was canceled.");
-                    SetState(OnewheelConnectionHelperState.DISCONNECTED);
-                }
+                Logger.Info("Searching for: " + boardId);
+                BLE_HELPER.StartEnumeration();
+                BLE_HELPER.BluetoothLeDevices.CollectionChanged += BluetoothLeDevices_CollectionChanged;
+                await OnDevicesChangedAsync();
             });
+        }
+
+        private async Task OnDevicesChangedAsync()
+        {
+            foreach (var device in BLE_HELPER.BluetoothLeDevices)
+            {
+                if (!(device.DeviceInfo is null) && string.Equals(device.DeviceInfo.Id, boardId))
+                {
+                    Logger.Info("Found: " + boardId);
+                    if (!device.IsConnected)
+                    {
+                        try
+                        {
+                            CancellationTokenSource cancellation = new CancellationTokenSource(1000);
+                            BluetoothLEDevice board = await BluetoothLEDevice.FromIdAsync(device.DeviceInfo.Id).AsTask(cancellation.Token);
+                            BLE_HELPER.BluetoothLeDevices.CollectionChanged -= BluetoothLeDevices_CollectionChanged;
+                            Logger.Error("Connect to: " + device.DeviceInfo.Id);
+                            SetBoard(board);
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.Error("Failed to connect to: " + device.DeviceInfo.Id, e);
+                        }
+                    }
+                }
+            }
+        }
+
+        private async void BluetoothLeDevices_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (state == OnewheelConnectionHelperState.SEARCHING)
+            {
+                await OnDevicesChangedAsync();
+            }
         }
 
         #endregion
