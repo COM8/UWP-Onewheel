@@ -16,12 +16,13 @@ namespace OnewheelBluetooth.Classes
         public static readonly Guid CHARACTERISTIC_SERIAL_NUMBER = Guid.Parse("e659F301-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_FIRMWARE_REVISION = Guid.Parse("e659f311-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_HARDWARE_REVISION = Guid.Parse("e659f318-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_DEVICE_NAME = Guid.Parse("00002a01-0000-1000-8000-00805f9b34fb");
 
         public static readonly Guid CHARACTERISTIC_RIDING_MODE = Guid.Parse("e659f302-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_CUSTOM_NAME = Guid.Parse("e659f3fd-ea98-11e3-ac10-0800200c9a66");
-        public static readonly Guid CHARACTERISTIC_STATUS = Guid.Parse("e659f30f-ea98-11e3-ac10-0800200c9a66"); // Unknown result
-        public static readonly Guid CHARACTERISTIC_SAFETY_HR = Guid.Parse("e659f317-ea98-11e3-ac10-0800200c9a66"); // Unknown result
-        public static readonly Guid CHARACTERISTIC_LAST_ERRORS = Guid.Parse("e659f31c-ea98-11e3-ac10-0800200c9a66"); // Unknown result
+        public static readonly Guid CHARACTERISTIC_STATUS = Guid.Parse("e659f30f-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_SAFETY_HR = Guid.Parse("e659f317-ea98-11e3-ac10-0800200c9a66");
+        public static readonly Guid CHARACTERISTIC_LAST_ERRORS = Guid.Parse("e659f31c-ea98-11e3-ac10-0800200c9a66");
 
         public static readonly Guid CHARACTERISTIC_DATA_29 = Guid.Parse("e659f31d-ea98-11e3-ac10-0800200c9a66"); // Unknown result
         public static readonly Guid CHARACTERISTIC_DATA_30 = Guid.Parse("e659f31e-ea98-11e3-ac10-0800200c9a66"); // Unknown result
@@ -57,13 +58,11 @@ namespace OnewheelBluetooth.Classes
         public static readonly Guid CHARACTERISTIC_UART_SERIAL_WRITE = Guid.Parse("e659f3ff-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_UART_SERIAL_READ = Guid.Parse("e659f3fe-ea98-11e3-ac10-0800200c9a66");
 
-        // Unknown usage. Handle 1 is probably used for firmware updates:
-        public static readonly Guid CHARACTERISTIC_HANDLE_1_UNKNOWN_1 = Guid.Parse("00002a00-0000-1000-8000-00805f9b34fb");
-        public static readonly Guid CHARACTERISTIC_HANDLE_1_UNKNOWN_2 = Guid.Parse("00002a01-0000-1000-8000-00805f9b34fb");
-        public static readonly Guid CHARACTERISTIC_HANDLE_1_UNKNOWN_3 = Guid.Parse("00002a02-0000-1000-8000-00805f9b34fb");
-        public static readonly Guid CHARACTERISTIC_HANDLE_1_UNKNOWN_4 = Guid.Parse("00002a03-0000-1000-8000-00805f9b34fb");
-        public static readonly Guid CHARACTERISTIC_HANDLE_1_UNKNOWN_5 = Guid.Parse("00002a04-0000-1000-8000-00805f9b34fb");
-        public static readonly Guid CHARACTERISTIC_HANDLE_12_UNKNOWN_1 = Guid.Parse("00002a05-0000-1000-8000-00805f9b34fb");
+        public static readonly Guid CHARACTERISTIC_CLIENT_CONFIGURATION = Guid.Parse("00002a00-0000-1000-8000-00805f9b34fb");
+        public static readonly Guid CHARACTERISTIC_PERIPHERAL_PRIVACY_FLAG = Guid.Parse("00002a02-0000-1000-8000-00805f9b34fb");
+        public static readonly Guid CHARACTERISTIC_RECONNECTION_ADDRESS = Guid.Parse("00002a03-0000-1000-8000-00805f9b34fb");
+        public static readonly Guid CHARACTERISTIC_PERIPHERAL_PREFFERED_CONNECTION_PARAMETERS = Guid.Parse("00002a04-0000-1000-8000-00805f9b34fb");
+        public static readonly Guid CHARACTERISTIC_SERVICE_CHANGED = Guid.Parse("00002a05-0000-1000-8000-00805f9b34fb");
 
         // Mock UUID objects:
         public static readonly Guid MOCK_TRIP_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000001");
@@ -74,6 +73,7 @@ namespace OnewheelBluetooth.Classes
             CHARACTERISTIC_SERIAL_NUMBER,
             CHARACTERISTIC_FIRMWARE_REVISION,
             CHARACTERISTIC_HARDWARE_REVISION,
+            CHARACTERISTIC_DEVICE_NAME,
 
             CHARACTERISTIC_RIDING_MODE,
             CHARACTERISTIC_CUSTOM_NAME,
