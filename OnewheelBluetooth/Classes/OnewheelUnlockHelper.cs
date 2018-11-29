@@ -218,6 +218,9 @@ namespace OnewheelBluetooth.Classes
         {
             if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ) && !(args.VALUE is null) && args.VALUE.Length > 0)
             {
+                // Reverse back the byte order because we need the raw date send by the board:
+                Utils.ReverseByteOrderIfNeeded(args.VALUE);
+
                 AddSerialReadDataToCache(args.VALUE);
                 if (DoFirstBytesMatch() && SERIAL_READ_CACHE.Count == 20)
                 {

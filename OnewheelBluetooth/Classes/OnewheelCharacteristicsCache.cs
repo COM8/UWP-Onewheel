@@ -187,12 +187,9 @@ namespace OnewheelBluetooth.Classes
 
         public ulong GetULong(byte[] value)
         {
-            if (value != null)
+            if (value != null && value.Length == 8)
             {
-                if (value.Length == 8)
-                {
-                    return BitConverter.ToUInt64(value, 0);
-                }
+                return BitConverter.ToUInt64(value, 0);
             }
             return 0;
         }
@@ -205,12 +202,9 @@ namespace OnewheelBluetooth.Classes
 
         public bool GetBool(byte[] value)
         {
-            if (value != null)
+            if (value != null && value.Length == 1)
             {
-                if (value.Length == 1)
-                {
-                    return BitConverter.ToBoolean(value, 0);
-                }
+                return BitConverter.ToBoolean(value, 0);
             }
             return false;
         }

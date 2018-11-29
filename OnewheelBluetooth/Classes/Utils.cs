@@ -42,11 +42,6 @@ namespace OnewheelBluetooth.Classes
                         data = new byte[reader.UnconsumedBufferLength];
                         reader.ReadBytes(data);
                     }
-
-                    if (BitConverter.IsLittleEndian)
-                    {
-                        Array.Reverse(data);
-                    }
                     return data;
                 }
             }
@@ -57,9 +52,18 @@ namespace OnewheelBluetooth.Classes
             return null;
         }
 
+        public static void ReverseByteOrderIfNeeded(byte[] data)
+        {
+            if (!(data is null) && BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(data);
+            }
+        }
+
         public static async Task<string> ReadStringAsync(GattCharacteristic c)
         {
             byte[] data = await ReadBytesAsync(c);
+            ReverseByteOrderIfNeeded(data);
             if (data != null)
             {
                 return BitConverter.ToString(data);
@@ -67,9 +71,10 @@ namespace OnewheelBluetooth.Classes
             return null;
         }
 
-        public static async Task<int> ReadIntAsync(GattCharacteristic c)
+        public static async Task<short> ReadShortAsync(GattCharacteristic c)
         {
             byte[] data = await ReadBytesAsync(c);
+            ReverseByteOrderIfNeeded(data);
             if (data != null)
             {
                 return BitConverter.ToInt16(data, 0);

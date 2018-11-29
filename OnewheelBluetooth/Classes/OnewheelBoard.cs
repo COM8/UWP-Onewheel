@@ -99,10 +99,7 @@ namespace OnewheelBluetooth.Classes
         public async Task<GattWriteResult> WriteShortAsync(Guid uuid, short data)
         {
             byte[] dataArr = BitConverter.GetBytes(data);
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(dataArr);
-            }
+            Utils.ReverseByteOrderIfNeeded(dataArr);
 
             return await WriteBytesAsync(uuid, dataArr);
         }
@@ -116,6 +113,8 @@ namespace OnewheelBluetooth.Classes
                 GattWriteResult result = await c.WriteValueWithResultAsync(buffer);
                 if (result.Status == GattCommunicationStatus.Success)
                 {
+                    // Convert to little endian:
+                    Utils.ReverseByteOrderIfNeeded(data);
                     OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(uuid, data, true);
                 }
                 return result;
@@ -334,17 +333,19 @@ namespace OnewheelBluetooth.Classes
         /// <param name="c">The characteristic the value should get added to the characteristics dictionary.</param>
         private async Task LoadCharacteristicValueAsync(GattCharacteristic c)
         {
-            byte[] value = null;
+            byte[] data = null;
             if (c.CharacteristicProperties.HasFlag(GattCharacteristicProperties.Read))
             {
                 try
                 {
                     // Load value from characteristic:
-                    value = await ReadBytesAsync(c);
+                    data = await ReadBytesAsync(c);
 
-                    if (!(value is null))
+                    if (!(data is null))
                     {
-                        OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(c.Uuid, value, true);
+                        // Convert to little endian:
+                        Utils.ReverseByteOrderIfNeeded(data);
+                        OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(c.Uuid, data, true);
                     }
                 }
                 catch (Exception e)
@@ -352,9 +353,6 @@ namespace OnewheelBluetooth.Classes
                     Logger.Error("Loading value from characteristic " + c.Uuid + " failed!", e);
                 }
             }
-
-            // Insert characteristic and its value into a dictionary:
-            OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(c.Uuid, value, true);
         }
 
         /// <summary>
@@ -381,10 +379,13 @@ namespace OnewheelBluetooth.Classes
         private void C_ValueChanged(GattCharacteristic sender, GattValueChangedEventArgs args)
         {
             // Read bytes:
-            byte[] bytes = ReadBytesFromBuffer(args.CharacteristicValue);
+            byte[] data = ReadBytesFromBuffer(args.CharacteristicValue);
+
+            // Convert to little endian:
+            Utils.ReverseByteOrderIfNeeded(data);
 
             // Insert characteristic and its value into a dictionary:
-            OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(sender.Uuid, bytes, args.Timestamp.DateTime, true);
+            OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(sender.Uuid, data, args.Timestamp.DateTime, true);
         }
 
         private void BOARD_ConnectionStatusChanged(BluetoothLEDevice sender, object args)
