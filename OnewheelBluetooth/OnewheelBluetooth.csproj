@@ -121,6 +121,7 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\Consts.cs" />
     <Compile Include="Classes\OnewheelType.cs" />
     <Compile Include="Classes\OnewheelCharacteristicsCache.cs" />
     <Compile Include="Classes\Events\OnewheelChangedEventArgs.cs" />

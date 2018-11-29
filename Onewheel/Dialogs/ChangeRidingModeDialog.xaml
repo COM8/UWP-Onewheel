@@ -33,6 +33,74 @@
                        Margin="0,10,0,0"
                        TextTrimming="CharacterEllipsis"
                        TextWrapping="Wrap"/>
+
+            <StackPanel x:Name="customShaping_stckp"
+                        Visibility="Collapsed">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="carve_sldr"
+                            Header="Carve ability"
+                            Maximum="5"
+                            Minimum="-5"
+                            StepFrequency="1"
+                            TickFrequency="1"
+                            TickPlacement="Outside"
+                            ValueChanged="Carve_sldr_ValueChanged"
+                            Value="0"/>
+                    <Button x:Name="resetCarve_btn"
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Click="ResetCarve_btn_Click"
+                            Content="&#xE72C;"
+                            FontFamily="Segoe MDL2 Assets"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="stance_sldr"
+                            Header="Stance profile"
+                            Maximum="3"
+                            Minimum="-1"
+                            StepFrequency="0.1"
+                            TickFrequency="0.5"
+                            TickPlacement="Outside"
+                            ValueChanged="Stance_sldr_ValueChanged"
+                            Value="0"/>
+                    <Button x:Name="resetStance_btn"
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Click="ResetStance_btn_Click"
+                            Content="&#xE72C;"
+                            FontFamily="Segoe MDL2 Assets"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Slider x:Name="aggressiveness_sldr"
+                            Grid.Column="0"
+                            Header="Aggressiveness"
+                            Maximum="11"
+                            Minimum="1"
+                            StepFrequency="1"
+                            TickFrequency="1"
+                            TickPlacement="Outside"
+                            ValueChanged="Aggressiveness_sldr_ValueChanged"
+                            Value="6"/>
+                    <Button x:Name="resetAggressiveness_btn"
+                            Grid.Column="1"
+                            Margin="10,0,0,0"
+                            Click="ResetAggressiveness_btn_Click"
+                            Content="&#xE72C;"
+                            FontFamily="Segoe MDL2 Assets"/>
+                </Grid>
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </ContentDialog>

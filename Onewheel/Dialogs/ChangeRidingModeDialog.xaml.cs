@@ -29,12 +29,19 @@ namespace Onewheel.Dialogs
             this.canceled = true;
             this.selectedRideMode = 0;
             this.InitializeComponent();
+
+            carve_sldr.Value = Consts.CUSTOM_SHAPING_CARVE_DEFAULT;
+            stance_sldr.Value = Consts.CUSTOM_SHAPING_STANCE_DEFAULT;
+            aggressiveness_sldr.Value = Consts.CUSTOM_SHAPING_AGGRESSIVENESS_DEFAULT;
         }
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-
+        public Tuple<int, double, int> GetCustomShpingValues()
+        {
+            return new Tuple<int, double, int>((int)carve_sldr.Value, stance_sldr.Value, (int)aggressiveness_sldr.Value);
+        }
 
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
@@ -44,7 +51,7 @@ namespace Onewheel.Dialogs
         #endregion
 
         #region --Misc Methods (Private)--
-        private void loadRidingModes()
+        private void LoadRidingModes()
         {
             MODES.Clear();
             OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
@@ -78,8 +85,10 @@ namespace Onewheel.Dialogs
             }
         }
 
-        private void showModeDescription()
+        private void ShowModeDescription()
         {
+            customShaping_stckp.Visibility = selectedRideMode == 9 ? Windows.UI.Xaml.Visibility.Visible : Windows.UI.Xaml.Visibility.Collapsed;
+
             switch (selectedRideMode)
             {
                 case 1:
@@ -151,20 +160,20 @@ namespace Onewheel.Dialogs
         private void ContentDialog_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
-            loadRidingModes();
+            LoadRidingModes();
+        }
+
+        private void ContentDialog_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
         }
 
         private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
         {
             if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE))
             {
-                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => loadRidingModes()).AsTask();
+                Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => LoadRidingModes()).AsTask();
             }
-        }
-
-        private void ContentDialog_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
-        {
-            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
         }
 
         private void ridingModes_cmbbx_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -174,7 +183,37 @@ namespace Onewheel.Dialogs
                 RidingModeDataTemplate ridingModeDataTemplate = ridingModes_cmbbx.SelectedItem as RidingModeDataTemplate;
                 selectedRideMode = ridingModeDataTemplate.ridingMode;
             }
-            showModeDescription();
+            ShowModeDescription();
+        }
+
+        private void ResetCarve_btn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            carve_sldr.Value = Consts.CUSTOM_SHAPING_CARVE_DEFAULT;
+        }
+
+        private void Carve_sldr_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            resetCarve_btn.IsEnabled = carve_sldr.Value != Consts.CUSTOM_SHAPING_CARVE_DEFAULT;
+        }
+
+        private void Stance_sldr_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            resetStance_btn.IsEnabled = stance_sldr.Value != Consts.CUSTOM_SHAPING_STANCE_DEFAULT;
+        }
+
+        private void ResetStance_btn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            stance_sldr.Value = Consts.CUSTOM_SHAPING_STANCE_DEFAULT;
+        }
+
+        private void Aggressiveness_sldr_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+        {
+            resetAggressiveness_btn.IsEnabled = aggressiveness_sldr.Value != Consts.CUSTOM_SHAPING_AGGRESSIVENESS_DEFAULT;
+        }
+
+        private void ResetAggressiveness_btn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            aggressiveness_sldr.Value = Consts.CUSTOM_SHAPING_AGGRESSIVENESS_DEFAULT;
         }
 
         #endregion
