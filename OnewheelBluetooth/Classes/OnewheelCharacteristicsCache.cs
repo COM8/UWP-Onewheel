@@ -1,4 +1,5 @@
 ﻿using DataManager.Classes;
+using Logging;
 using OnewheelBluetooth.Classes.Events;
 using OnewheelBluetooth.Classes.Handler;
 using System;
@@ -24,10 +25,10 @@ namespace OnewheelBluetooth.Classes
         public static readonly Guid CHARACTERISTIC_SAFETY_HR = Guid.Parse("e659f317-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LAST_ERRORS = Guid.Parse("e659f31c-ea98-11e3-ac10-0800200c9a66");
 
-        public static readonly Guid CHARACTERISTIC_DATA_29 = Guid.Parse("e659f31d-ea98-11e3-ac10-0800200c9a66"); // Unknown result
-        public static readonly Guid CHARACTERISTIC_DATA_30 = Guid.Parse("e659f31e-ea98-11e3-ac10-0800200c9a66"); // Unknown result
-        public static readonly Guid CHARACTERISTIC_DATA_31 = Guid.Parse("e659f31f-ea98-11e3-ac10-0800200c9a66"); // Unknown result
-        public static readonly Guid CHARACTERISTIC_DATA_32 = Guid.Parse("e659f320-ea98-11e3-ac10-0800200c9a66"); // Unknown result
+        public static readonly Guid CHARACTERISTIC_DATA_29 = Guid.Parse("e659f31d-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
+        public static readonly Guid CHARACTERISTIC_DATA_30 = Guid.Parse("e659f31e-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
+        public static readonly Guid CHARACTERISTIC_DATA_31 = Guid.Parse("e659f31f-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
+        public static readonly Guid CHARACTERISTIC_DATA_32 = Guid.Parse("e659f320-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
 
         public static readonly Guid CHARACTERISTIC_BATTERY_SERIAL_NUMBER = Guid.Parse("e659f306-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_BATTERY_LEVEL = Guid.Parse("e659f303-ea98-11e3-ac10-0800200c9a66");
@@ -81,11 +82,6 @@ namespace OnewheelBluetooth.Classes
             CHARACTERISTIC_SAFETY_HR,
             CHARACTERISTIC_LAST_ERRORS,
 
-            CHARACTERISTIC_DATA_29,
-            CHARACTERISTIC_DATA_30,
-            CHARACTERISTIC_DATA_31,
-            CHARACTERISTIC_DATA_32,
-
             CHARACTERISTIC_BATTERY_SERIAL_NUMBER,
             CHARACTERISTIC_BATTERY_LEVEL,
             CHARACTERISTIC_BATTERY_LOW_5,
@@ -111,9 +107,6 @@ namespace OnewheelBluetooth.Classes
 
             CHARACTERISTIC_LIFETIME_ODOMETER,
             CHARACTERISTIC_LIFETIME_AMPERE_HOURS,
-
-            // CHARACTERISTIC_UART_SERIAL_WRITE,
-            // CHARACTERISTIC_UART_SERIAL_READ,
         };
 
         private readonly Dictionary<Guid, byte[]> CHARACTERISTICS = new Dictionary<Guid, byte[]>();
