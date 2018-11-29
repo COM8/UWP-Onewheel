@@ -342,13 +342,14 @@ namespace OnewheelBluetooth.Classes
                     // Load value from characteristic:
                     value = await ReadBytesAsync(c);
 
-                    if (!(value is null) && BitConverter.IsLittleEndian)
+                    if (!(value is null))
                     {
-                        Array.Reverse(value);
+                        OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(c.Uuid, value, true);
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Logger.Error("Loading value from characteristic " + c.Uuid + " failed!", e);
                 }
             }
 
