@@ -189,8 +189,16 @@ namespace OnewheelBluetooth.Classes
             {
                 return;
             }
-            await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_BYTES);
-            Logger.Debug("Sent Gemini unlock firmware revision.");
+            try
+            {
+                await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_BYTES);
+                Logger.Debug("Sent Gemini unlock firmware revision.");
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to send Gemini unlock firmware revision!", e);
+                throw;
+            }
         }
 
         private void StopUnlockTimer()
