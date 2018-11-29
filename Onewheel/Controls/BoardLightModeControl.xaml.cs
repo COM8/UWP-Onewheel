@@ -83,7 +83,7 @@ namespace Onewheel.Controls
                     {
                         if (result != null && result.Status == GattCommunicationStatus.Success)
                         {
-                            ShowInfo("Light mode updated!", 5000);
+                            ShowInfo("💡 Light mode updated!", 5000);
                         }
                         else
                         {
