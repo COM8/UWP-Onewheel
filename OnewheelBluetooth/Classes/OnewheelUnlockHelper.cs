@@ -197,7 +197,6 @@ namespace OnewheelBluetooth.Classes
             catch (Exception e)
             {
                 Logger.Error("Failed to send Gemini unlock firmware revision!", e);
-                throw;
             }
         }
 
