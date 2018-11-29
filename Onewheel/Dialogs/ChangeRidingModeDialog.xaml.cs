@@ -56,15 +56,14 @@ namespace Onewheel.Dialogs
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 3 });
                     break;
 
+                case OnewheelType.ONEWHEEL_XR:
                 case OnewheelType.ONEWHEEL_PLUS:
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 4 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 5 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 6 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 7 });
                     MODES.Add(new RidingModeDataTemplate() { ridingMode = 8 });
-                    break;
-
-                case OnewheelType.ONEWHEEL_XR:
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 9 });
                     break;
             }
 
@@ -118,6 +117,11 @@ namespace Onewheel.Dialogs
                 // DELIRIUM:
                 case 8:
                     description_tbx.Text = "Max Velocity 32km/h.";
+                    break;
+
+                // CUSTOM SHAPING:
+                case 9:
+                    description_tbx.Text = "Custom shaping.";
                     break;
 
                 default:

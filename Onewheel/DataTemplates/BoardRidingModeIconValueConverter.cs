@@ -64,6 +64,10 @@ namespace Onewheel.DataTemplates
                     // DELIRIUM:
                     case 8:
                         return "\uE81F";
+
+                    // CUSTOM SHAPING:
+                    case 9:
+                        return "\uE90F";
                 }
             }
 

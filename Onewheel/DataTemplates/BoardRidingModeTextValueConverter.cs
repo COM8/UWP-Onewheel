@@ -59,6 +59,9 @@ namespace Onewheel.DataTemplates
 
                     case 8:
                         return "DELIRIUM";
+
+                    case 9:
+                        return "CUSTOM";
                 }
             }
 
