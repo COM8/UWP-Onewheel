@@ -14,6 +14,7 @@ namespace Onewheel.Controls
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
         private uint lightMode;
+        private bool skipEvents;
 
         private HomePage homePage;
 
@@ -28,7 +29,9 @@ namespace Onewheel.Controls
         /// </history>
 		public BoardLightModeControl()
         {
+            this.skipEvents = true;
             this.InitializeComponent();
+            this.skipEvents = false;
         }
 
         #endregion
@@ -39,10 +42,28 @@ namespace Onewheel.Controls
             if (this.lightMode != lightMode)
             {
                 this.lightMode = lightMode;
-                lightsOn_tggls.Toggled -= lightsOn_tggls_Toggled;
-                lightsOn_tggls.IsOn = lightMode != 0;
-                mode_tbx.Text = lightMode.ToString();
-                lightsOn_tggls.Toggled += lightsOn_tggls_Toggled;
+                skipEvents = true;
+                switch (lightMode)
+                {
+                    case Consts.LIGHT_MODE_OFF:
+                        lightsOff_rbtn.IsChecked = true;
+                        mode_tbx.Text = "Off";
+                        break;
+
+                    case Consts.LIGHT_MODE_AUTO:
+                        lightsOn_rbtn.IsChecked = true;
+                        mode_tbx.Text = "On";
+                        break;
+
+                    case Consts.LIGHT_MODE_CUSTOM:
+                        lightsCustom_rbtn.IsChecked = true;
+                        mode_tbx.Text = "Custom";
+                        break;
+
+                    default:
+                        break;
+                }
+                skipEvents = false;
             }
         }
 
@@ -66,8 +87,6 @@ namespace Onewheel.Controls
 
         private void WriteLighMode(uint lightMode)
         {
-            lightsOn_tggls.IsEnabled = false;
-
             Task.Run(async () =>
             {
                 OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
@@ -89,8 +108,6 @@ namespace Onewheel.Controls
                         {
                             ShowInfo("Failed to update light mode: " + (result == null ? "characteristic not found" : result.Status.ToString()), 5000);
                         }
-
-                        lightsOn_tggls.IsEnabled = true;
                     });
                 }
             });
@@ -109,11 +126,31 @@ namespace Onewheel.Controls
             LoadHomePage();
         }
 
-        private void lightsOn_tggls_Toggled(object sender, RoutedEventArgs e)
+        private void LightsOff_rbtn_Click(object sender, RoutedEventArgs e)
         {
-            uint lightMode = (uint)(lightsOn_tggls.IsOn ? 1 : 0);
-            SetLightMode(lightMode);
-            WriteLighMode(lightMode);
+            if(!skipEvents)
+            {
+                SetLightMode(Consts.LIGHT_MODE_OFF);
+                WriteLighMode(Consts.LIGHT_MODE_OFF);
+            }
+        }
+
+        private void LightsOn_rbtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!skipEvents)
+            {
+                SetLightMode(Consts.LIGHT_MODE_AUTO);
+                WriteLighMode(Consts.LIGHT_MODE_AUTO);
+            }
+        }
+
+        private void LightsCustom_rbtn_Click(object sender, RoutedEventArgs e)
+        {
+            if (!skipEvents)
+            {
+                SetLightMode(Consts.LIGHT_MODE_CUSTOM);
+                WriteLighMode(Consts.LIGHT_MODE_CUSTOM);
+            }
         }
 
         #endregion

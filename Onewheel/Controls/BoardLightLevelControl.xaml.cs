@@ -43,6 +43,7 @@ namespace Onewheel.Controls
         public static readonly DependencyProperty UuidProperty = DependencyProperty.Register(nameof(Uuid), typeof(Guid), typeof(BoardRidingModeControl), new PropertyMetadata(null));
 
         private HomePage homePage;
+        private bool skipEvents;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -55,6 +56,7 @@ namespace Onewheel.Controls
         /// </history>
 		public BoardLightLevelControl()
         {
+            this.skipEvents = true;
             this.InitializeComponent();
 
             red_sldr.Minimum = Consts.CUSTOM_LIGHT_LEVEL_MIN;
@@ -62,6 +64,7 @@ namespace Onewheel.Controls
 
             white_sldr.Minimum = Consts.CUSTOM_LIGHT_LEVEL_MIN;
             white_sldr.Maximum = Consts.CUSTOM_LIGHT_LEVEL_MAX;
+            this.skipEvents = false;
         }
 
         #endregion
@@ -79,8 +82,10 @@ namespace Onewheel.Controls
                 return;
             }
 
-            WhiteValue = data[0];
-            RedValue = data[1];
+            skipEvents = true;
+            /*WhiteValue = data[1];
+            RedValue = data[0];*/
+            skipEvents = false;
         }
 
         #endregion
@@ -104,9 +109,16 @@ namespace Onewheel.Controls
                 return;
             }
 
-            byte[] data = { WhiteValue, RedValue };
-            await board.WriteBytesAsync(Uuid, data);
-            Logger.Info("Updated " + Description + " to " + WhiteValue + " and " + RedValue);
+            try
+            {
+                byte[] data = { WhiteValue, RedValue };
+                await board.WriteBytesAsync(Uuid, data);
+                Logger.Info("Updated " + Description + " to " + WhiteValue + " and " + RedValue);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to update light level!", e);
+            }
         }
 
         #endregion
@@ -124,12 +136,18 @@ namespace Onewheel.Controls
 
         private async void Red_sldr_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            await UpdateLightLevelAsync();
+            if (!skipEvents)
+            {
+                await UpdateLightLevelAsync();
+            }
         }
 
         private async void White_sldr_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
         {
-            await UpdateLightLevelAsync();
+            if (!skipEvents)
+            {
+                await UpdateLightLevelAsync();
+            }
         }
 
         #endregion

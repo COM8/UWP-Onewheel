@@ -14,13 +14,28 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <ToggleSwitch x:Name="lightsOn_tggls"
-                      Grid.Row="0"
-                      Margin="33,0,0,0"
-                      VerticalAlignment="Center"
-                      OffContent=""
-                      OnContent=""
-                      Toggled="lightsOn_tggls_Toggled"/>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <RadioButton x:Name="lightsOff_rbtn"
+                         Grid.Column="0"
+                         Margin="8,0,0,0"
+                         Click="LightsOff_rbtn_Click"
+                         GroupName="LightMode"/>
+            <RadioButton x:Name="lightsOn_rbtn"
+                         Grid.Column="1"
+                         Margin="8,0,0,0"
+                         Click="LightsOn_rbtn_Click"
+                         GroupName="LightMode"/>
+            <RadioButton x:Name="lightsCustom_rbtn"
+                         Grid.Column="2"
+                         Margin="8,0,0,0"
+                         Click="LightsCustom_rbtn_Click"
+                         GroupName="LightMode"/>
+        </Grid>
         <StackPanel Grid.Row="1"
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">

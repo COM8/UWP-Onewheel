@@ -22,6 +22,10 @@
         public const uint CUSTOM_LIGHT_LEVEL_MIN = 0;
         public const uint CUSTOM_LIGHT_LEVEL_MAX = 75;
 
+        public const uint LIGHT_MODE_OFF = 0;
+        public const uint LIGHT_MODE_AUTO = 1;
+        public const uint LIGHT_MODE_CUSTOM = 2;
+
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--

@@ -42,7 +42,7 @@ namespace OnewheelBluetooth.Classes
         /// <summary>
         /// Three modes:
         /// 0 - off
-        /// 1 - on
+        /// 1 - auto
         /// 2 - custom
         /// </summary>
         public static readonly Guid CHARACTERISTIC_LIGHTING_MODE = Guid.Parse("e659f30c-ea98-11e3-ac10-0800200c9a66");
