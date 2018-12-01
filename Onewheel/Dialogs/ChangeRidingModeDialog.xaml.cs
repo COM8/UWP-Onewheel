@@ -58,19 +58,19 @@ namespace Onewheel.Dialogs
             switch (onewheel is null ? OnewheelType.ONEWHEEL_PLUS : onewheel.TYPE)
             {
                 case OnewheelType.ONEWHEEL:
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 1 });
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 2 });
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 3 });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_CLASSIC_CLASSIC });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_CLASSIC_XTREME });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_CLASSIC_ELEVATE });
                     break;
 
                 case OnewheelType.ONEWHEEL_XR:
                 case OnewheelType.ONEWHEEL_PLUS:
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 4 });
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 5 });
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 6 });
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 7 });
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 8 });
-                    MODES.Add(new RidingModeDataTemplate() { ridingMode = 9 });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_PLUS_SEQUOIA });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_PLUS_CRUZ });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_PLUS_MISSION });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_PLUS_ELEVATE });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_PLUS_DELIRIUM });
+                    MODES.Add(new RidingModeDataTemplate() { ridingMode = Consts.RIDING_MODE_OW_PLUS_CUSTOM_SHAPING });
                     break;
             }
 
@@ -91,45 +91,45 @@ namespace Onewheel.Dialogs
 
             switch (selectedRideMode)
             {
-                case 1:
+                case Consts.RIDING_MODE_OW_CLASSIC_CLASSIC:
                     description_tbx.Text = "";
                     break;
 
-                case 2:
+                case Consts.RIDING_MODE_OW_CLASSIC_XTREME:
                     description_tbx.Text = "";
                     break;
 
-                case 3:
+                case Consts.RIDING_MODE_OW_CLASSIC_ELEVATE:
                     description_tbx.Text = "";
                     break;
 
                 // SEQUOIA:
-                case 4:
+                case Consts.RIDING_MODE_OW_PLUS_SEQUOIA:
                     description_tbx.Text = "Max Velocity 20km/h.";
                     break;
 
                 // CRUZ:
-                case 5:
+                case Consts.RIDING_MODE_OW_PLUS_CRUZ:
                     description_tbx.Text = "Max Velocity 24km/h.";
                     break;
 
                 // MISSION:
-                case 6:
+                case Consts.RIDING_MODE_OW_PLUS_MISSION:
                     description_tbx.Text = "Max Velocity 31km/h.";
                     break;
 
                 // ELEVATE:
-                case 7:
+                case Consts.RIDING_MODE_OW_PLUS_ELEVATE:
                     description_tbx.Text = "Max Velocity 31km/h.";
                     break;
 
                 // DELIRIUM:
-                case 8:
+                case Consts.RIDING_MODE_OW_PLUS_DELIRIUM:
                     description_tbx.Text = "Max Velocity 32km/h.";
                     break;
 
                 // CUSTOM SHAPING:
-                case 9:
+                case Consts.RIDING_MODE_OW_PLUS_CUSTOM_SHAPING:
                     description_tbx.Text = "Custom shaping.";
                     break;
 
