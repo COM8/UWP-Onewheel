@@ -1,5 +1,7 @@
 ﻿using DataManager.Classes;
+using Logging;
 using Onewheel.Classes;
+using Onewheel.Controls;
 using OnewheelBluetooth.Classes;
 using System;
 using Windows.UI.Xaml;
@@ -120,6 +122,176 @@ namespace Onewheel.Pages
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => lightLevelBack_llc.OnLightLevelChanged(value)).AsTask();
         }
 
+        private void ShowMotorControllerTemperature()
+        {
+            byte[] value = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value != null)
+                {
+                    controllerTemp_bic.Value = (uint)value[0];
+                    motorTemp_bic.Value = (uint)value[1];
+                }
+                else
+                {
+                    controllerTemp_bic.Value = "0";
+                    motorTemp_bic.Value = "0";
+                }
+            }).AsTask();
+        }
+
+        private void ShowBatteryTemperature()
+        {
+            byte[] value = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_TEMPERATUR);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value != null)
+                {
+                    batteryTemp_bic.Value = (uint)value[1];
+                }
+                else
+                {
+                    batteryTemp_bic.Value = "0";
+                }
+            }).AsTask();
+        }
+
+        private void ShowBatteryCellVoltages()
+        {
+            byte[] values = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES);
+            if (values != null)
+            {
+                double[] voltages = Utils.ToBatteryCellVoltages(values);
+
+                string s = "";
+                for (int i = 0; i < voltages.Length; i++)
+                {
+                    s += voltages[i] + ", ";
+                }
+            }
+        }
+
+        private void ShowRidingMode()
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => ridingMode_brmc.Value = value).AsTask();
+        }
+
+        private void ShowSpeed(BoardInfoControl boardInfoControl, Guid uuid)
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(uuid);
+            double speed = Utils.RpmToKilometersPerHour(value);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    boardInfoControl.Value = speed;
+                }
+                else
+                {
+                    boardInfoControl.Value = "0";
+                }
+            }).AsTask();
+        }
+
+        private void ShowDistance(BoardInfoControl boardInfoControl, Guid uuid)
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(uuid);
+            double distance = Utils.RpmToKilometers(value);
+            distance = Math.Round(distance, 2);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    boardInfoControl.Value = distance;
+                }
+                else
+                {
+                    boardInfoControl.Value = "0";
+                }
+            }).AsTask();
+        }
+
+        private void ShowDistanceLive()
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_LIFETIME_ODOMETER);
+            double distance = Utils.MilesToKilometers(value);
+            distance = Math.Round(distance, 2);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    odometerLive_bic.Value = distance;
+                }
+                else
+                {
+                    odometerLive_bic.Value = "0";
+                }
+            }).AsTask();
+        }
+
+        private void ShowAmpere(BoardInfoControl boardInfoControl, Guid uuid)
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(uuid);
+
+            OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
+            double amp = Utils.ToAmpere(value, onewheel is null ? OnewheelType.ONEWHEEL_PLUS : onewheel.TYPE);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    boardInfoControl.Value = amp;
+                }
+                else
+                {
+                    boardInfoControl.Value = "0";
+                }
+            }).AsTask();
+        }
+
+        private void ShowVoltage(BoardInfoControl boardInfoControl, Guid uuid)
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(uuid);
+            double voltage = Utils.ToVoltage(value);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    boardInfoControl.Value = voltage;
+                }
+                else
+                {
+                    boardInfoControl.Value = "0";
+                }
+            }).AsTask();
+        }
+
+        private void ShowAmpereHours(BoardInfoControl boardInfoControl, Guid uuid)
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(uuid);
+            double ampHours = value / 50.0;
+            ampHours = Math.Round(ampHours, 2);
+
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                if (value >= 0)
+                {
+                    boardInfoControl.Value = ampHours;
+                }
+                else
+                {
+                    boardInfoControl.Value = "0";
+                }
+            }).AsTask();
+        }
+
         #endregion
 
         #region --Misc Methods (Protected)--
@@ -135,18 +307,46 @@ namespace Onewheel.Pages
             // General:
             ShowBatteryLevel();
             ShowBoadName();
+
+            // Lights:
+            ShowLightingMode();
+            ShowLightLevelFront();
+            ShowLightLevelBack();
+
+            // Speed:
+            ShowSpeed(topSpeedTrip_bic, OnewheelCharacteristicsCache.MOCK_TRIP_TOP_RPM);
+            ShowSpeed(topSpeedLive_bic, OnewheelCharacteristicsCache.MOCK_LIVETIME_TOP_RPM);
+
+            // Distance:
+            ShowDistanceLive();
+            ShowDistance(odometerTrip_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_ODOMETER);
+
+            // Ampere:
+            ShowAmpere(batteryAmpere_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CURRENT_AMPERE);
+
+            // Voltage:
+            ShowVoltage(batteryVoltage_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_VOLTAGE);
+
+            // Ampere hours:
+            ShowAmpereHours(ampereHoursLive_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_LIFETIME_AMPERE_HOURS);
+            ShowAmpereHours(ampereHoursTrip_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_AMPERE_HOURS);
+            ShowAmpereHours(ampereHoursRegenTrip_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS);
+
+            // Temperature:
+            ShowBatteryTemperature();
+            ShowMotorControllerTemperature();
+
+            // Battery voltages:
+            ShowBatteryCellVoltages();
+
+            // Riding mode:
+            ShowRidingMode();
         }
 
         private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
         {
-            // Battery:
-            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL))
-            {
-                ShowBatteryLevel();
-            }
-
-            // General:
-            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_NAME))
+            // Name:
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_NAME))
             {
                 ShowBoadName();
             }
@@ -156,23 +356,92 @@ namespace Onewheel.Pages
             {
                 ShowSpeed();
             }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.MOCK_TRIP_TOP_RPM))
+            {
+                ShowSpeed(topSpeedTrip_bic, OnewheelCharacteristicsCache.MOCK_TRIP_TOP_RPM);
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.MOCK_LIVETIME_TOP_RPM))
+            {
+                ShowSpeed(topSpeedLive_bic, OnewheelCharacteristicsCache.MOCK_LIVETIME_TOP_RPM);
+            }
 
-            // Light mode:
+            // Distance:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIFETIME_ODOMETER))
+            {
+                ShowDistanceLive();
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_ODOMETER))
+            {
+                ShowDistance(odometerTrip_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_ODOMETER);
+            }
+
+            // Battery:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL))
+            {
+                ShowBatteryLevel();
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES))
+            {
+                ShowBatteryCellVoltages();
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CURRENT_AMPERE))
+            {
+                ShowAmpere(batteryAmpere_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CURRENT_AMPERE);
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_VOLTAGE))
+            {
+                ShowVoltage(batteryVoltage_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_VOLTAGE);
+            }
+
+            // Ampere hours:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIFETIME_AMPERE_HOURS))
+            {
+                ShowAmpereHours(ampereHoursLive_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_LIFETIME_AMPERE_HOURS);
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_AMPERE_HOURS))
+            {
+                ShowAmpereHours(ampereHoursTrip_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_AMPERE_HOURS);
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS))
+            {
+                ShowAmpereHours(ampereHoursRegenTrip_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_TRIP_REGEN_AMPERE_HOURS);
+            }
+
+            // Temperature:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_TEMPERATUR))
+            {
+                ShowBatteryTemperature();
+            }
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE))
+            {
+                ShowMotorControllerTemperature();
+            }
+
+            // Lights:
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_MODE))
             {
                 ShowLightingMode();
             }
-
-            // Light level front:
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_FRONT))
             {
                 ShowLightLevelFront();
             }
-
-            // Light level back:
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_BACK))
             {
                 ShowLightLevelBack();
+            }
+
+            // Riding mode:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE))
+            {
+                ShowRidingMode();
+            }
+
+            // Status:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_STATUS))
+            {
+                uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_STATUS);
+                Logger.Debug("CHARACTERISTIC_STATUS: " + value);
             }
         }
 

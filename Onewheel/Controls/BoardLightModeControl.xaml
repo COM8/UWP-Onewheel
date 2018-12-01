@@ -23,6 +23,7 @@
             <RadioButton x:Name="lightsOff_rbtn"
                          Grid.Column="0"
                          Margin="8,0,0,0"
+                         IsChecked="True"
                          Click="LightsOff_rbtn_Click"
                          GroupName="LightMode"/>
             <RadioButton x:Name="lightsOn_rbtn"

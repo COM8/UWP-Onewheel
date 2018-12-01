@@ -98,11 +98,11 @@
 
                     <!--  Light level front:  -->
                     <controls:BoardLightLevelControl x:Name="lightLevelFront_llc"
-                                                     Description="Light front"/>
+                                                     Description="Light level front"/>
 
                     <!--  Light level back:  -->
                     <controls:BoardLightLevelControl x:Name="lightLevelBack_llc"
-                                                     Description="Light back"/>
+                                                     Description="Light level back"/>
                 </GridView>
 
                 <controls:SeperatorControl Text="Trip:"/>
