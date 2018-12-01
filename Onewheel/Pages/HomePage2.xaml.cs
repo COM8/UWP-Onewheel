@@ -25,6 +25,9 @@ namespace Onewheel.Pages
         public HomePage2()
         {
             this.InitializeComponent();
+
+            lightLevelFront_llc.Uuid = OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_FRONT;
+            lightLevelBack_llc.Uuid = OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_BACK;
         }
 
         #endregion
@@ -99,6 +102,24 @@ namespace Onewheel.Pages
             }).AsTask();
         }
 
+        private void ShowLightingMode()
+        {
+            uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_MODE);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => lightingMode_blmc.SetLightMode(value)).AsTask();
+        }
+
+        private void ShowLightLevelFront()
+        {
+            byte[] value = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_FRONT);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => lightLevelFront_llc.OnLightLevelChanged(value)).AsTask();
+        }
+
+        private void ShowLightLevelBack()
+        {
+            byte[] value = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_BACK);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => lightLevelBack_llc.OnLightLevelChanged(value)).AsTask();
+        }
+
         #endregion
 
         #region --Misc Methods (Protected)--
@@ -134,6 +155,24 @@ namespace Onewheel.Pages
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM))
             {
                 ShowSpeed();
+            }
+
+            // Light mode:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_MODE))
+            {
+                ShowLightingMode();
+            }
+
+            // Light level front:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_FRONT))
+            {
+                ShowLightLevelFront();
+            }
+
+            // Light level back:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_LIGHTING_BACK))
+            {
+                ShowLightLevelBack();
             }
         }
 

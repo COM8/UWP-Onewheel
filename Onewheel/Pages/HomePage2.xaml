@@ -82,6 +82,128 @@
                                            TickSpacing="5"
                                            Unit="KM/H"/>
                 </Grid>
+
+                <controls:SeperatorControl Grid.Row="0"
+                                           Margin="0,10,0,0"
+                                           Text="General:"/>
+                <GridView Margin="10"
+                          HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          SelectionMode="None">
+                    <!--  Riding mode:  -->
+                    <controls:BoardRidingModeControl x:Name="ridingMode_brmc"/>
+
+                    <!--  Lighting mode:  -->
+                    <controls:BoardLightModeControl x:Name="lightingMode_blmc"/>
+
+                    <!--  Light level front:  -->
+                    <controls:BoardLightLevelControl x:Name="lightLevelFront_llc"
+                                                     Description="Light front"/>
+
+                    <!--  Light level back:  -->
+                    <controls:BoardLightLevelControl x:Name="lightLevelBack_llc"
+                                                     Description="Light back"/>
+                </GridView>
+
+                <controls:SeperatorControl Text="Trip:"/>
+                <GridView Margin="10"
+                          HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          SelectionMode="None">
+                    <!--  Top speed trip:  -->
+                    <controls:BoardInfoControl x:Name="topSpeedTrip_bic"
+                                               DescriptionPrimary="KM/H"
+                                               DescriptionSecondary="Top speed"
+                                               Value="-"/>
+
+                    <!--  Odometer trip:  -->
+                    <controls:BoardInfoControl x:Name="odometerTrip_bic"
+                                               DescriptionPrimary="KM"
+                                               DescriptionSecondary="Trip"
+                                               Value="-"/>
+
+                    <!--  Ampere hours trip:  -->
+                    <controls:BoardInfoControl x:Name="ampereHoursTrip_bic"
+                                               DescriptionPrimary="Ah"
+                                               DescriptionSecondary="Trip"
+                                               Value="-"/>
+
+                    <!--  Ampere hours regen trip:  -->
+                    <controls:BoardInfoControl x:Name="ampereHoursRegenTrip_bic"
+                                               DescriptionPrimary="Ah"
+                                               DescriptionSecondary="Regen"
+                                               Value="-"/>
+                </GridView>
+
+                <controls:SeperatorControl Text="Live:"/>
+                <GridView Margin="10"
+                          HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          SelectionMode="None">
+                    <!--  Top speed live:  -->
+                    <controls:BoardInfoControl x:Name="topSpeedLive_bic"
+                                               DescriptionPrimary="KM/H"
+                                               DescriptionSecondary="Top speed"
+                                               Value="-"/>
+
+                    <!--  Odometer live:  -->
+                    <controls:BoardInfoControl x:Name="odometerLive_bic"
+                                               DescriptionPrimary="KM"
+                                               DescriptionSecondary="Live"
+                                               Value="-"/>
+
+                    <!--  Ampere hours live:  -->
+                    <controls:BoardInfoControl x:Name="ampereHoursLive_bic"
+                                               DescriptionPrimary="Ah"
+                                               DescriptionSecondary="Live"
+                                               Value="-"/>
+                </GridView>
+
+                <controls:SeperatorControl Text="Battery:"/>
+                <GridView Margin="10"
+                          HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          SelectionMode="None">
+                    <!--  Battery voltage:  -->
+                    <controls:BoardInfoControl x:Name="batteryVoltage_bic"
+                                               DescriptionPrimary="V"
+                                               DescriptionSecondary="Battery"
+                                               Value="-"/>
+
+                    <!--  Battery ampere:  -->
+                    <controls:BoardInfoControl x:Name="batteryAmpere_bic"
+                                               DescriptionPrimary="A"
+                                               DescriptionSecondary="Battery"
+                                               Value="-"/>
+                </GridView>
+
+                <controls:SeperatorControl Margin="0,10,0,0"
+                                           Text="Misc:"/>
+                <GridView Margin="10"
+                          HorizontalAlignment="Center"
+                          IsItemClickEnabled="False"
+                          SelectionMode="None">
+                    <!--  Battery temperature:  -->
+                    <controls:BoardInfoControl x:Name="batteryTemp_bic"
+                                               DescriptionPrimary="°C"
+                                               DescriptionSecondary="Battery"
+                                               Value="-"/>
+
+                    <!--  Motor temperature:  -->
+                    <controls:BoardInfoControl x:Name="motorTemp_bic"
+                                               DescriptionPrimary="°C"
+                                               DescriptionSecondary="Motor"
+                                               Value="-"/>
+
+                    <!--  Controller temperature:  -->
+                    <controls:BoardInfoControl x:Name="controllerTemp_bic"
+                                               DescriptionPrimary="°C"
+                                               DescriptionSecondary="Controller"
+                                               Value="-"/>
+
+                    <!--  Prevent screen lock  -->
+                    <controls:PreventScreenLockControl/>
+                </GridView>
             </StackPanel>
         </ScrollViewer>
 

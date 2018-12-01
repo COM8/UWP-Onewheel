@@ -332,12 +332,6 @@ namespace Onewheel.Pages
 
         private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
         {
-            /*if(!args.UUID.Equals(OnewheelInfo.CHARACTERISTIC_UART_SERIAL_READ))
-            {
-                string hex = BitConverter.ToString(args.VALUE);
-                Debug.WriteLine("Read Value: " + hex + " " + args.UUID);
-            }*/
-
             // General:
             if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL))
             {

@@ -1,5 +1,4 @@
 ﻿using DataManager.Classes;
-using Logging;
 using OnewheelBluetooth.Classes.Events;
 using OnewheelBluetooth.Classes.Handler;
 using System;
@@ -40,8 +39,26 @@ namespace OnewheelBluetooth.Classes
         public static readonly Guid CHARACTERISTIC_BATTERY_CELL_VOLTAGES = Guid.Parse("e659f31b-ea98-11e3-ac10-0800200c9a66");
 
         public static readonly Guid CHARACTERISTIC_MOTOR_CONTROLLER_TEMPERATURE = Guid.Parse("e659f310-ea98-11e3-ac10-0800200c9a66");
+        /// <summary>
+        /// Three modes:
+        /// 0 - off
+        /// 1 - on
+        /// 2 - custom
+        /// </summary>
         public static readonly Guid CHARACTERISTIC_LIGHTING_MODE = Guid.Parse("e659f30c-ea98-11e3-ac10-0800200c9a66");
+        /// <summary>
+        /// Two bytes:
+        /// 0 - white
+        /// 1 - red
+        /// Level from 0 (off) to 75 (brightest)
+        /// </summary>
         public static readonly Guid CHARACTERISTIC_LIGHTING_BACK = Guid.Parse("e659f30e-ea98-11e3-ac10-0800200c9a66");
+        /// <summary>
+        /// Two bytes:
+        /// 0 - white
+        /// 1 - red
+        /// Level from 0 (off) to 75 (brightest)
+        /// </summary>
         public static readonly Guid CHARACTERISTIC_LIGHTING_FRONT = Guid.Parse("e659f30d-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_SPEED_RPM = Guid.Parse("e659f30b-ea98-11e3-ac10-0800200c9a66");
 

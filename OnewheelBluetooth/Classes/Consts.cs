@@ -19,6 +19,9 @@
         public const double CUSTOM_SHAPING_STANCE_DEFAULT = 0.0;
         public const int CUSTOM_SHAPING_AGGRESSIVENESS_DEFAULT = 6;
 
+        public const uint CUSTOM_LIGHT_LEVEL_MIN = 0;
+        public const uint CUSTOM_LIGHT_LEVEL_MAX = 75;
+
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
