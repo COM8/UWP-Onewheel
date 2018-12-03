@@ -3,6 +3,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.Devices.Bluetooth;
 using OnewheelBluetooth.Classes;
+using System;
 
 namespace Onewheel.Pages
 {
@@ -94,6 +95,12 @@ namespace Onewheel.Pages
             }
         }
 
+        private void ShowCellVoltages()
+        {
+            byte[] data = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES);
+            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => batteryCellVoltages_bcvc.SetVoltages(data)).AsTask();
+        }
+
         #endregion
 
         #region --Misc Methods (Protected)--
@@ -105,7 +112,26 @@ namespace Onewheel.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             OnewheelConnectionHelper.INSTANCE.OnewheelChanged += INSTANCE_OnewheelChanged;
+            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
             SetBoard(OnewheelConnectionHelper.INSTANCE.GetOnewheel());
+
+            // Battery:
+            ShowCellVoltages();
+        }
+
+        private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
+        {
+            // Battery:
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES))
+            {
+                ShowCellVoltages();
+            }
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e)
+        {
+            OnewheelConnectionHelper.INSTANCE.OnewheelChanged -= INSTANCE_OnewheelChanged;
+            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
         }
 
         private void INSTANCE_OnewheelChanged(OnewheelConnectionHelper sender, OnewheelBluetooth.Classes.Events.OnewheelChangedEventArgs args)

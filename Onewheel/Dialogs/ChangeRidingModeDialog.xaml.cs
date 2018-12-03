@@ -208,7 +208,7 @@ namespace Onewheel.Dialogs
 
         private void Aggressiveness_sldr_ValueChanged(object sender, Windows.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
         {
-            resetAggressiveness_btn.IsEnabled = aggressiveness_sldr.Value != Consts.CUSTOM_SHAPING_AGGRESSIVENESS_DEFAULT;
+            //resetAggressiveness_btn.IsEnabled = aggressiveness_sldr.Value != Consts.CUSTOM_SHAPING_AGGRESSIVENESS_DEFAULT;
         }
 
         private void ResetAggressiveness_btn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)

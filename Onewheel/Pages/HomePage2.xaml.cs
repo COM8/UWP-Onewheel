@@ -158,21 +158,6 @@ namespace Onewheel.Pages
             }).AsTask();
         }
 
-        private void ShowBatteryCellVoltages()
-        {
-            byte[] values = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES);
-            if (values != null)
-            {
-                double[] voltages = Utils.ToBatteryCellVoltages(values);
-
-                string s = "";
-                for (int i = 0; i < voltages.Length; i++)
-                {
-                    s += voltages[i] + ", ";
-                }
-            }
-        }
-
         private void ShowRidingMode()
         {
             uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE);
@@ -336,9 +321,6 @@ namespace Onewheel.Pages
             ShowBatteryTemperature();
             ShowMotorControllerTemperature();
 
-            // Battery voltages:
-            ShowBatteryCellVoltages();
-
             // Riding mode:
             ShowRidingMode();
         }
@@ -379,10 +361,6 @@ namespace Onewheel.Pages
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL))
             {
                 ShowBatteryLevel();
-            }
-            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES))
-            {
-                ShowBatteryCellVoltages();
             }
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CURRENT_AMPERE))
             {

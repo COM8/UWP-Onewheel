@@ -97,6 +97,9 @@
     </Compile>
     <Compile Include="Classes\SpeedMeasurement.cs" />
     <Compile Include="Classes\UIUtils.cs" />
+    <Compile Include="Controls\BoardBatteryCellVoltagesControl.xaml.cs">
+      <DependentUpon>BoardBatteryCellVoltagesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\BoardInfoControl.xaml.cs">
       <DependentUpon>BoardInfoControl.xaml</DependentUpon>
     </Compile>
@@ -135,6 +138,7 @@
     <Compile Include="DataTemplates\BoardRidingModeIconValueConverter.cs" />
     <Compile Include="DataTemplates\BoardInfoValueConverter.cs" />
     <Compile Include="DataTemplates\ItemCountToEmptyLabelVisibilityConverter.cs" />
+    <Compile Include="DataTemplates\BatteryCellVoltageDataTemplate.cs" />
     <Compile Include="DataTemplates\RidingModeDataTemplate.cs" />
     <Compile Include="Dialogs\ChangeRidingModeDialog.xaml.cs">
       <DependentUpon>ChangeRidingModeDialog.xaml</DependentUpon>
@@ -224,6 +228,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\BoardBatteryCellVoltagesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\BoardInfoControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
