@@ -1,4 +1,6 @@
-﻿namespace OnewheelBluetooth.Classes
+﻿using System.Text;
+
+namespace OnewheelBluetooth.Classes
 {
     public class OnewheelStatus
     {
@@ -26,14 +28,14 @@
         {
             if (!(data is null) && data.Length > 0)
             {
-                this.RIDER_DETECTED = IsBitSet(data[0], 0);
-                this.RIDER_DETECTED_PAD_1 = IsBitSet(data[0], 1);
-                this.RIDER_DETECTED_PAD_2 = IsBitSet(data[0], 2);
-                this.ICSU_FAULT = IsBitSet(data[0], 3);
-                this.ICSV_FAULT = IsBitSet(data[0], 4);
-                this.CHARGING = IsBitSet(data[0], 5);
-                this.BMS_CTRL_COMMS = IsBitSet(data[0], 6);
-                this.BROKEN_CAPACITOR = IsBitSet(data[0], 7);
+                this.RIDER_DETECTED = IsBitSet(data[1], 0);
+                this.RIDER_DETECTED_PAD_1 = IsBitSet(data[1], 1);
+                this.RIDER_DETECTED_PAD_2 = IsBitSet(data[1], 2);
+                this.ICSU_FAULT = IsBitSet(data[1], 3);
+                this.ICSV_FAULT = IsBitSet(data[1], 4);
+                this.CHARGING = IsBitSet(data[1], 5);
+                this.BMS_CTRL_COMMS = IsBitSet(data[1], 6);
+                this.BROKEN_CAPACITOR = IsBitSet(data[1], 7);
             }
         }
 
@@ -45,7 +47,26 @@
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder("Rider detected: ");
+            sb.Append(RIDER_DETECTED);
+            sb.Append(", Pad 1: ");
+            sb.Append(RIDER_DETECTED_PAD_1);
+            sb.Append(", Pad 2: ");
+            sb.Append(RIDER_DETECTED_PAD_2);
+            sb.Append(", ICSU Fault: ");
+            sb.Append(ICSU_FAULT);
+            sb.Append(", ICSV Fault: ");
+            sb.Append(ICSV_FAULT);
+            sb.Append(", Charging: ");
+            sb.Append(CHARGING);
+            sb.Append(", BMS Control: ");
+            sb.Append(BMS_CTRL_COMMS);
+            sb.Append(", Broken Capacitor: ");
+            sb.Append(BROKEN_CAPACITOR);
+            return sb.ToString();
+        }
 
         #endregion
 

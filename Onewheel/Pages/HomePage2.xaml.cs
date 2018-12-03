@@ -87,14 +87,13 @@ namespace Onewheel.Pages
         private void ShowBatteryLevel()
         {
             uint level = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL);
-            byte[] status = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_STATUS);
-            OnewheelStatus onewheelStatus = new OnewheelStatus(status);
+            OnewheelStatus status = OnewheelConnectionHelper.INSTANCE.CACHE.GetStatus();
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if (level >= 0 && level <= 100)
                 {
                     batteryPerc_tbx.Text = level + "%";
-                    batteryIcon_tbx.Text = onewheelStatus.CHARGING ? UIUtils.BATTERY_CHARCHING_LEVEL_ICONS[level / 10] : UIUtils.BATTERY_LEVEL_ICONS[level / 10];
+                    batteryIcon_tbx.Text = status.CHARGING ? UIUtils.BATTERY_CHARCHING_LEVEL_ICONS[level / 10] : UIUtils.BATTERY_LEVEL_ICONS[level / 10];
                 }
                 else
                 {
@@ -102,6 +101,14 @@ namespace Onewheel.Pages
                     batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[11];
                 }
             }).AsTask();
+        }
+
+        private void ShowStatus()
+        {
+            OnewheelStatus status = OnewheelConnectionHelper.INSTANCE.CACHE.GetStatus();
+            ShowBatteryLevel();
+
+            Logger.Debug("CHARACTERISTIC_STATUS: " + status);
         }
 
         private void ShowLightingMode()
@@ -418,8 +425,7 @@ namespace Onewheel.Pages
             // Status:
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_STATUS))
             {
-                uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_STATUS);
-                Logger.Debug("CHARACTERISTIC_STATUS: " + value);
+                ShowStatus();
             }
         }
 

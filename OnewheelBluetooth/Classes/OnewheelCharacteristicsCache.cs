@@ -195,6 +195,16 @@ namespace OnewheelBluetooth.Classes
             return GetUint(value);
         }
 
+        public OnewheelStatus GetStatus(Guid uuid)
+        {
+            return new OnewheelStatus(GetBytes(uuid));
+        }
+
+        public OnewheelStatus GetStatus()
+        {
+            return GetStatus(CHARACTERISTIC_STATUS);
+        }
+
         public ulong GetULong(byte[] value)
         {
             if (value != null && value.Length == 8)
