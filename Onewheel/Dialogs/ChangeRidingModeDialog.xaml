@@ -28,7 +28,8 @@
             <ComboBox HorizontalAlignment="Stretch"
                       ItemTemplate="{StaticResource RidingModeTemplate}"
                       ItemsSource="{x:Bind VIEW_MODEL.MODEL.MODES}"
-                      PlaceholderText="Select riding mode..."/>
+                      PlaceholderText="Select riding mode..."
+                      SelectedItem="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=TwoWay}"/>
             <TextBlock Margin="0,10,0,0"
                        Text="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=OneWay, Converter={StaticResource RidingModeDataTemplateStringDescriptionValueConverter}}"
                        TextTrimming="CharacterEllipsis"
