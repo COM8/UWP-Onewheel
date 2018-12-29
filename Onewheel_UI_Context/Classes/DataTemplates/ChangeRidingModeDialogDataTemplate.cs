@@ -33,7 +33,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
             set { SetProperty(ref _SelectedMode, value); }
         }
 
-        private readonly ObservableCollection<RidingModeDataTemplate> MODES = new ObservableCollection<RidingModeDataTemplate>();
+        public readonly ObservableCollection<RidingModeDataTemplate> MODES = new ObservableCollection<RidingModeDataTemplate>();
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
