@@ -4,6 +4,7 @@ using OnewheelBluetooth.Classes.Events;
 using OnewheelBluetooth.Classes.Handler;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OnewheelBluetooth.Classes
 {
@@ -112,7 +113,7 @@ namespace OnewheelBluetooth.Classes
             CHARACTERISTIC_SAFETY_HR,
             CHARACTERISTIC_LAST_ERRORS,
 
-            CHARACTERISTIC_CUSTOM_SHAPING, // Custom shaping
+            CHARACTERISTIC_CUSTOM_SHAPING,
 
             CHARACTERISTIC_BATTERY_SERIAL_NUMBER,
             CHARACTERISTIC_BATTERY_LEVEL,
@@ -139,6 +140,15 @@ namespace OnewheelBluetooth.Classes
 
             CHARACTERISTIC_LIFETIME_ODOMETER,
             CHARACTERISTIC_LIFETIME_AMPERE_HOURS,
+        };
+
+        /// <summary>
+        /// These characteristics only update mock objects,
+        /// so they do not need to be pushed out with a notification each time they change.
+        /// </summary>
+        public static readonly Guid[] DONT_SEND_ON_CHANGED_NOTIFICATIONS_CHARACTERISTICS = new Guid[]
+        {
+            CHARACTERISTIC_CUSTOM_SHAPING
         };
 
         private readonly Dictionary<Guid, byte[]> CHARACTERISTICS = new Dictionary<Guid, byte[]>();
@@ -294,18 +304,24 @@ namespace OnewheelBluetooth.Classes
                 switch (value[1])
                 {
                     case Consts.CUSTOM_SHAPING_IDENT_STANCE_PROFILE:
-                        AddToDictionary(MOCK_CUSTOM_SHAPING_STANCE_PROFILE, value, false);
-                        Logger.Debug("New stance profile: " + (sbyte)value[0]);
+                        if (AddToDictionary(MOCK_CUSTOM_SHAPING_STANCE_PROFILE, value, false))
+                        {
+                            Logger.Debug("New stance profile: " + (sbyte)value[0]);
+                        }
                         break;
 
                     case Consts.CUSTOM_SHAPING_IDENT_CARVE_ABILITY:
-                        AddToDictionary(MOCK_CUSTOM_SHAPING_CARVE_ABILITY, value, false);
-                        Logger.Debug("New carve ability: " + (sbyte)value[0]);
+                        if (AddToDictionary(MOCK_CUSTOM_SHAPING_CARVE_ABILITY, value, false))
+                        {
+                            Logger.Debug("New carve ability: " + (sbyte)value[0]);
+                        }
                         break;
 
                     case Consts.CUSTOM_SHAPING_IDENT_AGGRESSIVENESS:
-                        AddToDictionary(MOCK_CUSTOM_SHAPING_AGGRESSIVENESS, value, false);
-                        Logger.Debug("New aggressiveness: " + (sbyte)value[0]);
+                        if (AddToDictionary(MOCK_CUSTOM_SHAPING_AGGRESSIVENESS, value, false))
+                        {
+                            Logger.Debug("New aggressiveness: " + (sbyte)value[0]);
+                        }
                         break;
 
                     default:
@@ -324,9 +340,10 @@ namespace OnewheelBluetooth.Classes
         /// <param name="uuid">The UUID of the characteristic.</param>
         /// <param name="value">The value of the characteristics.</param>
         /// <param name="updateMockObjects">Whether to update the mock objects</param>
-        internal void AddToDictionary(Guid uuid, byte[] value, bool shouldUpdateMockObjects)
+        /// <returns>True if the value is not the same as already stored for this characteristic.</returns>
+        internal bool AddToDictionary(Guid uuid, byte[] value, bool shouldUpdateMockObjects)
         {
-            AddToDictionary(uuid, value, DateTime.Now, shouldUpdateMockObjects);
+            return AddToDictionary(uuid, value, DateTime.Now, shouldUpdateMockObjects);
         }
 
         /// <summary>
@@ -336,13 +353,41 @@ namespace OnewheelBluetooth.Classes
         /// <param name="value">The value of the characteristics.</param>
         /// <param name="timestamp">A when did the value change?</param>
         /// <param name="updateMockObjects">Whether to update the mock objects</param>
-        internal void AddToDictionary(Guid uuid, byte[] value, DateTime timestamp, bool shouldUpdateMockObjects)
+        /// <returns>True if the value is not the same as already stored for this characteristic.</returns>
+        internal bool AddToDictionary(Guid uuid, byte[] value, DateTime timestamp, bool shouldUpdateMockObjects)
         {
+            if (value is null)
+            {
+                return false;
+            }
+
+            byte[] oldValue = null;
             lock (CHARACTERISTICS_LOCK)
             {
-                CHARACTERISTICS[uuid] = value;
+                if (CHARACTERISTICS.ContainsKey(uuid))
+                {
+                    oldValue = CHARACTERISTICS[uuid];
+                    CHARACTERISTICS[uuid] = value;
+                }
+                else
+                {
+                    CHARACTERISTICS[uuid] = value;
+                }
             }
-            CharacteristicChanged?.Invoke(this, new CharacteristicChangedEventArgs(uuid, value));
+
+            if (!uuid.Equals(CHARACTERISTIC_UART_SERIAL_READ) && !uuid.Equals(CHARACTERISTIC_UART_SERIAL_WRITE))
+            {
+                if (oldValue == value || (!(oldValue is null) && oldValue.SequenceEqual(value)))
+                {
+                    // Values are the same, no need to update anything:
+                    return false;
+                }
+            }
+
+            if (!DONT_SEND_ON_CHANGED_NOTIFICATIONS_CHARACTERISTICS.Contains(uuid))
+            {
+                CharacteristicChanged?.Invoke(this, new CharacteristicChangedEventArgs(uuid, oldValue, value));
+            }
 
             if (shouldUpdateMockObjects)
             {
@@ -370,6 +415,7 @@ namespace OnewheelBluetooth.Classes
                 THERMAL_HANDLER.onTempChanged(OnewheelThermalHandler.CONTROLLER_TEMP, value[0], timestamp);
                 THERMAL_HANDLER.onTempChanged(OnewheelThermalHandler.MOTOR_TEMP, value[1], timestamp);
             }
+            return true;
         }
 
         #endregion

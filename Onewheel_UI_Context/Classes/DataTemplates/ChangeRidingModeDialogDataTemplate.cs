@@ -201,19 +201,19 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
         {
             if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_RIDING_MODE))
             {
-                SetRidingMode(args.VALUE);
+                SetRidingMode(args.NEW_VALUE);
             }
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_CARVE_ABILITY))
             {
-                SetCarveAbility(args.VALUE);
+                SetCarveAbility(args.NEW_VALUE);
             }
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_STANCE_PROFILE))
             {
-                SetStanceProfile(args.VALUE);
+                SetStanceProfile(args.NEW_VALUE);
             }
             else if (args.UUID.Equals(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_AGGRESSIVENESS))
             {
-                SetAggressiveness(args.VALUE);
+                SetAggressiveness(args.NEW_VALUE);
             }
         }
 

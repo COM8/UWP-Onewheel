@@ -216,12 +216,12 @@ namespace OnewheelBluetooth.Classes
         #region --Events--
         private async void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, Events.CharacteristicChangedEventArgs args)
         {
-            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ) && !(args.VALUE is null) && args.VALUE.Length > 0)
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ) && !(args.NEW_VALUE is null) && args.NEW_VALUE.Length > 0)
             {
                 // Reverse back the byte order because we need the raw date send by the board:
-                Utils.ReverseByteOrderIfNeeded(args.VALUE);
+                Utils.ReverseByteOrderIfNeeded(args.NEW_VALUE);
 
-                AddSerialReadDataToCache(args.VALUE);
+                AddSerialReadDataToCache(args.NEW_VALUE);
                 if (DoFirstBytesMatch() && SERIAL_READ_CACHE.Count == 20)
                 {
                     await CalcAndSendResponseAsync();

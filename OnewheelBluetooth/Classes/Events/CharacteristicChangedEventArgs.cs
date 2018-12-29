@@ -7,7 +7,8 @@ namespace OnewheelBluetooth.Classes.Events
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
         public readonly Guid UUID;
-        public readonly byte[] VALUE;
+        public readonly byte[] NEW_VALUE;
+        public readonly byte[] OLD_VALUE;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -18,10 +19,11 @@ namespace OnewheelBluetooth.Classes.Events
         /// <history>
         /// 17/11/2018 Created [Fabian Sauter]
         /// </history>
-        public CharacteristicChangedEventArgs(Guid uuid, byte[] value)
+        public CharacteristicChangedEventArgs(Guid uuid, byte[] old_value, byte[] new_value)
         {
             this.UUID = uuid;
-            this.VALUE = value;
+            this.NEW_VALUE = new_value;
+            this.OLD_VALUE = old_value;
         }
 
         #endregion
