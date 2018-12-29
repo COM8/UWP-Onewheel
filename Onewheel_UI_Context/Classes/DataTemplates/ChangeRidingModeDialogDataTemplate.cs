@@ -41,6 +41,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
         public ChangeRidingModeDialogDataTemplate()
         {
             LoadRidingModes();
+            LoadCustomShaping();
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
         }
 
