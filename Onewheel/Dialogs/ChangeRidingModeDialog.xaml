@@ -2,103 +2,96 @@
                xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                xmlns:controls="using:Onewheel.Controls"
+               xmlns:converters="using:Onewheel_UI_Context.Classes.ValueConverters"
                xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-               xmlns:datatemplates="using:Onewheel.DataTemplates"
+               xmlns:datatemplates="using:Onewheel_UI_Context.Classes.DataTemplates"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                Title="Change riding mode:"
-               Loaded="ContentDialog_Loaded"
-               PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
+               PrimaryButtonClick="ContentDialog_CancelButtonClick"
                PrimaryButtonText="Cancel"
-               SecondaryButtonClick="ContentDialog_SecondaryButtonClick"
+               SecondaryButtonClick="ContentDialog_AcceptButtonClick"
                SecondaryButtonText="Accept"
-               Unloaded="ContentDialog_Unloaded"
                mc:Ignorable="d">
 
     <ContentDialog.Resources>
-        <DataTemplate x:Key="ridingModeTemplate"
+        <DataTemplate x:Key="RidingModeTemplate"
                       x:DataType="datatemplates:RidingModeDataTemplate">
-            <controls:RidingModeControl RidingMode="{x:Bind ridingMode}"/>
+            <controls:RidingModeControl RidingMode="{x:Bind Mode}"/>
         </DataTemplate>
+        <converters:RidingModeDataTemplateCustomShapingVisabilityValueConverter x:Key="RidingModeDataTemplateCustomShapingVisabilityValueConverter"/>
+        <converters:RidingModeDataTemplateStringDescriptionValueConverter x:Key="RidingModeDataTemplateStringDescriptionValueConverter"/>
+        <converters:AggressivenessUintDoubleValueConverter x:Key="AggressivenessUintDoubleValueConverter"/>
     </ContentDialog.Resources>
 
     <ScrollViewer>
         <StackPanel>
-            <ComboBox x:Name="ridingModes_cmbbx"
-                      HorizontalAlignment="Stretch"
-                      ItemTemplate="{StaticResource ridingModeTemplate}"
-                      ItemsSource="{x:Bind MODES}"
-                      PlaceholderText="Select riding mode..."
-                      SelectionChanged="ridingModes_cmbbx_SelectionChanged"/>
-            <TextBlock x:Name="description_tbx"
-                       Margin="0,10,0,0"
+            <ComboBox HorizontalAlignment="Stretch"
+                      ItemTemplate="{StaticResource RidingModeTemplate}"
+                      ItemsSource="{x:Bind VIEW_MODEL.MODEL}"
+                      PlaceholderText="Select riding mode..."/>
+            <TextBlock Margin="0,10,0,0"
+                       Text="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=OneWay, Converter={StaticResource RidingModeDataTemplateStringDescriptionValueConverter}}"
                        TextTrimming="CharacterEllipsis"
                        TextWrapping="Wrap"/>
 
-            <StackPanel x:Name="customShaping_stckp"
-                        Visibility="Collapsed">
+            <StackPanel Visibility="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=OneWay, Converter={StaticResource RidingModeDataTemplateCustomShapingVisabilityValueConverter}}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Slider x:Name="carve_sldr"
-                            Header="Carve ability"
+                    <Slider Header="Carve ability"
                             Maximum="5"
                             Minimum="-5"
                             StepFrequency="1"
                             TickFrequency="1"
                             TickPlacement="Outside"
-                            ValueChanged="Carve_sldr_ValueChanged"
-                            Value="0"/>
-                    <Button x:Name="resetCarve_btn"
-                            Grid.Column="1"
+                            Value="{x:Bind VIEW_MODEL.MODEL.CarveAbility, Mode=TwoWay}"/>
+                    <Button Grid.Column="1"
                             Margin="10,0,0,0"
                             Click="ResetCarve_btn_Click"
                             Content="&#xE72C;"
-                            FontFamily="Segoe MDL2 Assets"/>
+                            FontFamily="Segoe MDL2 Assets"
+                            ToolTipService.ToolTip="Reset"/>
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Slider x:Name="stance_sldr"
-                            Header="Stance profile"
+                    <Slider Header="Stance profile"
                             Maximum="3"
                             Minimum="-1"
                             StepFrequency="0.1"
                             TickFrequency="0.5"
                             TickPlacement="Outside"
-                            ValueChanged="Stance_sldr_ValueChanged"
-                            Value="0"/>
-                    <Button x:Name="resetStance_btn"
-                            Grid.Column="1"
+                            Value="{x:Bind VIEW_MODEL.MODEL.StanceProfile, Mode=TwoWay}"/>
+                    <Button Grid.Column="1"
                             Margin="10,0,0,0"
                             Click="ResetStance_btn_Click"
                             Content="&#xE72C;"
-                            FontFamily="Segoe MDL2 Assets"/>
+                            FontFamily="Segoe MDL2 Assets"
+                            ToolTipService.ToolTip="Reset"/>
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Slider x:Name="aggressiveness_sldr"
-                            Grid.Column="0"
+                    <Slider Grid.Column="0"
                             Header="Aggressiveness"
                             Maximum="11"
                             Minimum="1"
                             StepFrequency="1"
                             TickFrequency="1"
                             TickPlacement="Outside"
-                            ValueChanged="Aggressiveness_sldr_ValueChanged"
-                            Value="6"/>
-                    <Button x:Name="resetAggressiveness_btn"
-                            Grid.Column="1"
+                            Value="{x:Bind VIEW_MODEL.MODEL.Aggressiveness, Mode=TwoWay, Converter={StaticResource AggressivenessUintDoubleValueConverter}}"/>
+                    <Button Grid.Column="1"
                             Margin="10,0,0,0"
                             Click="ResetAggressiveness_btn_Click"
                             Content="&#xE72C;"
-                            FontFamily="Segoe MDL2 Assets"/>
+                            FontFamily="Segoe MDL2 Assets"
+                            ToolTipService.ToolTip="Reset"/>
                 </Grid>
             </StackPanel>
         </StackPanel>

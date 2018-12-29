@@ -1,9 +1,9 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace Onewheel.DataTemplates
+namespace Onewheel_UI_Context.Classes.ValueConverters
 {
-    class BoardRidingModeIconValueConverter : IValueConverter
+    public sealed class BoardRidingModeIconValueConverter : IValueConverter
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
@@ -12,15 +12,7 @@ namespace Onewheel.DataTemplates
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        /// <summary>
-        /// Basic Constructor
-        /// </summary>
-        /// <history>
-        /// 04/04/2018 Created [Fabian Sauter]
-        /// </history>
-        public BoardRidingModeIconValueConverter()
-        {
-        }
+
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\

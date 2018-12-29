@@ -1,4 +1,5 @@
 ﻿using DataManager.Classes;
+using Logging;
 using OnewheelBluetooth.Classes.Events;
 using OnewheelBluetooth.Classes.Handler;
 using System;
@@ -23,9 +24,17 @@ namespace OnewheelBluetooth.Classes
         public static readonly Guid CHARACTERISTIC_STATUS = Guid.Parse("e659f30f-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_SAFETY_HR = Guid.Parse("e659f317-ea98-11e3-ac10-0800200c9a66");
         public static readonly Guid CHARACTERISTIC_LAST_ERRORS = Guid.Parse("e659f31c-ea98-11e3-ac10-0800200c9a66");
+        /// <summary>
+        /// The board sends it about 6 times per second.
+        /// If last byte:
+        /// 0 = stance profile, values: -20 to 60, -1 to +3
+        /// 1 = carve ability, -100 to 100, -5 to 5
+        /// 2 = aggressiveness, -80 to 127, 1 to 11
+        /// Source: https://github.com/ponewheel/android-ponewheel/issues/86#issuecomment-450445851
+        /// </summary>
+        public static readonly Guid CHARACTERISTIC_CUSTOM_SHAPING = Guid.Parse("e659f31e-ea98-11e3-ac10-0800200c9a66");
 
         public static readonly Guid CHARACTERISTIC_DATA_29 = Guid.Parse("e659f31d-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
-        public static readonly Guid CHARACTERISTIC_DATA_30 = Guid.Parse("e659f31e-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
         public static readonly Guid CHARACTERISTIC_DATA_31 = Guid.Parse("e659f31f-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
         public static readonly Guid CHARACTERISTIC_DATA_32 = Guid.Parse("e659f320-ea98-11e3-ac10-0800200c9a66"); // Unknown usage
 
@@ -86,6 +95,10 @@ namespace OnewheelBluetooth.Classes
         public static readonly Guid MOCK_TRIP_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000001");
         public static readonly Guid MOCK_LIVETIME_TOP_RPM = Guid.Parse("00000000-0000-0000-0000-000000000002");
 
+        public static readonly Guid MOCK_CUSTOM_SHAPING_STANCE_PROFILE = Guid.Parse("00000000-0000-0000-0000-000000000003");
+        public static readonly Guid MOCK_CUSTOM_SHAPING_CARVE_ABILITY = Guid.Parse("00000000-0000-0000-0000-000000000004");
+        public static readonly Guid MOCK_CUSTOM_SHAPING_AGGRESSIVENESS = Guid.Parse("00000000-0000-0000-0000-000000000005");
+
         public static readonly Guid[] SUBSCRIBE_TO_CHARACTERISTICS = new Guid[]
         {
             CHARACTERISTIC_SERIAL_NUMBER,
@@ -98,6 +111,8 @@ namespace OnewheelBluetooth.Classes
             CHARACTERISTIC_STATUS,
             CHARACTERISTIC_SAFETY_HR,
             CHARACTERISTIC_LAST_ERRORS,
+
+            CHARACTERISTIC_CUSTOM_SHAPING, // Custom shaping
 
             CHARACTERISTIC_BATTERY_SERIAL_NUMBER,
             CHARACTERISTIC_BATTERY_LEVEL,
@@ -158,7 +173,7 @@ namespace OnewheelBluetooth.Classes
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
-        public string GetString(byte[] value)
+        public static string GetString(byte[] value)
         {
             if (value != null)
             {
@@ -173,7 +188,7 @@ namespace OnewheelBluetooth.Classes
             return GetString(value);
         }
 
-        public uint GetUint(byte[] value)
+        public static uint GetUint(byte[] value)
         {
             if (value != null)
             {
@@ -205,7 +220,7 @@ namespace OnewheelBluetooth.Classes
             return GetStatus(CHARACTERISTIC_STATUS);
         }
 
-        public ulong GetULong(byte[] value)
+        public static ulong GetULong(byte[] value)
         {
             if (value != null && value.Length == 8)
             {
@@ -220,7 +235,7 @@ namespace OnewheelBluetooth.Classes
             return GetULong(value);
         }
 
-        public bool GetBool(byte[] value)
+        public static bool GetBool(byte[] value)
         {
             if (value != null && value.Length == 1)
             {
@@ -268,6 +283,34 @@ namespace OnewheelBluetooth.Classes
                 {
                     AddToDictionary(MOCK_LIVETIME_TOP_RPM, value, false);
                     Settings.setSetting(SettingsConsts.BOARD_TOP_RPM_LIVE, value);
+                }
+            }
+            else if (uuid.Equals(CHARACTERISTIC_CUSTOM_SHAPING))
+            {
+                if (value.Length != 2)
+                {
+                    Logger.Warn("Unknown value for " + nameof(CHARACTERISTIC_CUSTOM_SHAPING) + " received: " + Utils.ByteArrayToHexString(value));
+                }
+                switch (value[1])
+                {
+                    case Consts.CUSTOM_SHAPING_IDENT_STANCE_PROFILE:
+                        AddToDictionary(MOCK_CUSTOM_SHAPING_STANCE_PROFILE, value, false);
+                        Logger.Debug("New stance profile: " + (sbyte)value[0]);
+                        break;
+
+                    case Consts.CUSTOM_SHAPING_IDENT_CARVE_ABILITY:
+                        AddToDictionary(MOCK_CUSTOM_SHAPING_CARVE_ABILITY, value, false);
+                        Logger.Debug("New carve ability: " + (sbyte)value[0]);
+                        break;
+
+                    case Consts.CUSTOM_SHAPING_IDENT_AGGRESSIVENESS:
+                        AddToDictionary(MOCK_CUSTOM_SHAPING_AGGRESSIVENESS, value, false);
+                        Logger.Debug("New aggressiveness: " + (sbyte)value[0]);
+                        break;
+
+                    default:
+                        Logger.Warn("Unknown custom shaping type received: " + Utils.ByteArrayToHexString(value));
+                        break;
                 }
             }
         }

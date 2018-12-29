@@ -134,8 +134,6 @@
       <DependentUpon>SpeedGraph.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataTemplates\BoardLightModeValueConverter.cs" />
-    <Compile Include="DataTemplates\BoardRidingModeTextValueConverter.cs" />
-    <Compile Include="DataTemplates\BoardRidingModeIconValueConverter.cs" />
     <Compile Include="DataTemplates\BoardInfoValueConverter.cs" />
     <Compile Include="DataTemplates\ItemCountToEmptyLabelVisibilityConverter.cs" />
     <Compile Include="DataTemplates\BatteryCellVoltageDataTemplate.cs" />
@@ -341,6 +339,10 @@
     <ProjectReference Include="..\OnewheelBluetooth\OnewheelBluetooth.csproj">
       <Project>{3006d751-eba6-4fb2-a784-0b25b5ca0ddd}</Project>
       <Name>OnewheelBluetooth</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Onewheel_UI_Context\Onewheel_UI_Context.csproj">
+      <Project>{e9a0bef8-0d98-4e94-8fd1-ce87c51e4704}</Project>
+      <Name>Onewheel_UI_Context</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

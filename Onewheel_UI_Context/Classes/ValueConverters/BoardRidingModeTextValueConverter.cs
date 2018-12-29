@@ -1,9 +1,9 @@
 ﻿using System;
 using Windows.UI.Xaml.Data;
 
-namespace Onewheel.DataTemplates
+namespace Onewheel_UI_Context.Classes.ValueConverters
 {
-    class BoardRidingModeTextValueConverter : IValueConverter
+    public sealed class BoardRidingModeTextValueConverter : IValueConverter
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
@@ -12,15 +12,7 @@ namespace Onewheel.DataTemplates
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        /// <summary>
-        /// Basic Constructor
-        /// </summary>
-        /// <history>
-        /// 04/04/2018 Created [Fabian Sauter]
-        /// </history>
-        public BoardRidingModeTextValueConverter()
-        {
-        }
+
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
@@ -65,7 +57,7 @@ namespace Onewheel.DataTemplates
                 }
             }
 
-            return value == null ? "-" :  value.ToString();
+            return value == null ? "-" : value.ToString();
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

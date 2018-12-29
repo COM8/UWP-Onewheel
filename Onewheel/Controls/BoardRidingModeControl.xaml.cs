@@ -1,12 +1,12 @@
-﻿using Onewheel.Dialogs;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Onewheel.Classes;
+using Onewheel.Dialogs;
+using Onewheel.Pages;
+using OnewheelBluetooth.Classes;
 using System;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth.GenericAttributeProfile;
-using Onewheel.Pages;
-using Onewheel.Classes;
-using OnewheelBluetooth.Classes;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Onewheel.Controls
 {
@@ -68,7 +68,10 @@ namespace Onewheel.Controls
                     }
                     else
                     {
-                        SetRideMode(dialog.selectedRideMode);
+                        if (!(dialog.VIEW_MODEL.MODEL.SelectedMode is null))
+                        {
+                            SetRideMode(dialog.VIEW_MODEL.MODEL.SelectedMode.Mode);
+                        }
                     }
                 }
                 else

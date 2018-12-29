@@ -155,6 +155,90 @@ namespace OnewheelBluetooth.Classes
             return hex.ToString();
         }
 
+        public static double CarveAbilityToDouble(byte data)
+        {
+            sbyte dataSig = (sbyte)data;
+            if (dataSig > Consts.CUSTOM_SHAPING_MAX_CARVE_ABILITY)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MAX_CARVE_ABILITY;
+            }
+            else if (dataSig < Consts.CUSTOM_SHAPING_MIN_CARVE_ABILITY)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MIN_CARVE_ABILITY;
+            }
+
+            return dataSig / Consts.CUSTOM_SHAPING_STEP_CARVE_ABILITY;
+        }
+
+        public static byte CarveAbilityToByte(double value)
+        {
+            sbyte dataSig = (sbyte)(value * Consts.CUSTOM_SHAPING_STEP_CARVE_ABILITY);
+            if (dataSig > Consts.CUSTOM_SHAPING_MAX_CARVE_ABILITY)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MAX_CARVE_ABILITY;
+            }
+            else if (dataSig < Consts.CUSTOM_SHAPING_MIN_CARVE_ABILITY)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MIN_CARVE_ABILITY;
+            }
+            return (byte)dataSig;
+        }
+
+        public static double StanceProfileToDouble(byte data)
+        {
+            sbyte dataSig = (sbyte)data;
+            if (dataSig > Consts.CUSTOM_SHAPING_MAX_STANCE_PROFILE)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MAX_STANCE_PROFILE;
+            }
+            else if (dataSig < Consts.CUSTOM_SHAPING_MIN_STANCE_PROFILE)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MIN_STANCE_PROFILE;
+            }
+
+            return dataSig / Consts.CUSTOM_SHAPING_STEP_STANCE_PROFILE;
+        }
+
+        public static byte StanceProfileToByte(double value)
+        {
+            sbyte dataSig = (sbyte)(value * Consts.CUSTOM_SHAPING_STEP_STANCE_PROFILE);
+            if (dataSig > Consts.CUSTOM_SHAPING_MAX_STANCE_PROFILE)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MAX_STANCE_PROFILE;
+            }
+            else if (dataSig < Consts.CUSTOM_SHAPING_MIN_STANCE_PROFILE)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MIN_STANCE_PROFILE;
+            }
+            return (byte)dataSig;
+        }
+
+        public static uint AggressivenessToUInt(byte data)
+        {
+            sbyte dataSig = (sbyte)data;
+            for (uint i = 0; i < Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length; i++)
+            {
+                if (dataSig <= Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[i])
+                {
+                    return i + 1;
+                }
+            };
+            return (uint)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length;
+        }
+
+        public static byte AggressivenessToByte(uint value)
+        {
+            if (value > Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length - 1)
+            {
+                value = (uint)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length;
+            }
+            else if (value < 1)
+            {
+                value = 1;
+            }
+            return (byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[value - 1];
+        }
+
         #endregion
 
         #region --Misc Methods (Private)--
