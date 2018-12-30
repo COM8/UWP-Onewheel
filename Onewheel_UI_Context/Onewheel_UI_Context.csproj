@@ -130,6 +130,7 @@
     <Compile Include="Classes\ValueConverters\AggressivenessUintDoubleValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\RidingModeDataTemplateCustomShapingVisabilityValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\RidingModeDataTemplateStringDescriptionValueConverter.cs" />
+    <Compile Include="Classes\ValueConverters\StringEmptyVisabilityValueConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Onewheel_UI_Context.rd.xml" />
   </ItemGroup>
