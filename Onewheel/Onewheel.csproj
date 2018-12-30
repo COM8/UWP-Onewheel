@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Classes\Events\SliderValueChangeCompletedEventArgs.cs" />
     <Compile Include="Classes\SpeedMeasurement.cs" />
     <Compile Include="Classes\UIUtils.cs" />
     <Compile Include="Controls\BoardBatteryCellVoltagesControl.xaml.cs">
@@ -118,6 +119,7 @@
     <Compile Include="Controls\ConnectedBoardControl.xaml.cs">
       <DependentUpon>ConnectedBoardControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ExtendedSlider.cs" />
     <Compile Include="Controls\IconTextBlockControl.xaml.cs">
       <DependentUpon>IconTextBlockControl.xaml</DependentUpon>
     </Compile>
@@ -302,11 +304,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Resources\MyValueBrushes.xaml">
+    <Page Include="Resources\MyBrushes.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Resources\MyValueStyles.xaml">
+    <Page Include="Resources\MyStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

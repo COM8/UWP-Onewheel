@@ -213,30 +213,32 @@ namespace OnewheelBluetooth.Classes
             return (byte)dataSig;
         }
 
-        public static uint AggressivenessToUInt(byte data)
+        public static double AggressivenessToDouble(byte data)
         {
             sbyte dataSig = (sbyte)data;
-            for (uint i = 0; i < Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length; i++)
+            if (dataSig > Consts.CUSTOM_SHAPING_MAX_AGGRESSIVENESS)
             {
-                if (dataSig <= Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[i])
-                {
-                    return i + 1;
-                }
-            };
-            return (uint)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length;
+                dataSig = Consts.CUSTOM_SHAPING_MAX_AGGRESSIVENESS;
+            }
+            else if (dataSig < Consts.CUSTOM_SHAPING_MIN_AGGRESSIVENESS)
+            {
+                dataSig = Consts.CUSTOM_SHAPING_MIN_AGGRESSIVENESS;
+            }
+            return Math.Round((dataSig + 100.7) / 20.7, 1);
         }
 
-        public static byte AggressivenessToByte(uint value)
+        public static byte AggressivenessToByte(double value)
         {
-            if (value > Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length - 1)
+            int dataSig = (int)Math.Round(value * 20.7 - 100.7, 0);
+            if (dataSig > Consts.CUSTOM_SHAPING_MAX_AGGRESSIVENESS)
             {
-                value = (uint)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS.Length;
+                dataSig = Consts.CUSTOM_SHAPING_MAX_AGGRESSIVENESS;
             }
-            else if (value < 1)
+            else if (dataSig < Consts.CUSTOM_SHAPING_MIN_AGGRESSIVENESS)
             {
-                value = 1;
+                dataSig = Consts.CUSTOM_SHAPING_MIN_AGGRESSIVENESS;
             }
-            return (byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[value - 1];
+            return (byte)dataSig;
         }
 
         #endregion

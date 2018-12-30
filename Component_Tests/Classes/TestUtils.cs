@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OnewheelBluetooth.Classes;
+using System;
 
 namespace Component_Tests.Classes
 {
@@ -128,57 +129,67 @@ namespace Component_Tests.Classes
         [TestMethod]
         public void Test_AggressivenessToUInt_Default_1()
         {
-            uint result = Utils.AggressivenessToUInt((byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[0]);
-            Assert.AreEqual(result, (uint)1);
+            double result = Utils.AggressivenessToDouble(unchecked((byte)-80.0d));
+            Assert.AreEqual(result, 1.0d);
         }
 
         [TestMethod]
         public void Test_AggressivenessToUInt_Min_1()
         {
-            uint result = Utils.AggressivenessToUInt((byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[6]);
-            Assert.AreEqual(result, (uint)7);
+            double result = Utils.AggressivenessToDouble(44);
+            Assert.AreEqual(result, 7.0d);
         }
 
         [TestMethod]
         public void Test_AggressivenessToUInt_Max_1()
         {
-            uint result = Utils.AggressivenessToUInt((byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[10]);
-            Assert.AreEqual(result, (uint)11);
+            double result = Utils.AggressivenessToDouble((byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[10]);
+            Assert.AreEqual(result, 11);
         }
 
         [TestMethod]
         public void Test_AggressivenessToByte_Default_1()
         {
-            byte result = Utils.AggressivenessToByte(7);
-            Assert.AreEqual(result, (byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[6]);
+            byte result = Utils.AggressivenessToByte(7.0d);
+            Assert.AreEqual(result, (byte)44.0d);
         }
 
         [TestMethod]
         public void Test_AggressivenessToByte_Min_1()
         {
-            byte result = Utils.AggressivenessToByte(1);
-            Assert.AreEqual(result, (byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[0]);
+            byte result = Utils.AggressivenessToByte(1.0d);
+            Assert.AreEqual(result, unchecked((byte)-80.0d));
         }
 
         [TestMethod]
         public void Test_AggressivenessToByte_Min_2()
         {
-            byte result = Utils.AggressivenessToByte(0);
-            Assert.AreEqual(result, (byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[0]);
+            byte result = Utils.AggressivenessToByte(0.0d);
+            Assert.AreEqual(result, unchecked((byte)-80.0d));
         }
 
         [TestMethod]
         public void Test_AggressivenessToByte_Max_1()
         {
-            byte result = Utils.AggressivenessToByte(11);
-            Assert.AreEqual(result, (byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[10]);
+            byte result = Utils.AggressivenessToByte(11.0d);
+            Assert.AreEqual(result, 127.0d);
         }
 
         [TestMethod]
         public void Test_AggressivenessToByte_Max_2()
         {
-            byte result = Utils.AggressivenessToByte(12);
-            Assert.AreEqual(result, (byte)Consts.CUSTOM_SHAPING_VALUES_AGGRESSIVENESS[10]);
+            byte result = Utils.AggressivenessToByte(12.0d);
+            Assert.AreEqual(result, 127.0d);
+        }
+
+        [TestMethod]
+        public void Test_AggressivenessToByte_Reverese_1()
+        {
+            for (double d = 1; d <= 11; d += 0.1)
+            {
+                double result = Utils.AggressivenessToDouble(Utils.AggressivenessToByte(d));
+                Assert.AreEqual(result, Math.Round(d, 1));
+            }
         }
 
         #endregion

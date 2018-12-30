@@ -1,18 +1,18 @@
-﻿using Onewheel_UI_Context.Classes.DataTemplates;
-using System.Threading.Tasks;
-
-namespace Onewheel_UI_Context.Classes.DataContexts
+﻿namespace Onewheel.Classes.Events
 {
-    public class ChangeRidingModeDialogDataContext
+    class SliderValueChangeCompletedEventArgs
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public readonly ChangeRidingModeDialogDataTemplate MODEL = new ChangeRidingModeDialogDataTemplate();
+        public readonly double VALUE;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-
+        public SliderValueChangeCompletedEventArgs(double value)
+        {
+            this.VALUE = value;
+        }
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
@@ -22,35 +22,7 @@ namespace Onewheel_UI_Context.Classes.DataContexts
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-        public void ResetCarveAbility()
-        {
-            MODEL.ResetCarveAbility();
-        }
 
-        public void ResetStanceProfile()
-        {
-            MODEL.ResetStanceProfile();
-        }
-
-        public void ResetAggressiveness()
-        {
-            MODEL.ResetAggressiveness();
-        }
-
-        public async Task SaveCarveAbilityAsync()
-        {
-            await MODEL.SaveCarveAbilityAsync();
-        }
-
-        public async Task SaveStanceProfileAsync()
-        {
-            await MODEL.SaveStanceProfileAsync();
-        }
-
-        public async Task SaveAggressivenessAsync()
-        {
-            await MODEL.SaveAggressivenessAsync();
-        }
 
         #endregion
 

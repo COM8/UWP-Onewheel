@@ -1,4 +1,5 @@
-﻿using Onewheel_UI_Context.Classes.DataContexts;
+﻿using Onewheel.Controls;
+using Onewheel_UI_Context.Classes.DataContexts;
 using Windows.UI.Xaml.Controls;
 
 namespace Onewheel.Dialogs
@@ -8,7 +9,6 @@ namespace Onewheel.Dialogs
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
         public readonly ChangeRidingModeDialogDataContext VIEW_MODEL = new ChangeRidingModeDialogDataContext();
-        public bool canceled;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -21,7 +21,6 @@ namespace Onewheel.Dialogs
         /// </history>
 		public ChangeRidingModeDialog()
         {
-            this.canceled = true;
             this.InitializeComponent();
         }
 
@@ -48,16 +47,6 @@ namespace Onewheel.Dialogs
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void ContentDialog_CancelButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            this.canceled = true;
-        }
-
-        private void ContentDialog_AcceptButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            this.canceled = false;
-        }
-
         private void ResetCarve_btn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             VIEW_MODEL.ResetCarveAbility();
@@ -71,6 +60,21 @@ namespace Onewheel.Dialogs
         private void ResetAggressiveness_btn_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             VIEW_MODEL.ResetAggressiveness();
+        }
+
+        private async void Stance_sldr_ValueChangeCompleted(ExtendedSlider sender, Classes.Events.SliderValueChangeCompletedEventArgs args)
+        {
+            await VIEW_MODEL.SaveStanceProfileAsync();
+        }
+
+        private async void Aggressiveness_sldr_ValueChangeCompleted(ExtendedSlider sender, Classes.Events.SliderValueChangeCompletedEventArgs args)
+        {
+            await VIEW_MODEL.SaveAggressivenessAsync();
+        }
+
+        private async void Carve_sldr_ValueChangeCompleted(ExtendedSlider sender, Classes.Events.SliderValueChangeCompletedEventArgs args)
+        {
+            await VIEW_MODEL.SaveCarveAbilityAsync();
         }
 
         #endregion

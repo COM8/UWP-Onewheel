@@ -7,10 +7,7 @@
                xmlns:datatemplates="using:Onewheel_UI_Context.Classes.DataTemplates"
                xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                Title="Change riding mode:"
-               PrimaryButtonClick="ContentDialog_CancelButtonClick"
-               PrimaryButtonText="Cancel"
-               SecondaryButtonClick="ContentDialog_AcceptButtonClick"
-               SecondaryButtonText="Accept"
+               SecondaryButtonText="Close"
                mc:Ignorable="d">
 
     <ContentDialog.Resources>
@@ -23,78 +20,106 @@
         <converters:AggressivenessUintDoubleValueConverter x:Key="AggressivenessUintDoubleValueConverter"/>
     </ContentDialog.Resources>
 
-    <ScrollViewer>
-        <StackPanel>
-            <ComboBox HorizontalAlignment="Stretch"
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="0,0,10,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ComboBox Grid.Row="0"
+                      HorizontalAlignment="Stretch"
                       ItemTemplate="{StaticResource RidingModeTemplate}"
                       ItemsSource="{x:Bind VIEW_MODEL.MODEL.MODES}"
                       PlaceholderText="Select riding mode..."
                       SelectedItem="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=TwoWay}"/>
-            <TextBlock Margin="0,10,0,0"
+            <TextBlock Grid.Row="1"
+                       Margin="0,10,0,0"
                        Text="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=OneWay, Converter={StaticResource RidingModeDataTemplateStringDescriptionValueConverter}}"
                        TextTrimming="CharacterEllipsis"
                        TextWrapping="Wrap"/>
 
-            <StackPanel Visibility="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=OneWay, Converter={StaticResource RidingModeDataTemplateCustomShapingVisabilityValueConverter}}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Slider Header="Carve ability"
-                            Maximum="5"
-                            Minimum="-5"
-                            StepFrequency="1"
-                            TickFrequency="1"
-                            TickPlacement="Outside"
-                            Value="{x:Bind VIEW_MODEL.MODEL.CarveAbility, Mode=TwoWay}"/>
-                    <Button Grid.Column="1"
-                            Margin="10,0,0,0"
-                            Click="ResetCarve_btn_Click"
-                            Content="&#xE72C;"
-                            FontFamily="Segoe MDL2 Assets"
-                            ToolTipService.ToolTip="Reset"/>
-                </Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Slider Header="Stance profile"
-                            Maximum="3"
-                            Minimum="-1"
-                            StepFrequency="0.1"
-                            TickFrequency="0.5"
-                            TickPlacement="Outside"
-                            Value="{x:Bind VIEW_MODEL.MODEL.StanceProfile, Mode=TwoWay}"/>
-                    <Button Grid.Column="1"
-                            Margin="10,0,0,0"
-                            Click="ResetStance_btn_Click"
-                            Content="&#xE72C;"
-                            FontFamily="Segoe MDL2 Assets"
-                            ToolTipService.ToolTip="Reset"/>
-                </Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    <Slider Grid.Column="0"
-                            Header="Aggressiveness"
-                            Maximum="11"
-                            Minimum="1"
-                            StepFrequency="1"
-                            TickFrequency="1"
-                            TickPlacement="Outside"
-                            Value="{x:Bind VIEW_MODEL.MODEL.Aggressiveness, Mode=TwoWay, Converter={StaticResource AggressivenessUintDoubleValueConverter}}"/>
-                    <Button Grid.Column="1"
-                            Margin="10,0,0,0"
-                            Click="ResetAggressiveness_btn_Click"
-                            Content="&#xE72C;"
-                            FontFamily="Segoe MDL2 Assets"
-                            ToolTipService.ToolTip="Reset"/>
-                </Grid>
-            </StackPanel>
-        </StackPanel>
+            <Grid Grid.Row="2"
+                  Visibility="{x:Bind VIEW_MODEL.MODEL.SelectedMode, Mode=OneWay, Converter={StaticResource RidingModeDataTemplateCustomShapingVisabilityValueConverter}}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <controls:SeperatorControl Grid.Row="0"
+                                           Grid.ColumnSpan="2"
+                                           Margin="0,10,0,10"/>
+
+                <controls:ExtendedSlider x:Name="carve_sldr"
+                                         Grid.Row="1"
+                                         Grid.Column="0"
+                                         Header="Carve ability"
+                                         Maximum="5"
+                                         Minimum="-5"
+                                         StepFrequency="1"
+                                         TickFrequency="1"
+                                         TickPlacement="Outside"
+                                         ValueChangeCompleted="Carve_sldr_ValueChangeCompleted"
+                                         Value="{x:Bind VIEW_MODEL.MODEL.CarveAbility, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                <Button Grid.Row="1"
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Click="ResetCarve_btn_Click"
+                        Content="&#xE72C;"
+                        FontFamily="Segoe MDL2 Assets"
+                        ToolTipService.ToolTip="Reset"/>
+
+                <controls:ExtendedSlider x:Name="stance_sldr"
+                                         Grid.Row="2"
+                                         Grid.Column="0"
+                                         CanDrag="True"
+                                         Header="Stance profile"
+                                         ManipulationMode="All"
+                                         Maximum="3"
+                                         Minimum="-1"
+                                         StepFrequency="0.1"
+                                         TickFrequency="0.5"
+                                         TickPlacement="Outside"
+                                         ValueChangeCompleted="Stance_sldr_ValueChangeCompleted"
+                                         Value="{x:Bind VIEW_MODEL.MODEL.StanceProfile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Button Grid.Row="2"
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Click="ResetStance_btn_Click"
+                        Content="&#xE72C;"
+                        FontFamily="Segoe MDL2 Assets"
+                        ToolTipService.ToolTip="Reset"/>
+
+                <controls:ExtendedSlider x:Name="aggressiveness_sldr"
+                                         Grid.Row="3"
+                                         Grid.Column="0"
+                                         Header="Aggressiveness"
+                                         Maximum="11"
+                                         Minimum="1"
+                                         StepFrequency="0.1"
+                                         TickFrequency="1"
+                                         TickPlacement="Outside"
+                                         ValueChangeCompleted="Aggressiveness_sldr_ValueChangeCompleted"
+                                         Value="{x:Bind VIEW_MODEL.MODEL.Aggressiveness, Mode=TwoWay}"/>
+                <Button Grid.Row="3"
+                        Grid.Column="1"
+                        Margin="10,0,0,0"
+                        Click="ResetAggressiveness_btn_Click"
+                        Content="&#xE72C;"
+                        FontFamily="Segoe MDL2 Assets"
+                        ToolTipService.ToolTip="Reset"/>
+            </Grid>
+            <TextBlock Grid.Row="3"
+                       Margin="0,10,0,0"
+                       Foreground="{x:Bind VIEW_MODEL.MODEL.StatusTextBrush, Mode=OneWay}"
+                       Text="{x:Bind VIEW_MODEL.MODEL.StatusText, Mode=OneWay}"/>
+        </Grid>
     </ScrollViewer>
 </ContentDialog>

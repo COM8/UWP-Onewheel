@@ -31,9 +31,11 @@
 
         public const sbyte CUSTOM_SHAPING_MIN_STANCE_PROFILE = -20;
         public const sbyte CUSTOM_SHAPING_MIN_CARVE_ABILITY = -100;
+        public const sbyte CUSTOM_SHAPING_MIN_AGGRESSIVENESS = -80;
 
         public const sbyte CUSTOM_SHAPING_MAX_STANCE_PROFILE = 60;
         public const sbyte CUSTOM_SHAPING_MAX_CARVE_ABILITY = 100;
+        public const sbyte CUSTOM_SHAPING_MAX_AGGRESSIVENESS = 127;
 
         public static readonly sbyte[] CUSTOM_SHAPING_VALUES_AGGRESSIVENESS = new sbyte[] { -80, -59, -39, -18, 3, 24, 44, 64, 86, 106, 127 };
 

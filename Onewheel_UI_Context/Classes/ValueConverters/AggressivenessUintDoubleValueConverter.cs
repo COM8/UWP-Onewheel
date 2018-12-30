@@ -29,7 +29,7 @@ namespace Onewheel_UI_Context.Classes.ValueConverters
             {
                 return (double)i;
             }
-            return (double)Utils.AggressivenessToUInt((byte)Consts.CUSTOM_SHAPING_DEFAULT_AGGRESSIVENESS);
+            return (double)Utils.AggressivenessToDouble((byte)Consts.CUSTOM_SHAPING_DEFAULT_AGGRESSIVENESS);
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
@@ -42,7 +42,7 @@ namespace Onewheel_UI_Context.Classes.ValueConverters
                 }
                 return (uint)d;
             }
-            return Utils.AggressivenessToUInt((byte)Consts.CUSTOM_SHAPING_DEFAULT_AGGRESSIVENESS);
+            return Utils.AggressivenessToDouble((byte)Consts.CUSTOM_SHAPING_DEFAULT_AGGRESSIVENESS);
         }
 
         #endregion

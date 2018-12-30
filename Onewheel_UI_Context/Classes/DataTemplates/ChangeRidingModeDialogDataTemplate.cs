@@ -1,6 +1,11 @@
-﻿using OnewheelBluetooth.Classes;
+﻿using Logging;
+using OnewheelBluetooth.Classes;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Windows.Devices.Bluetooth.GenericAttributeProfile;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 
 namespace Onewheel_UI_Context.Classes.DataTemplates
 {
@@ -12,25 +17,37 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
         public double CarveAbility
         {
             get { return _CarveAbility; }
-            set { SetCarveAbility(value); }
+            set { SetProperty(ref _CarveAbility, value); }
         }
         private double _StanceProfile;
         public double StanceProfile
         {
             get { return _StanceProfile; }
-            set { SetStanceProfile(value); }
+            set { SetProperty(ref _StanceProfile, value); }
         }
-        private uint _Aggressiveness;
-        public uint Aggressiveness
+        private double _Aggressiveness;
+        public double Aggressiveness
         {
             get { return _Aggressiveness; }
-            set { SetAggressiveness(value); }
+            set { SetProperty(ref _Aggressiveness, value); }
         }
         private RidingModeDataTemplate _SelectedMode;
         public RidingModeDataTemplate SelectedMode
         {
             get { return _SelectedMode; }
             set { SetProperty(ref _SelectedMode, value); }
+        }
+        private string _StatusText;
+        public string StatusText
+        {
+            get { return _StatusText; }
+            set { SetProperty(ref _StatusText, value); }
+        }
+        private SolidColorBrush _StatusTextBrush;
+        public SolidColorBrush StatusTextBrush
+        {
+            get { return _StatusTextBrush; }
+            set { SetProperty(ref _StatusTextBrush, value); }
         }
 
         public readonly ObservableCollection<RidingModeDataTemplate> MODES = new ObservableCollection<RidingModeDataTemplate>();
@@ -52,7 +69,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
         {
             if (carve is null || carve.Length != 2)
             {
-                CarveAbility = Utils.CarveAbilityToDouble((byte)Consts.CUSTOM_SHAPING_DEFAULT_CARVE_ABILITY);
+                ResetCarveAbility();
             }
             else
             {
@@ -60,22 +77,11 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
             }
         }
 
-        private void SetCarveAbility(double value)
-        {
-            if (SetProperty(ref _CarveAbility, value))
-            {
-                Task.Run(async () =>
-                {
-                    // Update carve
-                });
-            }
-        }
-
         private void SetStanceProfile(byte[] stance)
         {
             if (stance is null || stance.Length != 2)
             {
-                StanceProfile = Utils.StanceProfileToDouble((byte)Consts.CUSTOM_SHAPING_DEFAULT_STANCE_PROFILE);
+                ResetStanceProfile();
             }
             else
             {
@@ -83,37 +89,15 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
             }
         }
 
-        private void SetStanceProfile(double value)
-        {
-            if (SetProperty(ref _StanceProfile, value))
-            {
-                Task.Run(async () =>
-                {
-                    // Update carve
-                });
-            }
-        }
-
         private void SetAggressiveness(byte[] aggr)
         {
             if (aggr is null || aggr.Length != 2)
             {
-                Aggressiveness = Utils.AggressivenessToUInt((byte)Consts.CUSTOM_SHAPING_DEFAULT_AGGRESSIVENESS);
+                ResetAggressiveness();
             }
             else
             {
-                Aggressiveness = Utils.AggressivenessToUInt(aggr[0]);
-            }
-        }
-
-        private void SetAggressiveness(uint value)
-        {
-            if (SetProperty(ref _Aggressiveness, value))
-            {
-                Task.Run(async () =>
-                {
-                    // Update carve
-                });
+                Aggressiveness = Utils.AggressivenessToDouble(aggr[0]);
             }
         }
 
@@ -128,6 +112,18 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
                     break;
                 }
             }
+        }
+
+        private void SetErrorText(string text)
+        {
+            StatusText = text;
+            StatusTextBrush = new SolidColorBrush(Colors.Red);
+        }
+
+        private void SetSuccessText(string text)
+        {
+            StatusText = text;
+            StatusTextBrush = new SolidColorBrush(Colors.Green);
         }
 
         #endregion
@@ -145,7 +141,40 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
 
         public void ResetAggressiveness()
         {
-            Aggressiveness = Utils.AggressivenessToUInt((byte)Consts.CUSTOM_SHAPING_DEFAULT_AGGRESSIVENESS);
+            Aggressiveness = Utils.AggressivenessToDouble((byte)Consts.CUSTOM_SHAPING_DEFAULT_AGGRESSIVENESS);
+        }
+
+        public async Task SaveCarveAbilityAsync()
+        {
+            byte[] data = new byte[2];
+            data[0] = Consts.CUSTOM_SHAPING_IDENT_CARVE_ABILITY;
+            data[1] = Utils.CarveAbilityToByte(CarveAbility);
+            if (!await SaveCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_SHAPING, data, "Carve ability"))
+            {
+                LoadCarveAbility();
+            }
+        }
+
+        public async Task SaveStanceProfileAsync()
+        {
+            byte[] data = new byte[2];
+            data[0] = Consts.CUSTOM_SHAPING_IDENT_STANCE_PROFILE;
+            data[1] = Utils.StanceProfileToByte(StanceProfile);
+            if (!await SaveCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_SHAPING, data, "Stance profile"))
+            {
+                LoadStanceProfile();
+            }
+        }
+
+        public async Task SaveAggressivenessAsync()
+        {
+            byte[] data = new byte[2];
+            data[0] = Consts.CUSTOM_SHAPING_IDENT_AGGRESSIVENESS;
+            data[1] = Utils.AggressivenessToByte(Aggressiveness);
+            if (!await SaveCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_SHAPING, data, "Aggressiveness"))
+            {
+                LoadAggressiveness();
+            }
         }
 
         #endregion
@@ -180,13 +209,68 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
 
         private void LoadCustomShaping()
         {
-            byte[] carve = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_CARVE_ABILITY);
-            byte[] stance = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_STANCE_PROFILE);
-            byte[] aggr = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_AGGRESSIVENESS);
+            LoadCarveAbility();
+            LoadStanceProfile();
+            LoadAggressiveness();
+        }
 
+        private void LoadCarveAbility()
+        {
+            byte[] carve = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_CARVE_ABILITY);
             SetCarveAbility(carve);
+        }
+
+        private void LoadStanceProfile()
+        {
+            byte[] stance = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_STANCE_PROFILE);
             SetStanceProfile(stance);
+        }
+
+        private void LoadAggressiveness()
+        {
+            byte[] aggr = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.MOCK_CUSTOM_SHAPING_AGGRESSIVENESS);
             SetAggressiveness(aggr);
+        }
+
+        private async Task<bool> SaveCharacteristicAsync(Guid uuid, byte[] data, string name)
+        {
+            uint curSpeed = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM);
+            if (curSpeed <= 0)
+            {
+                OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
+                if (onewheel is null || onewheel.GetBoard().ConnectionStatus == Windows.Devices.Bluetooth.BluetoothConnectionStatus.Disconnected)
+                {
+                    // Not connected:
+                    SetErrorText("Not connected to Onewheel!");
+                    Logger.Info("Failed to update " + name + " - not connected.");
+                    return false;
+                }
+                else
+                {
+                    GattWriteResult result = await onewheel.WriteBytesAsync(uuid, data);
+                    if (!(result is null) && result.Status == GattCommunicationStatus.Success)
+                    {
+                        // Success:
+                        SetSuccessText(name + " updated!");
+                        Logger.Info(name + " updated to: " + Utils.ByteArrayToHexString(data));
+                        return true;
+                    }
+                    else
+                    {
+                        // Internal error:
+                        SetErrorText("Failed to update " + name + " - internal error!");
+                        Logger.Info("Failed to update " + name + " - " + (result is null ? "characteristic not found" : result.Status.ToString()) + '.');
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Too fast:
+                SetErrorText("Failed to update " + name + " - too fast!");
+                Logger.Info("Failed to update " + name + " - too fast(" + curSpeed + ").");
+                return false;
+            }
         }
 
         #endregion
