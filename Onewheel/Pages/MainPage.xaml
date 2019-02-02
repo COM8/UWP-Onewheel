@@ -19,6 +19,7 @@
                                      IsBackButtonVisible="Collapsed"
                                      IsSettingsVisible="True"
                                      Loaded="NavigationView_Loaded"
+                                     PaneDisplayMode="LeftCompact"
                                      SelectionChanged="NavigationView_SelectionChanged">
             <controlsComp:NavigationView.MenuItems>
                 <controlsComp:NavigationViewItem Content="Home"

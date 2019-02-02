@@ -38,7 +38,7 @@ namespace Onewheel.Controls
             this.InitializeComponent();
             if (!DeviceFamilyHelper.IsRunningOnDesktopDevice())
             {
-                this.Visibility = Visibility.Collapsed;
+                this.backRequest_btn.Visibility = Visibility.Collapsed;
                 return;
             }
             SetupTitleBar();
