@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Thread_Save_Components.Classes.SQLite
+namespace Shared.Classes.SQLite
 {
     public class TSSQLiteConnection : IDisposable
     {

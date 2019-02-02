@@ -1,7 +1,7 @@
 ﻿using Logging;
+using Shared.Classes.SQLite;
 using System;
 using System.IO;
-using Thread_Save_Components.Classes.SQLite;
 using Windows.Storage;
 
 namespace DataManager.Classes.DBManagers

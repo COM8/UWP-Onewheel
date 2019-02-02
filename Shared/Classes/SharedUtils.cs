@@ -1,8 +1,11 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading.Tasks;
+using Windows.ApplicationModel.Core;
+using Windows.UI.Core;
 
-namespace Thread_Save_Components.Classes.Threading
+namespace Shared.Classes
 {
-    public class MySemaphoreSlim : SemaphoreSlim
+    public static class SharedUtils
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
@@ -11,15 +14,7 @@ namespace Thread_Save_Components.Classes.Threading
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        /// <summary>
-        /// Basic Constructor
-        /// </summary>
-        /// <history>
-        /// 31/01/2018 Created [Fabian Sauter]
-        /// </history>
-        public MySemaphoreSlim(int initialCount, int maxCount) : base(initialCount, maxCount)
-        {
-        }
+
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
@@ -29,11 +24,19 @@ namespace Thread_Save_Components.Classes.Threading
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-        public void WaitCount(int count)
+        /// <summary>
+        /// Calls the UI thread dispatcher and executes the given callback on it.
+        /// </summary>
+        /// <param name="callback">The callback that should be executed in the UI thread.</param>
+        public static async Task CallDispatcherAsync(DispatchedHandler callback)
         {
-            for (int i = 0; i < count; i++)
+            if (CoreApplication.MainView.CoreWindow.Dispatcher.HasThreadAccess)
             {
-                Wait();
+                callback();
+            }
+            else
+            {
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, callback);
             }
         }
 

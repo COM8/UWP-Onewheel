@@ -148,6 +148,10 @@
       <Project>{3006d751-eba6-4fb2-a784-0b25b5ca0ddd}</Project>
       <Name>OnewheelBluetooth</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{4567c459-1e6c-490d-b017-9b908725b8a4}</Project>
+      <Name>Shared</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Classes\DataContexts\Controls\" />

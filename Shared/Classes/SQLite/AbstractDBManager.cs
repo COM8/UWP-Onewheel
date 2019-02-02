@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using Windows.Storage;
 
-namespace Thread_Save_Components.Classes.SQLite
+namespace Shared.Classes.SQLite
 {
     public abstract class AbstractDBManager
     {

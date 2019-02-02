@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Thread_Save_Components.Classes.Collections
+namespace Shared.Classes.Collections
 {
     public class TSTimedList<T>
     {
@@ -85,7 +85,7 @@ namespace Thread_Save_Components.Classes.Collections
         #region --Misc Methods (Private)--
         private void onItemAdded()
         {
-            if (timer == null)
+            if (timer is null)
             {
                 startTimer();
             }
