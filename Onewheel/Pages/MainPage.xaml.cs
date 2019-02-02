@@ -79,6 +79,10 @@ namespace Onewheel.Pages
 
                     case "Trip":
                         break;
+
+                    default:
+                        content_frame.Navigate(typeof(SettingsPage));
+                        break;
                 }
             }
         }

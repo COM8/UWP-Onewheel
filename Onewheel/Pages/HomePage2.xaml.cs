@@ -1,6 +1,4 @@
-﻿using DataManager.Classes;
-using Logging;
-using Onewheel.Classes;
+﻿using Logging;
 using Onewheel.Controls;
 using OnewheelBluetooth.Classes;
 using System;
@@ -40,34 +38,14 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-
+        public void ShowInfo(string text, int duration)
+        {
+            info_notification.Show(text, duration);
+        }
 
         #endregion
 
         #region --Misc Methods (Private)--
-        private void ShowBoadName()
-        {
-            string name = OnewheelConnectionHelper.INSTANCE.CACHE.GetString(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_NAME);
-            if (name == null)
-            {
-                name = Settings.getSettingString(SettingsConsts.BOARD_NAME);
-            }
-
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                if (name != null)
-                {
-                    boardName_tbx.Text = name;
-                    editName_btn.Visibility = Visibility.Visible;
-                }
-                else
-                {
-                    boardName_tbx.Text = "";
-                    editName_btn.Visibility = Visibility.Collapsed;
-                }
-            }).AsTask();
-        }
-
         private void ShowSpeed()
         {
             uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM);
@@ -84,29 +62,9 @@ namespace Onewheel.Pages
             }).AsTask();
         }
 
-        private void ShowBatteryLevel()
-        {
-            uint level = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL);
-            OnewheelStatus status = OnewheelConnectionHelper.INSTANCE.CACHE.GetStatus();
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                if (level >= 0 && level <= 100)
-                {
-                    batteryPerc_tbx.Text = level + "%";
-                    batteryIcon_tbx.Text = status.CHARGING ? UIUtils.BATTERY_CHARCHING_LEVEL_ICONS[level / 10] : UIUtils.BATTERY_LEVEL_ICONS[level / 10];
-                }
-                else
-                {
-                    batteryPerc_tbx.Text = "Unknown";
-                    batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[11];
-                }
-            }).AsTask();
-        }
-
         private void ShowStatus()
         {
             OnewheelStatus status = OnewheelConnectionHelper.INSTANCE.CACHE.GetStatus();
-            ShowBatteryLevel();
 
             Logger.Debug("CHARACTERISTIC_STATUS: " + status);
         }
@@ -295,11 +253,6 @@ namespace Onewheel.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
-
-            // General:
-            ShowBatteryLevel();
-            ShowBoadName();
-
             // Lights:
             ShowLightingMode();
             ShowLightLevelFront();
@@ -334,14 +287,8 @@ namespace Onewheel.Pages
 
         private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
         {
-            // Name:
-            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_CUSTOM_NAME))
-            {
-                ShowBoadName();
-            }
-
             // Speed:
-            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM))
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_SPEED_RPM))
             {
                 ShowSpeed();
             }
@@ -365,11 +312,7 @@ namespace Onewheel.Pages
             }
 
             // Battery:
-            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_LEVEL))
-            {
-                ShowBatteryLevel();
-            }
-            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CURRENT_AMPERE))
+            if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CURRENT_AMPERE))
             {
                 ShowAmpere(batteryAmpere_bic, OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CURRENT_AMPERE);
             }

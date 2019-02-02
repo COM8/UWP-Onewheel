@@ -1,17 +1,14 @@
-﻿using Shared.Classes;
+﻿using OnewheelBluetooth.Classes;
+using System;
+using Windows.UI.Xaml.Data;
 
-namespace Onewheel_UI_Context.Classes.DataTemplates
+namespace Onewheel_UI_Context.Classes.ValueConverters
 {
-    public sealed class RidingModeDataTemplate : AbstractDataTemplate
+    public sealed class BatteryLevelGlyphValueConverter : IValueConverter
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private uint _Mode;
-        public uint Mode
-        {
-            get { return _Mode; }
-            set { SetProperty(ref _Mode, value); }
-        }
+
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -26,7 +23,27 @@ namespace Onewheel_UI_Context.Classes.DataTemplates
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is int i && i >= 0 && i <= 100)
+            {
+                OnewheelStatus status = OnewheelConnectionHelper.INSTANCE.CACHE.GetStatus();
+                if (status.CHARGING)
+                {
+                    return UiUtils.BATTERY_CHARCHING_LEVEL_GLYPHS[i / 10];
+                }
+                else
+                {
+                    return UiUtils.BATTERY_LEVEL_GLYPHS[i / 10];
+                }
+            }
+            return UiUtils.BATTERY_LEVEL_GLYPHS[11];
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 

@@ -120,8 +120,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Classes\DataContexts\Controls\InfoTitleBarControlContext.cs" />
     <Compile Include="Classes\DataContexts\Dialogs\ChangeRidingModeDialogDataContext.cs" />
-    <Compile Include="Classes\DataTemplates\AbstractDataTemplate.cs" />
+    <Compile Include="Classes\DataTemplates\Controls\InfoTitleBarControlDataTemplate.cs" />
+    <Compile Include="Classes\ValueConverters\BatteryLevelGlyphValueConverter.cs" />
+    <Compile Include="Classes\ValueConverters\BatteryLevelTextValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\BoardRidingModeIconValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\BoardRidingModeTextValueConverter.cs" />
     <Compile Include="Classes\DataTemplates\Dialogs\ChangeRidingModeDialogDataTemplate.cs" />
@@ -138,8 +141,15 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.3</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.UI.Xaml">
+      <Version>2.0.181018003.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DataManager\DataManager.csproj">
+      <Project>{3239A757-E34C-45BE-B4B7-3A3046D5D2CE}</Project>
+      <Name>DataManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Logging\Logging.csproj">
       <Project>{24fef00d-9a32-4edb-944b-1f82877e108e}</Project>
       <Name>Logging</Name>
@@ -154,10 +164,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Classes\DataContexts\Controls\" />
     <Folder Include="Classes\DataContexts\Pages\" />
-    <Folder Include="Classes\DataTemplates\Controls\" />
     <Folder Include="Classes\DataTemplates\Pages\" />
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="WindowsMobile, Version=10.0.17763.0">
+      <Name>Windows Mobile Extensions for the UWP</Name>
+    </SDKReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

@@ -1,6 +1,6 @@
-﻿using Onewheel.Classes;
-using Onewheel.Dialogs;
+﻿using Onewheel.Dialogs;
 using Onewheel.Pages;
+using Onewheel_UI_Context.Classes;
 using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
@@ -19,7 +19,7 @@ namespace Onewheel.Controls
         }
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(object), typeof(BoardRidingModeControl), null);
 
-        private HomePage homePage;
+        private HomePage2 homePage;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -61,7 +61,7 @@ namespace Onewheel.Controls
 
         private void loadHomePage()
         {
-            homePage = UIUtils.FindParent<HomePage>(this);
+            homePage = UiUtils.FindParent<HomePage2>(this);
         }
 
         #endregion

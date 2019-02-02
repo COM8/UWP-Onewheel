@@ -1,5 +1,6 @@
 ﻿using Logging;
 using OnewheelBluetooth.Classes;
+using Shared.Classes;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;

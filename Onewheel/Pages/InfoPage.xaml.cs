@@ -1,9 +1,9 @@
-﻿using Onewheel.Classes;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.Devices.Bluetooth;
+﻿using Onewheel_UI_Context.Classes;
 using OnewheelBluetooth.Classes;
 using System;
+using Windows.Devices.Bluetooth;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace Onewheel.Pages
 {
@@ -72,12 +72,12 @@ namespace Onewheel.Pages
             if (level >= 0 && level <= 100)
             {
                 batteryPercent_tbx.Text = level + "%";
-                batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[level / 10];
+                batteryIcon_tbx.Text = UiUtils.BATTERY_LEVEL_GLYPHS[level / 10];
             }
             else
             {
                 batteryPercent_tbx.Text = "Unknown!";
-                batteryIcon_tbx.Text = UIUtils.BATTERY_LEVEL_ICONS[11];
+                batteryIcon_tbx.Text = UiUtils.BATTERY_LEVEL_GLYPHS[11];
             }
         }
 

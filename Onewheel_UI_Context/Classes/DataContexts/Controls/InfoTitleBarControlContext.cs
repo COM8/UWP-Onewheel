@@ -1,17 +1,12 @@
-﻿using Shared.Classes;
+﻿using Onewheel_UI_Context.Classes.DataTemplates.Controls;
 
-namespace Onewheel_UI_Context.Classes.DataTemplates
+namespace Onewheel_UI_Context.Classes.DataContexts.Controls
 {
-    public sealed class RidingModeDataTemplate : AbstractDataTemplate
+    public sealed class InfoTitleBarControlContext
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private uint _Mode;
-        public uint Mode
-        {
-            get { return _Mode; }
-            set { SetProperty(ref _Mode, value); }
-        }
+        public readonly InfoTitleBarControlDataTemplate MODEL = new InfoTitleBarControlDataTemplate();
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\

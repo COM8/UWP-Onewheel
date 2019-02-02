@@ -11,59 +11,10 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"
-              Height="48"
-              Background="{ThemeResource SystemAccentColorDark3}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-
-            <TextBlock x:Name="batteryPerc_tbx"
-                       Grid.Column="0"
-                       Margin="10,0,0,0"
-                       VerticalAlignment="Center"
-                       FontSize="25"/>
-
-            <Grid Grid.Column="1"
-                  Margin="10,0,10,0"
-                  HorizontalAlignment="Center"
-                  VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock x:Name="boardName_tbx"
-                           Grid.Column="0"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           TextTrimming="CharacterEllipsis"/>
-                <Button x:Name="editName_btn"
-                        Grid.Column="1"
-                        VerticalAlignment="Center"
-                        Background="Transparent"
-                        Click="editName_btn_Click"
-                        Content="&#xE70F;"
-                        FontFamily="Segoe MDL2 Assets"
-                        Visibility="Collapsed"/>
-            </Grid>
-
-            <TextBlock x:Name="batteryIcon_tbx"
-                       Grid.Column="2"
-                       Margin="0,0,10,0"
-                       HorizontalAlignment="Right"
-                       VerticalAlignment="Center"
-                       FontFamily="Segoe MDL2 Assets"
-                       FontSize="25"/>
-        </Grid>
-
-        <ScrollViewer Grid.Row="1">
+        <ScrollViewer Grid.Row="0">
             <StackPanel>
                 <Grid MaxHeight="300"
                       Margin="10,10,10,0">

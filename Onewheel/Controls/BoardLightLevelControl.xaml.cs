@@ -1,6 +1,6 @@
 ﻿using Logging;
-using Onewheel.Classes;
 using Onewheel.Pages;
+using Onewheel_UI_Context.Classes;
 using OnewheelBluetooth.Classes;
 using System;
 using System.Threading.Tasks;
@@ -42,7 +42,7 @@ namespace Onewheel.Controls
         }
         public static readonly DependencyProperty UuidProperty = DependencyProperty.Register(nameof(Uuid), typeof(Guid), typeof(BoardRidingModeControl), new PropertyMetadata(null));
 
-        private HomePage homePage;
+        private HomePage2 homePage;
         private bool skipEvents;
 
         #endregion
@@ -98,7 +98,7 @@ namespace Onewheel.Controls
 
         private void LoadHomePage()
         {
-            homePage = UIUtils.FindParent<HomePage>(this);
+            homePage = UiUtils.FindParent<HomePage2>(this);
         }
 
         private async Task UpdateLightLevelAsync()

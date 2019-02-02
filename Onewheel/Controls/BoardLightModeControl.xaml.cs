@@ -1,5 +1,5 @@
-﻿using Onewheel.Classes;
-using Onewheel.Pages;
+﻿using Onewheel.Pages;
+using Onewheel_UI_Context.Classes;
 using OnewheelBluetooth.Classes;
 using System;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace Onewheel.Controls
         private uint lightMode;
         private bool skipEvents;
 
-        private HomePage homePage;
+        private HomePage2 homePage;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -82,7 +82,7 @@ namespace Onewheel.Controls
 
         private void LoadHomePage()
         {
-            homePage = UIUtils.FindParent<HomePage>(this);
+            homePage = UiUtils.FindParent<HomePage2>(this);
         }
 
         private void WriteLighMode(uint lightMode)
@@ -128,7 +128,7 @@ namespace Onewheel.Controls
 
         private void LightsOff_rbtn_Click(object sender, RoutedEventArgs e)
         {
-            if(!skipEvents)
+            if (!skipEvents)
             {
                 SetLightMode(Consts.LIGHT_MODE_OFF);
                 WriteLighMode(Consts.LIGHT_MODE_OFF);

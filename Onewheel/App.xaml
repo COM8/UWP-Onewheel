@@ -13,6 +13,7 @@
 
                 <!--  Styles:  -->
                 <ResourceDictionary Source="ms-appx:///Resources/MyStyles.xaml"/>
+                <ResourceDictionary Source="ms-appx:///Resources/Styles/DefaultButtonStyle.xaml"/>
 
                 <!--  Value Converters:  -->
                 <ResourceDictionary Source="ms-appx:///Resources/MyValueConverters.xaml"/>

@@ -97,7 +97,6 @@
     </Compile>
     <Compile Include="Classes\Events\SliderValueChangeCompletedEventArgs.cs" />
     <Compile Include="Classes\SpeedMeasurement.cs" />
-    <Compile Include="Classes\UIUtils.cs" />
     <Compile Include="Controls\BoardBatteryCellVoltagesControl.xaml.cs">
       <DependentUpon>BoardBatteryCellVoltagesControl.xaml</DependentUpon>
     </Compile>
@@ -123,6 +122,9 @@
     <Compile Include="Controls\IconTextBlockControl.xaml.cs">
       <DependentUpon>IconTextBlockControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\InfoTitleBarControl.xaml.cs">
+      <DependentUpon>InfoTitleBarControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PreventScreenLockControl.xaml.cs">
       <DependentUpon>PreventScreenLockControl.xaml</DependentUpon>
     </Compile>
@@ -145,9 +147,6 @@
     </Compile>
     <Compile Include="Pages\ConnectPage.xaml.cs">
       <DependentUpon>ConnectPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\HomePage.xaml.cs">
-      <DependentUpon>HomePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\HomePage2.xaml.cs">
       <DependentUpon>HomePage2.xaml</DependentUpon>
@@ -260,6 +259,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\InfoTitleBarControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\PreventScreenLockControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -281,10 +284,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\ConnectPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\HomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -315,6 +314,10 @@
     <Page Include="Resources\MyValueConverters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Styles\DefaultButtonStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -360,6 +363,10 @@
     <ProjectReference Include="..\Onewheel_UI_Context\Onewheel_UI_Context.csproj">
       <Project>{e9a0bef8-0d98-4e94-8fd1-ce87c51e4704}</Project>
       <Name>Onewheel_UI_Context</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Shared.csproj">
+      <Project>{4567C459-1E6C-490D-B017-9B908725B8A4}</Project>
+      <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
