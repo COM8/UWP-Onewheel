@@ -123,8 +123,10 @@
     <Compile Include="Classes\DataContexts\Controls\InfoTitleBarControlContext.cs" />
     <Compile Include="Classes\DataContexts\Dialogs\ChangeBoardNameDialogContext.cs" />
     <Compile Include="Classes\DataContexts\Dialogs\ChangeRidingModeDialogDataContext.cs" />
+    <Compile Include="Classes\DataContexts\Pages\SettingsPageContext.cs" />
     <Compile Include="Classes\DataTemplates\Controls\InfoTitleBarControlDataTemplate.cs" />
     <Compile Include="Classes\DataTemplates\Dialogs\ChangeBoardNameDialogDataTemplate.cs" />
+    <Compile Include="Classes\DataTemplates\Pages\SettingsPageDataTemplate.cs" />
     <Compile Include="Classes\ValueConverters\BatteryLevelGlyphValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\BatteryLevelTextValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\BoardRidingModeIconValueConverter.cs" />
@@ -168,10 +170,7 @@
       <Name>Shared</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Classes\DataContexts\Pages\" />
-    <Folder Include="Classes\DataTemplates\Pages\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <SDKReference Include="WindowsMobile, Version=10.0.17763.0">
       <Name>Windows Mobile Extensions for the UWP</Name>

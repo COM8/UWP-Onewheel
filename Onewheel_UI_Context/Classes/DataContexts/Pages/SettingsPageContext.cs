@@ -1,21 +1,17 @@
-﻿using Onewheel_UI_Context.Classes.DataContexts.Pages;
-using Windows.UI.Xaml.Controls;
+﻿using Onewheel_UI_Context.Classes.DataTemplates.Pages;
 
-namespace Onewheel.Pages
+namespace Onewheel_UI_Context.Classes.DataContexts.Pages
 {
-    public sealed partial class SettingsPage : Page
+    public sealed class SettingsPageContext
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public readonly SettingsPageContext MODEL = new SettingsPageContext();
+        public readonly SettingsPageDataTemplate MODEL = new SettingsPageDataTemplate();
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        public SettingsPage()
-        {
-            this.InitializeComponent();
-        }
+
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\

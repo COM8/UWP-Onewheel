@@ -134,6 +134,9 @@
     <Compile Include="Controls\SeperatorControl.xaml.cs">
       <DependentUpon>SeperatorControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SettingsContentControl.xaml.cs">
+      <DependentUpon>SettingsContentControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SpeedGraph.xaml.cs">
       <DependentUpon>SpeedGraph.xaml</DependentUpon>
     </Compile>
@@ -148,9 +151,7 @@
     <Compile Include="Dialogs\ChangeRidingModeDialog.xaml.cs">
       <DependentUpon>ChangeRidingModeDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\ConnectPage.xaml.cs">
-      <DependentUpon>ConnectPage.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Extensions\ScrollViewerExtensions.cs" />
     <Compile Include="Pages\HomePage2.xaml.cs">
       <DependentUpon>HomePage2.xaml</DependentUpon>
     </Compile>
@@ -278,6 +279,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\SettingsContentControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\SpeedGraph.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -287,10 +292,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\ChangeRidingModeDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Pages\ConnectPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

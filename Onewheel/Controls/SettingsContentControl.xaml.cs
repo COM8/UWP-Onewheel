@@ -1,26 +1,30 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System;
-using OnewheelBluetooth.Classes;
 
-namespace Onewheel.Pages
+namespace Onewheel.Controls
 {
-    public sealed partial class ConnectPage : Page
+    public sealed partial class SettingsContentControl : UserControl
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
+        public string Header
+        {
+            get { return (string)GetValue(HeaderProperty); }
+            set { SetValue(HeaderProperty, value); }
+        }
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(SettingsContentControl), new PropertyMetadata(""));
 
+        public object MainContent
+        {
+            get { return GetValue(MainContentProperty); }
+            set { SetValue(MainContentProperty, value); }
+        }
+        public static readonly DependencyProperty MainContentProperty = DependencyProperty.Register(nameof(MainContent), typeof(object), typeof(SettingsContentControl), new PropertyMetadata(null));
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        /// <summary>
-        /// Basic Constructor
-        /// </summary>
-        /// <history>
-        /// 15/03/2018 Created [Fabian Sauter]
-        /// </history>
-        public ConnectPage()
+        public SettingsContentControl()
         {
             this.InitializeComponent();
         }
@@ -48,21 +52,7 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionHelperStateChanged += INSTANCE_OnewheelConnectionHelperStateChanged;
-            status_tbx.Text = OnewheelConnectionHelper.INSTANCE.GetState().ToString();
-        }
 
-        private void Page_Unloaded(object sender, RoutedEventArgs e)
-        {
-            OnewheelConnectionHelper.INSTANCE.OnewheelConnectionHelperStateChanged -= INSTANCE_OnewheelConnectionHelperStateChanged;
-        }
-
-        private async void INSTANCE_OnewheelConnectionHelperStateChanged(OnewheelConnectionHelper sender, OnewheelBluetooth.Classes.Events.OnewheelConnectionHelperStateChangedEventArgs args)
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => status_tbx.Text = args.NEW_STATE.ToString());
-        }
 
         #endregion
     }
