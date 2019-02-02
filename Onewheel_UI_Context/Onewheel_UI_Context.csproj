@@ -131,6 +131,9 @@
     <Compile Include="Classes\DataTemplates\RidingModeDataTemplate.cs" />
     <Compile Include="Classes\UiUtils.cs" />
     <Compile Include="Classes\ValueConverters\AggressivenessUintDoubleValueConverter.cs" />
+    <Compile Include="Classes\ValueConverters\BoolInvertedVisabilityValueConverter.cs" />
+    <Compile Include="Classes\ValueConverters\OnewheelConnectionHelperStateConnectedBoolValueConverter.cs" />
+    <Compile Include="Classes\ValueConverters\OnewheelConnectionHelperStateSearchingVisabilityValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\RidingModeDataTemplateCustomShapingVisabilityValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\RidingModeDataTemplateStringDescriptionValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\StringEmptyVisabilityValueConverter.cs" />

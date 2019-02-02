@@ -11,10 +11,13 @@
     <UserControl.Resources>
         <valueConverter:BatteryLevelTextValueConverter x:Key="BatteryLevelTextValueConverter"/>
         <valueConverter:BatteryLevelGlyphValueConverter x:Key="BatteryLevelGlyphValueConverter"/>
+        <valueConverter:OnewheelConnectionHelperStateConnectedBoolValueConverter x:Key="OnewheelConnectionHelperStateConnectedBoolValueConverter"/>
+        <valueConverter:OnewheelConnectionHelperStateSearchingVisabilityValueConverter x:Key="OnewheelConnectionHelperStateSearchingVisabilityValueConverter"/>
     </UserControl.Resources>
 
     <Grid Background="{ThemeResource SystemAccentColorDark3}">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -53,21 +56,23 @@
                     Visibility="{x:Bind BackRequestButtonVisability, Mode=OneWay}"/>
 
             <TextBlock Grid.Row="0"
-                       Grid.Column="2"
+                       Grid.Column="4"
+                       Margin="10,0,0,0"
                        VerticalAlignment="Center"
                        FontSize="20"
                        Text="{x:Bind VIEW_MODEL.MODEL.BatteryLevel, Mode=OneWay, Converter={StaticResource BatteryLevelTextValueConverter}}"/>
 
             <FontIcon Grid.Row="0"
-                      Grid.Column="4"
+                      Grid.Column="3"
+                      Margin="10,2,0,0"
                       HorizontalAlignment="Right"
                       FontSize="20"
                       Glyph="{x:Bind VIEW_MODEL.MODEL.BatteryLevel, Mode=OneWay, Converter={StaticResource BatteryLevelGlyphValueConverter}}"
                       ToolTipService.ToolTip="Battery left"/>
 
             <Grid Grid.Row="0"
-                  Grid.Column="3"
-                  Margin="10,0,10,0"
+                  Grid.Column="2"
+                  Margin="10,0,0,0"
                   HorizontalAlignment="Center">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -82,11 +87,14 @@
                         Click="EditName_btn_Click"
                         Content="&#xE70F;"
                         FontSize="15"
-                        IsEnabled="{x:Bind VIEW_MODEL.MODEL.Connected, Mode=OneWay}"
+                        IsEnabled="{x:Bind VIEW_MODEL.MODEL.ConnectionState, Mode=OneWay, Converter={StaticResource OnewheelConnectionHelperStateConnectedBoolValueConverter}}"
                         Style="{ThemeResource NavigationBackButtonSmallStyle}"
                         ToolTipService.ToolTip="Edit"/>
             </Grid>
         </Grid>
-        <local:SeperatorControl Grid.Row="1"/>
+        <local:SeperatorControl Grid.Row="2"/>
+        <ProgressBar Grid.Row="1"
+                     IsIndeterminate="True"
+                     Visibility="{x:Bind VIEW_MODEL.MODEL.ConnectionState, Mode=OneWay, Converter={StaticResource OnewheelConnectionHelperStateSearchingVisabilityValueConverter}}"/>
     </Grid>
 </UserControl>

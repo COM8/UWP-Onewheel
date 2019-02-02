@@ -21,11 +21,11 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Controls
             get { return _BatteryLevel; }
             set { SetProperty(ref _BatteryLevel, value); }
         }
-        private bool _Connected;
-        public bool Connected
+        private OnewheelConnectionHelperState _ConnectionState;
+        public OnewheelConnectionHelperState ConnectionState
         {
-            get { return _Connected; }
-            set { SetProperty(ref _Connected, value); }
+            get { return _ConnectionState; }
+            set { SetProperty(ref _ConnectionState, value); }
         }
 
         #endregion
@@ -35,6 +35,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Controls
         {
             BoardName = Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
             BatteryLevel = -1;
+            ConnectionState = OnewheelConnectionHelper.INSTANCE.GetState();
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
             OnewheelConnectionHelper.INSTANCE.OnewheelConnectionHelperStateChanged += INSTANCE_OnewheelConnectionHelperStateChanged;
         }
@@ -76,15 +77,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Controls
 
         private void INSTANCE_OnewheelConnectionHelperStateChanged(OnewheelConnectionHelper sender, OnewheelConnectionHelperStateChangedEventArgs args)
         {
-            if (args.NEW_STATE == OnewheelConnectionHelperState.CONNECTED)
-            {
-                Connected = true;
-            }
-            else
-            {
-                Connected = false;
-                BatteryLevel = -1;
-            }
+            ConnectionState = args.NEW_STATE;
         }
 
         #endregion
