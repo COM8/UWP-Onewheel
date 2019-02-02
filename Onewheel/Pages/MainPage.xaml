@@ -1,69 +1,27 @@
 ﻿<Page x:Class="Onewheel.Pages.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:controlsComp="using:Microsoft.UI.Xaml.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
       mc:Ignorable="d">
 
-    <Page.Resources>
-        <DataTemplate x:Key="hamburgerMenuItemTemplate"
-                      x:DataType="controls:HamburgerMenuGlyphItem">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="48"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <FontIcon Grid.Column="0"
-                          FontFamily="Segoe MDL2 Assets"
-                          FontSize="16"
-                          Foreground="{ThemeResource SystemControlBackgroundBaseHighBrush}"
-                          Glyph="{x:Bind Glyph, Mode=OneWay}"/>
-                <TextBlock Grid.Column="1"
-                           VerticalAlignment="Center"
-                           FontSize="16"
-                           Foreground="{ThemeResource SystemControlBackgroundBaseHighBrush}"
-                           Text="{x:Bind Label, Mode=OneWay}"/>
-            </Grid>
-        </DataTemplate>
-    </Page.Resources>
-
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <controls:HamburgerMenu x:Name="main_hbm"
-                                DisplayMode="CompactOverlay"
-                                IsPaneOpen="False"
-                                ItemClick="main_hbm_ItemClick"
-                                ItemTemplate="{StaticResource hamburgerMenuItemTemplate}"
-                                Loaded="main_hbm_Loaded"
-                                OptionsItemClick="main_hbm_OptionsItemClick"
-                                OptionsItemTemplate="{StaticResource hamburgerMenuItemTemplate}"
-                                PaneBackground="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
-                                SelectedIndex="0">
-            <controls:HamburgerMenu.ItemsSource>
-                <controls:HamburgerMenuItemCollection>
-                    <controls:HamburgerMenuGlyphItem Glyph="&#xE10F;"
-                                                     Label="Home2"
-                                                     Tag="home2"/>
-                    <controls:HamburgerMenuGlyphItem Glyph="&#xE10F;"
-                                                     Label="Home"
-                                                     Tag="home"/>
-                    <controls:HamburgerMenuGlyphItem Glyph="&#xE946;"
-                                                     Label="Info"
-                                                     Tag="info"/>
-                    <controls:HamburgerMenuGlyphItem Glyph="&#xE702;"
-                                                     Label="Connect"
-                                                     Tag="connect"/>
-                </controls:HamburgerMenuItemCollection>
-            </controls:HamburgerMenu.ItemsSource>
-
-            <controls:HamburgerMenu.OptionsItemsSource>
-                <controls:HamburgerMenuItemCollection>
-                    <controls:HamburgerMenuGlyphItem Glyph="&#xE713;"
-                                                     Label="Settings"/>
-                </controls:HamburgerMenuItemCollection>
-            </controls:HamburgerMenu.OptionsItemsSource>
-
-            <Frame x:Name="contentFrame"/>
-        </controls:HamburgerMenu>
-    </Grid>
+    <controlsComp:NavigationView x:Name="main_ngv"
+                                 IsSettingsVisible="True"
+                                 Loaded="NavigationView_Loaded"
+                                 SelectionChanged="NavigationView_SelectionChanged">
+        <controlsComp:NavigationView.MenuItems>
+            <controlsComp:NavigationViewItem Content="Home"
+                                             Icon="Home"
+                                             Tag="Home"/>
+            <controlsComp:NavigationViewItem Content="Info"
+                                             Icon="AllApps"
+                                             Tag="Info"/>
+            <controlsComp:NavigationViewItem Content="Trip"
+                                             Icon="MapPin"
+                                             Tag="Trip"/>
+        </controlsComp:NavigationView.MenuItems>
+        <Frame x:Name="content_frame"/>
+    </controlsComp:NavigationView>
 </Page>

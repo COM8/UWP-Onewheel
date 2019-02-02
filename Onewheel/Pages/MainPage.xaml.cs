@@ -1,5 +1,4 @@
-﻿using Microsoft.Toolkit.Uwp.UI.Controls;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace Onewheel.Pages
@@ -42,28 +41,7 @@ namespace Onewheel.Pages
         #endregion
 
         #region --Misc Methods (Private)--
-        private void NavigateTo(HamburgerMenuGlyphItem item)
-        {
-            HeaderText = item.Label;
-            switch (item.Tag)
-            {
-                case "home":
-                    contentFrame.Navigate(typeof(HomePage));
-                    break;
 
-                case "home2":
-                    contentFrame.Navigate(typeof(HomePage2));
-                    break;
-
-                case "info":
-                    contentFrame.Navigate(typeof(InfoPage));
-                    break;
-
-                case "connect":
-                    contentFrame.Navigate(typeof(ConnectPage));
-                    break;
-            }
-        }
 
         #endregion
 
@@ -73,22 +51,36 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void main_hbm_ItemClick(object sender, ItemClickEventArgs e)
+        private void NavigationView_Loaded(object sender, RoutedEventArgs e)
         {
-            if (e.ClickedItem is HamburgerMenuGlyphItem)
+            foreach (object item in main_ngv.MenuItems)
             {
-                NavigateTo(e.ClickedItem as HamburgerMenuGlyphItem);
+                if (item is Microsoft.UI.Xaml.Controls.NavigationViewItem navItem && string.Equals((string)navItem.Tag, "Home"))
+                {
+                    main_ngv.SelectedItem = item;
+                    break;
+                }
             }
         }
 
-        private void main_hbm_OptionsItemClick(object sender, ItemClickEventArgs e)
+        private void NavigationView_SelectionChanged(Microsoft.UI.Xaml.Controls.NavigationView sender, Microsoft.UI.Xaml.Controls.NavigationViewSelectionChangedEventArgs args)
         {
-            contentFrame.Navigate(typeof(SettingsPage));
-        }
+            if (args.SelectedItem is Microsoft.UI.Xaml.Controls.NavigationViewItem item)
+            {
+                switch (item.Tag)
+                {
+                    case "Home":
+                        content_frame.Navigate(typeof(HomePage2));
+                        break;
 
-        private void main_hbm_Loaded(object sender, RoutedEventArgs e)
-        {
-            contentFrame.Navigate(typeof(HomePage2));
+                    case "Info":
+                        content_frame.Navigate(typeof(InfoPage));
+                        break;
+
+                    case "Trip":
+                        break;
+                }
+            }
         }
 
         #endregion
