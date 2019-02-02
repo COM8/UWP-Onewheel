@@ -7,7 +7,7 @@ using Windows.Devices.Bluetooth.GenericAttributeProfile;
 using Windows.UI;
 using Windows.UI.Xaml.Media;
 
-namespace Onewheel_UI_Context.Classes.DataTemplates
+namespace Onewheel_UI_Context.Classes.DataTemplates.Dialogs
 {
     public sealed class ChangeRidingModeDialogDataTemplate : AbstractDataTemplate
     {

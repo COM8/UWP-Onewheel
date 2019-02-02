@@ -1,7 +1,7 @@
-﻿using Onewheel_UI_Context.Classes.DataTemplates;
+﻿using Onewheel_UI_Context.Classes.DataTemplates.Dialogs;
 using System.Threading.Tasks;
 
-namespace Onewheel_UI_Context.Classes.DataContexts
+namespace Onewheel_UI_Context.Classes.DataContexts.Dialogs
 {
     public class ChangeRidingModeDialogDataContext
     {

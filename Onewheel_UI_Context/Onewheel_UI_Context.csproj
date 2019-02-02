@@ -120,11 +120,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Classes\DataContexts\ChangeRidingModeDialogDataContext.cs" />
+    <Compile Include="Classes\DataContexts\Dialogs\ChangeRidingModeDialogDataContext.cs" />
     <Compile Include="Classes\DataTemplates\AbstractDataTemplate.cs" />
     <Compile Include="Classes\ValueConverters\BoardRidingModeIconValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\BoardRidingModeTextValueConverter.cs" />
-    <Compile Include="Classes\DataTemplates\ChangeRidingModeDialogDataTemplate.cs" />
+    <Compile Include="Classes\DataTemplates\Dialogs\ChangeRidingModeDialogDataTemplate.cs" />
     <Compile Include="Classes\DataTemplates\RidingModeDataTemplate.cs" />
     <Compile Include="Classes\UiUtils.cs" />
     <Compile Include="Classes\ValueConverters\AggressivenessUintDoubleValueConverter.cs" />
@@ -149,7 +149,12 @@
       <Name>OnewheelBluetooth</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Classes\DataContexts\Controls\" />
+    <Folder Include="Classes\DataContexts\Pages\" />
+    <Folder Include="Classes\DataTemplates\Controls\" />
+    <Folder Include="Classes\DataTemplates\Pages\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

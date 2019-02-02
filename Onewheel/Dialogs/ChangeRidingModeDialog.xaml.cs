@@ -1,5 +1,5 @@
 ﻿using Onewheel.Controls;
-using Onewheel_UI_Context.Classes.DataContexts;
+using Onewheel_UI_Context.Classes.DataContexts.Dialogs;
 using Windows.UI.Xaml.Controls;
 
 namespace Onewheel.Dialogs
