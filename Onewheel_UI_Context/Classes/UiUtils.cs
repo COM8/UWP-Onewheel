@@ -50,6 +50,8 @@ namespace Onewheel_UI_Context.Classes
             "\uEC02", // Unknown
         };
 
+        private static TaskCompletionSource<ContentDialog> contentDialogShowRequest;
+
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
@@ -139,6 +141,32 @@ namespace Onewheel_UI_Context.Classes
             else
             {
             }
+        }
+
+        /// <summary>
+        /// Shows the given content dialog on the screen, if no other dialog is shown right now.
+        /// If there is an other one being shown, the dialog will be shown afterwards.
+        /// </summary>
+        /// <param name="dialog">The dialog that should get shown.</param>
+        public static async Task<ContentDialogResult> ShowDialogAsync(ContentDialog dialog)
+        {
+            // Make sure it gets invoked by the UI thread:
+            if (!Window.Current.Dispatcher.HasThreadAccess)
+            {
+                throw new InvalidOperationException("This method can only be invoked from UI thread.");
+            }
+
+            while (!(contentDialogShowRequest is null))
+            {
+                await contentDialogShowRequest.Task;
+            }
+
+            contentDialogShowRequest = new TaskCompletionSource<ContentDialog>();
+            ContentDialogResult result = await dialog.ShowAsync();
+            contentDialogShowRequest.SetResult(dialog);
+            contentDialogShowRequest = null;
+
+            return result;
         }
 
         /// <summary>

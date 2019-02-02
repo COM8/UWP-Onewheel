@@ -121,8 +121,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Classes\DataContexts\Controls\InfoTitleBarControlContext.cs" />
+    <Compile Include="Classes\DataContexts\Dialogs\ChangeBoardNameDialogContext.cs" />
     <Compile Include="Classes\DataContexts\Dialogs\ChangeRidingModeDialogDataContext.cs" />
     <Compile Include="Classes\DataTemplates\Controls\InfoTitleBarControlDataTemplate.cs" />
+    <Compile Include="Classes\DataTemplates\Dialogs\ChangeBoardNameDialogDataTemplate.cs" />
     <Compile Include="Classes\ValueConverters\BatteryLevelGlyphValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\BatteryLevelTextValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\BoardRidingModeIconValueConverter.cs" />

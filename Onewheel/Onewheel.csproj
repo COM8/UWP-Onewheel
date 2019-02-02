@@ -142,6 +142,9 @@
     <Compile Include="DataTemplates\ItemCountToEmptyLabelVisibilityConverter.cs" />
     <Compile Include="DataTemplates\BatteryCellVoltageDataTemplate.cs" />
     <Compile Include="DataTemplates\RidingModeDataTemplate.cs" />
+    <Compile Include="Dialogs\ChangeBoardNameDialog.xaml.cs">
+      <DependentUpon>ChangeBoardNameDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\ChangeRidingModeDialog.xaml.cs">
       <DependentUpon>ChangeRidingModeDialog.xaml</DependentUpon>
     </Compile>
@@ -276,6 +279,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\SpeedGraph.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ChangeBoardNameDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,4 +1,5 @@
-﻿using Onewheel_UI_Context.Classes;
+﻿using Onewheel.Dialogs;
+using Onewheel_UI_Context.Classes;
 using Onewheel_UI_Context.Classes.DataContexts.Controls;
 using UWPX_UI_Context.Classes;
 using Windows.ApplicationModel.Core;
@@ -152,9 +153,11 @@ namespace Onewheel.Controls
             }
         }
 
-        private void EditName_btn_Click(object sender, RoutedEventArgs e)
+        private async void EditName_btn_Click(object sender, RoutedEventArgs e)
         {
-
+            ChangeBoardNameDialog dialog = new ChangeBoardNameDialog();
+            await UiUtils.ShowDialogAsync(dialog);
+            await VIEW_MODEL.ChangeBoardNameAsync(dialog.VIEW_MODEL);
         }
 
         #endregion

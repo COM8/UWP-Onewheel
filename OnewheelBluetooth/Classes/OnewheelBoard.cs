@@ -1,6 +1,7 @@
 ﻿using Logging;
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
@@ -102,6 +103,11 @@ namespace OnewheelBluetooth.Classes
             Utils.ReverseByteOrderIfNeeded(dataArr);
 
             return await WriteBytesAsync(uuid, dataArr);
+        }
+
+        public async Task<GattWriteResult> WriteStringAsync(Guid uuid, string data)
+        {
+            return await WriteBytesAsync(uuid, Encoding.ASCII.GetBytes(data));
         }
 
         public async Task<GattWriteResult> WriteBytesAsync(Guid uuid, byte[] data)
