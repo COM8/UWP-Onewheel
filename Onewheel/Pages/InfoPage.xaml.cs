@@ -1,6 +1,7 @@
 ﻿using Onewheel_UI_Context.Classes;
 using OnewheelBluetooth.Classes;
-using System;
+using Shared.Classes;
+using System.Threading.Tasks;
 using Windows.Devices.Bluetooth;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -95,10 +96,22 @@ namespace Onewheel.Pages
             }
         }
 
-        private void ShowCellVoltages()
+        private async Task ShowCellVoltagesAsync()
         {
             byte[] data = OnewheelConnectionHelper.INSTANCE.CACHE.GetBytes(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES);
-            Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => batteryCellVoltages_bcvc.SetVoltages(data)).AsTask();
+            await SharedUtils.CallDispatcherAsync(() => batteryCellVoltages_bcvc.SetVoltages(data));
+        }
+
+        private async Task ShowHardwareRevisionAsync()
+        {
+            uint hw = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_HARDWARE_REVISION);
+            await SharedUtils.CallDispatcherAsync(() => hardware_tbx.Text = hw.ToString());
+        }
+
+        private async Task ShowFirmwareRevisionAsync()
+        {
+            uint fw = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION);
+            await SharedUtils.CallDispatcherAsync(() => firmware_tbx.Text = fw.ToString());
         }
 
         #endregion
@@ -109,22 +122,36 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+        private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             OnewheelConnectionHelper.INSTANCE.OnewheelChanged += INSTANCE_OnewheelChanged;
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;
             SetBoard(OnewheelConnectionHelper.INSTANCE.GetOnewheel());
 
             // Battery:
-            ShowCellVoltages();
+            await ShowCellVoltagesAsync();
+            // Firmware:
+            await ShowFirmwareRevisionAsync();
+            // Hardware:
+            await ShowHardwareRevisionAsync();
         }
 
-        private void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
+        private async void CACHE_CharacteristicChanged(OnewheelCharacteristicsCache sender, OnewheelBluetooth.Classes.Events.CharacteristicChangedEventArgs args)
         {
             // Battery:
             if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_BATTERY_CELL_VOLTAGES))
             {
-                ShowCellVoltages();
+                await ShowCellVoltagesAsync();
+            }
+            // Firmware:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION))
+            {
+                await ShowFirmwareRevisionAsync();
+            }
+            // Hardware:
+            else if (args.UUID.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_HARDWARE_REVISION))
+            {
+                await ShowHardwareRevisionAsync();
             }
         }
 

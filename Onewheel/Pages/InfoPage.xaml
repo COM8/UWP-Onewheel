@@ -52,6 +52,18 @@
 
                 <TextBlock Margin="0,10,0,0"
                            FontSize="20"
+                           Text="Firmware revision:"/>
+                <TextBlock x:Name="firmware_tbx"
+                           TextWrapping="Wrap"/>
+
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
+                           Text="Hardware revision:"/>
+                <TextBlock x:Name="hardware_tbx"
+                           TextWrapping="Wrap"/>
+
+                <TextBlock Margin="0,10,0,0"
+                           FontSize="20"
                            Text="Battery:"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock x:Name="batteryIcon_tbx"
