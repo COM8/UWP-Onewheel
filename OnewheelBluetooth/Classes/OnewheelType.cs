@@ -4,6 +4,6 @@
     {
         ONEWHEEL = 0,
         ONEWHEEL_PLUS = 1,
-        ONEWHEEL_XR = 2
+        ONEWHEEL_PLUS_XR = 2
     }
 }

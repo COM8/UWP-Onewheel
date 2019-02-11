@@ -111,7 +111,7 @@ namespace OnewheelBluetooth.Classes
                     multiplier = 1.8;
                     break;
 
-                case OnewheelType.ONEWHEEL_XR:
+                case OnewheelType.ONEWHEEL_PLUS_XR:
                     multiplier = 1.8; // Not validated
                     break;
             }

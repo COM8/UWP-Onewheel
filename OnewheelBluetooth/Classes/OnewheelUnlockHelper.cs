@@ -12,9 +12,14 @@ namespace OnewheelBluetooth.Classes
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
         /// <summary>
-        /// The Gemini firmware revision number.
+        /// The Gemini firmware revision number for the Onewheel Plus.
         /// </summary>
-        private readonly byte[] FIRMWARE_REVISION_BYTES = new byte[] { 0x0f, 0xc2 };
+        private readonly byte[] FIRMWARE_REVISION_OW_PLUS_BYTES = new byte[] { 0x0f, 0xc2 };
+
+        /// <summary>
+        /// The Gemini firmware revision number for the Onewheel Plus XR.
+        /// </summary>
+        private readonly byte[] FIRMWARE_REVISION_OW_PLUS_XR_BYTES = new byte[] { 0x10, 0x26 };
 
         /// <summary>
         /// The first three bytes of a challenge message from the Onewheel.
@@ -45,6 +50,7 @@ namespace OnewheelBluetooth.Classes
         private bool disposed = false;
 
         private readonly OnewheelBoard ONEWHEEL;
+        private OnewheelType type;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
@@ -64,7 +70,15 @@ namespace OnewheelBluetooth.Classes
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
         #region --Set-, Get- Methods--
+        private bool IsOwPlusFirmwareRevision(byte[] data)
+        {
+            return data[0] == FIRMWARE_REVISION_OW_PLUS_BYTES[0] && data[1] == FIRMWARE_REVISION_OW_PLUS_BYTES[1];
+        }
 
+        private bool IsOwPlusXrFirmwareRevision(byte[] data)
+        {
+            return data[0] == FIRMWARE_REVISION_OW_PLUS_XR_BYTES[0] && data[1] == FIRMWARE_REVISION_OW_PLUS_XR_BYTES[1];
+        }
 
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
@@ -79,7 +93,7 @@ namespace OnewheelBluetooth.Classes
                 Logger.Info("Requesting firmware version for Gemini unlock...");
                 byte[] data = await ONEWHEEL.ReadBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION);
 
-                if (data == null || data[0] != FIRMWARE_REVISION_BYTES[0] || data[1] != FIRMWARE_REVISION_BYTES[1])
+                if (!CheckForGeminiFirmwareRevision(data))
                 {
                     Logger.Info("Unlock failed - Gemini firmware does not match: " + (data is null ? "null" : Utils.ByteArrayToHexString(data)));
                     return;
@@ -138,7 +152,26 @@ namespace OnewheelBluetooth.Classes
         #endregion
 
         #region --Misc Methods (Private)--
-        private bool DoFirstBytesMatch()
+        private bool CheckForGeminiFirmwareRevision(byte[] data)
+        {
+            if (!(data is null) && data.Length >= 2)
+            {
+                if (IsOwPlusXrFirmwareRevision(data))
+                {
+                    type = OnewheelType.ONEWHEEL_PLUS_XR;
+                    return true;
+                }
+                else if (IsOwPlusFirmwareRevision(data))
+                {
+                    type = OnewheelType.ONEWHEEL_PLUS;
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+
+        private bool CheckIfFirstChallengeBytesMatch()
         {
             return SERIAL_READ_CACHE.Count >= 3
                 && SERIAL_READ_CACHE[0] == CHALLENGE_FIRT_BYTES[0]
@@ -191,7 +224,14 @@ namespace OnewheelBluetooth.Classes
             }
             try
             {
-                await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_BYTES);
+                if (type == OnewheelType.ONEWHEEL_PLUS)
+                {
+                    await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_OW_PLUS_BYTES);
+                }
+                else
+                {
+                    await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_OW_PLUS_XR_BYTES);
+                }
                 Logger.Debug("Sent Gemini unlock firmware revision.");
             }
             catch (Exception e)
@@ -222,7 +262,7 @@ namespace OnewheelBluetooth.Classes
                 Utils.ReverseByteOrderIfNeeded(args.NEW_VALUE);
 
                 AddSerialReadDataToCache(args.NEW_VALUE);
-                if (DoFirstBytesMatch() && SERIAL_READ_CACHE.Count == 20)
+                if (CheckIfFirstChallengeBytesMatch() && SERIAL_READ_CACHE.Count == 20)
                 {
                     await CalcAndSendResponseAsync();
                 }

@@ -193,7 +193,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Dialogs
                     MODES.Add(new RidingModeDataTemplate() { Mode = Consts.RIDING_MODE_OW_CLASSIC_ELEVATE });
                     break;
 
-                case OnewheelType.ONEWHEEL_XR:
+                case OnewheelType.ONEWHEEL_PLUS_XR:
                 case OnewheelType.ONEWHEEL_PLUS:
                     MODES.Add(new RidingModeDataTemplate() { Mode = Consts.RIDING_MODE_OW_PLUS_SEQUOIA });
                     MODES.Add(new RidingModeDataTemplate() { Mode = Consts.RIDING_MODE_OW_PLUS_CRUZ });
