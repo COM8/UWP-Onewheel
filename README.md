@@ -12,7 +12,7 @@ NOTE: UWP-Onewheel is not endorsed by or affiliated with Future Motion in any wa
 * Onewheel+ XR (`Andromeda`, `Gemini`)
 * All other boards and firmware revisions are **not** tested. [Let me know](https://github.com/COM8/UWP-Onewheel/issues) if you got one and UWP-Onewheel works with it!
 
-### A note about the Gemini firmware version:
+### A note about the Gemini firmware revision:
 Since the Gemini firmware revision **Future Motion** added a challenge response mechanism for unlocking and accessing to the board.
 * If you are interested in the process that was required to figure out how it works, read on [here](https://github.com/ponewheel/android-ponewheel/issues/86).
 * [Here](https://github.com/ponewheel/android-ponewheel/issues/86#issuecomment-441448257) you can find the steps required to unlock the Onewheel and keep it unlocked.
