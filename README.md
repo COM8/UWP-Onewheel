@@ -9,6 +9,7 @@ NOTE: UWP-Onewheel is not endorsed by or affiliated with Future Motion in any wa
 
 ## Supported boards:
 * Onewheel+ (`Andromeda`, `Gemini`)
+* Onewheel+ XR (`Andromeda`, `Gemini`)
 * All other boards and firmware revisions are **not** tested. [Let me know](https://github.com/COM8/UWP-Onewheel/issues) if you got one and UWP-Onewheel works with it!
 
 ### A note about the Gemini firmware version:
