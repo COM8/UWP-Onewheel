@@ -183,7 +183,7 @@ namespace OnewheelBluetooth.Classes.UnlockHelper
                 AddSerialReadDataToCache(args.NEW_VALUE);
                 if (unlock.CheckIfFirstChallengeBytesMatch(SERIAL_READ_CACHE) && SERIAL_READ_CACHE.Count == 20)
                 {
-                    await unlock.CalcAndSendResponseAsync(ONEWHEEL, SERIAL_READ_CACHE);
+                    await unlock.CalcAndSendResponseAsync(SERIAL_READ_CACHE, ONEWHEEL);
 
                     await ONEWHEEL.UnsubscribeFromCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ);
                     await ONEWHEEL.SubscribeToCharacteristicsAsync(OnewheelCharacteristicsCache.SUBSCRIBE_TO_CHARACTERISTICS);

@@ -185,7 +185,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Dialogs
         {
             MODES.Clear();
             OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
-            switch (onewheel is null ? OnewheelType.ONEWHEEL_PLUS : onewheel.TYPE)
+            switch (onewheel is null ? OnewheelType.ONEWHEEL_PLUS : onewheel.owType)
             {
                 case OnewheelType.ONEWHEEL:
                     MODES.Add(new RidingModeDataTemplate() { Mode = Consts.RIDING_MODE_OW_CLASSIC_CLASSIC });

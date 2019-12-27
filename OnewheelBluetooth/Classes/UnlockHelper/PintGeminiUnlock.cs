@@ -146,7 +146,7 @@ namespace OnewheelBluetooth.Classes.UnlockHelper
 
         private string GetOwTypeName(OnewheelBoard onewheel)
         {
-            switch (onewheel.TYPE)
+            switch (onewheel.owType)
             {
                 case OnewheelType.ONEWHEEL_PLUS_XR:
                     return "xr";

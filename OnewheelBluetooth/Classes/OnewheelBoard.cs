@@ -19,10 +19,7 @@ namespace OnewheelBluetooth.Classes
         private readonly Dictionary<Guid, GattCharacteristic> ONEWHEEL_CHARACTERISTICS = new Dictionary<Guid, GattCharacteristic>();
         private readonly CancellationTokenSource REQUEST_SUBS_CANCEL_TOKEN = new CancellationTokenSource();
 
-        /// <summary>
-        /// Just the ow+ is supported right now.
-        /// </summary>
-        public readonly OnewheelType TYPE = OnewheelType.ONEWHEEL_PLUS;
+        public OnewheelType owType = OnewheelType.UNKNOWN;
         private readonly OnewheelUnlockHelper UNLOCK_HELPER;
         private readonly BluetoothLEDevice BOARD;
         public bool characteristicsLoaded = false;
@@ -383,6 +380,37 @@ namespace OnewheelBluetooth.Classes
             return data;
         }
 
+        private void TryLoadingOnewheelType(byte[] hardwareRevisionArray)
+        {
+            if (hardwareRevisionArray is null || hardwareRevisionArray.Length < 2)
+            {
+                return;
+            }
+
+            ushort hardwareRevision = BitConverter.ToUInt16(hardwareRevisionArray, 0);
+            // Based on: https://github.com/OnewheelCommunityEdition/OWCE_App/blob/4fc1923323543db849deccbf2998646cdf1bae31/OWCE/OWCE/OWBoard.cs#L458-L473
+            if (hardwareRevision >= 1 && hardwareRevision <= 2999)
+            {
+                owType = OnewheelType.ONEWHEEL;
+                Logger.Info("Received hardware revision of an original Onewheel.");
+            }
+            else if (hardwareRevision >= 3000 && hardwareRevision <= 3999)
+            {
+                owType = OnewheelType.ONEWHEEL_PLUS;
+                Logger.Info("Received hardware revision of an Onewheel+.");
+            }
+            else if (hardwareRevision >= 4000 && hardwareRevision <= 4999)
+            {
+                owType = OnewheelType.ONEWHEEL_PLUS_XR;
+                Logger.Info("Received hardware revision of an Onewheel+ XR.");
+            }
+            else if (hardwareRevision >= 5000 && hardwareRevision <= 5999)
+            {
+                owType = OnewheelType.ONEWHEEL_PINT;
+                Logger.Info("Received hardware revision of a Pint.");
+            }
+        }
+
         #endregion
 
         #region --Misc Methods (Protected)--
@@ -398,6 +426,12 @@ namespace OnewheelBluetooth.Classes
 
             // Convert to little endian:
             Utils.ReverseByteOrderIfNeeded(data);
+
+            // Try loading the Onewheel type:
+            if (sender.Uuid.Equals(OnewheelCharacteristicsCache.CHARACTERISTIC_HARDWARE_REVISION))
+            {
+                TryLoadingOnewheelType(data);
+            }
 
             // Insert characteristic and its value into a dictionary:
             OnewheelConnectionHelper.INSTANCE.CACHE.AddToDictionary(sender.Uuid, data, args.Timestamp.DateTime, true);

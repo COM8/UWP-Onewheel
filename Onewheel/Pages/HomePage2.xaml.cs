@@ -190,7 +190,7 @@ namespace Onewheel.Pages
             uint value = OnewheelConnectionHelper.INSTANCE.CACHE.GetUint(uuid);
 
             OnewheelBoard onewheel = OnewheelConnectionHelper.INSTANCE.GetOnewheel();
-            double amp = Utils.ToAmpere(value, onewheel is null ? OnewheelType.ONEWHEEL_PLUS : onewheel.TYPE);
+            double amp = Utils.ToAmpere(value, onewheel is null ? OnewheelType.ONEWHEEL_PLUS : onewheel.owType);
 
             Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
