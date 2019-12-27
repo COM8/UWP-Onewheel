@@ -1,11 +1,10 @@
 ﻿using Logging;
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.System.Threading;
 
-namespace OnewheelBluetooth.Classes
+namespace OnewheelBluetooth.Classes.UnlockHelper
 {
     public class OnewheelUnlockHelper : IDisposable
     {
@@ -20,17 +19,6 @@ namespace OnewheelBluetooth.Classes
         /// The Gemini firmware revision number for the Onewheel Plus XR.
         /// </summary>
         private readonly byte[] FIRMWARE_REVISION_OW_PLUS_XR_BYTES = new byte[] { 0x10, 0x26 };
-
-        /// <summary>
-        /// The first three bytes of a challenge message from the Onewheel.
-        /// </summary>
-        private readonly byte[] CHALLENGE_FIRT_BYTES = new byte[] { 0x43, 0x52, 0x58 };
-
-        /// <summary>
-        /// The android challenge response password.
-        /// Source: https://github.com/ponewheel/android-ponewheel/issues/86#issuecomment-440809066
-        /// </summary>
-        private readonly byte[] CHALLENGE_RESPONSE_PASSWORD = new byte[] { 0xD9, 0x25, 0x5F, 0x0F, 0x23, 0x35, 0x4E, 0x19, 0xBA, 0x73, 0x9C, 0xCD, 0xC4, 0xA9, 0x17, 0x65 };
 
         /// <summary>
         /// A cache for the last 20 bytes received from the Onewheel.
@@ -50,17 +38,12 @@ namespace OnewheelBluetooth.Classes
         private bool disposed = false;
 
         private readonly OnewheelBoard ONEWHEEL;
-        private OnewheelType type;
+        private ushort firmwareRevision;
+        private AbstractOnewheelUnlock unlock;
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        /// <summary>
-        /// Basic Constructor
-        /// </summary>
-        /// <history>
-        /// 22/11/2018 Created [Fabian Sauter]
-        /// </history>
         public OnewheelUnlockHelper(OnewheelBoard onewheel)
         {
             this.ONEWHEEL = onewheel;
@@ -90,16 +73,32 @@ namespace OnewheelBluetooth.Classes
         {
             Task.Run(async () =>
             {
-                Logger.Info("Requesting firmware version for Gemini unlock...");
+                Logger.Info("Requesting firmware revision for Gemini unlock...");
                 byte[] data = await ONEWHEEL.ReadBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION);
-
-                if (!CheckForGeminiFirmwareRevision(data))
+                if (data is null || data.Length < 2)
                 {
                     Logger.Info("Unlock failed - Gemini firmware does not match: " + (data is null ? "null" : Utils.ByteArrayToHexString(data)));
+                }
+                firmwareRevision = BitConverter.ToUInt16(data, 0);
+
+                // Get the correct unlock mechanism based on the received firmware revision:
+                if (firmwareRevision < 4100) // Andromeda
+                {
+                    Logger.Info("Received firmware revision (" + firmwareRevision + "). No unlock required.");
                     return;
                 }
-                Logger.Info("Received firmware version for Gemini unlock.");
+                else if (firmwareRevision < 4200) // Gemini
+                {
+                    unlock = new DefaultGeminiUnlock();
+                    Logger.Info("Received firmware revision (" + firmwareRevision + ") for default Gemini unlock.");
+                }
+                else  // New Gemini and Pint
+                {
+                    unlock = new PintGeminiUnlock();
+                    Logger.Info("Received firmware revision (" + firmwareRevision + ") for Pint Gemini unlock.");
+                }
 
+                // Start the process by subscribing to the serial read characteristic:
                 bool result = await ONEWHEEL.SubscribeToCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ);
                 if (!result)
                 {
@@ -107,6 +106,7 @@ namespace OnewheelBluetooth.Classes
                     return;
                 }
 
+                // Send the firmware revision back to trigger the first challenge:
                 await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, data);
                 Logger.Debug("Sent Gemini unlock firmware revision.");
             });
@@ -119,66 +119,9 @@ namespace OnewheelBluetooth.Classes
             disposed = true;
         }
 
-        /// <summary>
-        /// Calculates the response for the given challenge.
-        /// Source: https://github.com/ponewheel/android-ponewheel/issues/86#issuecomment-440809066
-        /// </summary>
-        /// <param name="challenge">The challenge send by the Onewheel.</param>
-        /// <returns>The response for the given challenge.</returns>
-        public byte[] CalcResponse(byte[] challenge)
-        {
-            List<byte> response = new List<byte>(20);
-            response.AddRange(CHALLENGE_FIRT_BYTES);
-
-            byte[] md5In = new byte[16 + CHALLENGE_RESPONSE_PASSWORD.Length];
-            Buffer.BlockCopy(challenge, 3, md5In, 0, 16);
-            Buffer.BlockCopy(CHALLENGE_RESPONSE_PASSWORD, 0, md5In, 16, CHALLENGE_RESPONSE_PASSWORD.Length);
-
-            MD5 md5 = MD5.Create();
-            byte[] md5Out = md5.ComputeHash(md5In);
-            response.AddRange(md5Out);
-
-            // Calculate the validation byte:
-            byte checkByte = 0;
-            for (int i = 0; i < response.Count; i++)
-            {
-                checkByte = ((byte)(response[i] ^ checkByte));
-            }
-            response.Add(checkByte);
-
-            return response.ToArray();
-        }
-
         #endregion
 
         #region --Misc Methods (Private)--
-        private bool CheckForGeminiFirmwareRevision(byte[] data)
-        {
-            if (!(data is null) && data.Length >= 2)
-            {
-                if (IsOwPlusXrFirmwareRevision(data))
-                {
-                    type = OnewheelType.ONEWHEEL_PLUS_XR;
-                    return true;
-                }
-                else if (IsOwPlusFirmwareRevision(data))
-                {
-                    type = OnewheelType.ONEWHEEL_PLUS;
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        }
-
-        private bool CheckIfFirstChallengeBytesMatch()
-        {
-            return SERIAL_READ_CACHE.Count >= 3
-                && SERIAL_READ_CACHE[0] == CHALLENGE_FIRT_BYTES[0]
-                && SERIAL_READ_CACHE[1] == CHALLENGE_FIRT_BYTES[1]
-                && SERIAL_READ_CACHE[2] == CHALLENGE_FIRT_BYTES[2];
-        }
-
         private void AddSerialReadDataToCache(byte[] data)
         {
             if (SERIAL_READ_CACHE.Count > 20)
@@ -186,23 +129,6 @@ namespace OnewheelBluetooth.Classes
                 SERIAL_READ_CACHE.RemoveRange(0, data.Length);
             }
             SERIAL_READ_CACHE.AddRange(data);
-        }
-
-        private async Task CalcAndSendResponseAsync()
-        {
-            byte[] challenge = SERIAL_READ_CACHE.ToArray();
-            byte[] response = CalcResponse(challenge);
-
-            await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_WRITE, response);
-            Logger.Info("Sent Gemini unlock response to Onewheel challenge.");
-
-            await ONEWHEEL.UnsubscribeFromCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ);
-
-            await ONEWHEEL.SubscribeToCharacteristicsAsync(OnewheelCharacteristicsCache.SUBSCRIBE_TO_CHARACTERISTICS);
-
-            // Send the Gemini firmware revision every UNLOCK_PERIOD to keep the board unlocked:
-            StartUnlockTimer();
-            OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
         }
 
         private void StartUnlockTimer()
@@ -224,14 +150,7 @@ namespace OnewheelBluetooth.Classes
             }
             try
             {
-                if (type == OnewheelType.ONEWHEEL_PLUS)
-                {
-                    await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_OW_PLUS_BYTES);
-                }
-                else
-                {
-                    await ONEWHEEL.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, FIRMWARE_REVISION_OW_PLUS_XR_BYTES);
-                }
+                await ONEWHEEL.WriteUShortAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_FIRMWARE_REVISION, firmwareRevision);
                 Logger.Debug("Sent Gemini unlock firmware revision.");
             }
             catch (Exception e)
@@ -262,9 +181,16 @@ namespace OnewheelBluetooth.Classes
                 Utils.ReverseByteOrderIfNeeded(args.NEW_VALUE);
 
                 AddSerialReadDataToCache(args.NEW_VALUE);
-                if (CheckIfFirstChallengeBytesMatch() && SERIAL_READ_CACHE.Count == 20)
+                if (unlock.CheckIfFirstChallengeBytesMatch(SERIAL_READ_CACHE) && SERIAL_READ_CACHE.Count == 20)
                 {
-                    await CalcAndSendResponseAsync();
+                    await unlock.CalcAndSendResponseAsync(ONEWHEEL, SERIAL_READ_CACHE);
+
+                    await ONEWHEEL.UnsubscribeFromCharacteristicAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_READ);
+                    await ONEWHEEL.SubscribeToCharacteristicsAsync(OnewheelCharacteristicsCache.SUBSCRIBE_TO_CHARACTERISTICS);
+
+                    // Send the Gemini firmware revision every UNLOCK_PERIOD to keep the board unlocked:
+                    StartUnlockTimer();
+                    OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged -= CACHE_CharacteristicChanged;
                 }
             }
         }

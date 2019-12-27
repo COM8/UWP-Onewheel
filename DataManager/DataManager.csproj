@@ -112,8 +112,10 @@
     <Compile Include="Classes\DBTables\BatteryTable.cs" />
     <Compile Include="Classes\DBTables\DBTableConsts.cs" />
     <Compile Include="Classes\DBTables\SpeedTable.cs" />
+    <Compile Include="Classes\OnewheelApiCredentials.cs" />
     <Compile Include="Classes\Settings.cs" />
     <Compile Include="Classes\SettingsConsts.cs" />
+    <Compile Include="Classes\Vault.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 ﻿using Logging;
+using OnewheelBluetooth.Classes.UnlockHelper;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -98,6 +99,14 @@ namespace OnewheelBluetooth.Classes
         }
 
         public async Task<GattWriteResult> WriteShortAsync(Guid uuid, short data)
+        {
+            byte[] dataArr = BitConverter.GetBytes(data);
+            Utils.ReverseByteOrderIfNeeded(dataArr);
+
+            return await WriteBytesAsync(uuid, dataArr);
+        }
+
+        public async Task<GattWriteResult> WriteUShortAsync(Guid uuid, ushort data)
         {
             byte[] dataArr = BitConverter.GetBytes(data);
             Utils.ReverseByteOrderIfNeeded(dataArr);
