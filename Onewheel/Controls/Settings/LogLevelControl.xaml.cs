@@ -1,27 +1,20 @@
-﻿using Logging;
-using Shared.Classes;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Onewheel_UI_Context.Classes.DataContexts.Controls.Settings;
+using Windows.UI.Xaml.Controls;
 
-namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
+namespace Onewheel.Controls.Settings
 {
-    public sealed class SettingsPageDataTemplate : AbstractDataTemplate
+    public sealed partial class LogLevelControl : UserControl
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private string _LogFolderPath;
-        public string LogFolderPath
-        {
-            get => _LogFolderPath;
-            set => SetProperty(ref _LogFolderPath, value);
-        }
+        public readonly LogLevelControlContext VIEW_MODEL = new LogLevelControlContext();
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        public SettingsPageDataTemplate()
+        public LogLevelControl()
         {
-            LoadSettings();
+            this.InitializeComponent();
         }
 
         #endregion
@@ -37,14 +30,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
         #endregion
 
         #region --Misc Methods (Private)--
-        private void LoadSettings()
-        {
-            Task.Run(async () =>
-            {
-                StorageFolder folder = await Logger.GetLogFolderAsync();
-                LogFolderPath = folder is null ? "" : folder.Path;
-            });
-        }
+
 
         #endregion
 

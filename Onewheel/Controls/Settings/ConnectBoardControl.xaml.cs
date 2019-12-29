@@ -1,11 +1,11 @@
 ﻿using Microsoft.Toolkit.Uwp.Connectivity;
+using OnewheelBluetooth.Classes;
+using System;
 using Windows.Devices.Bluetooth;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using System;
-using OnewheelBluetooth.Classes;
 
-namespace Onewheel.Controls
+namespace Onewheel.Controls.Settings
 {
     public sealed partial class ConnectBoardControl : UserControl
     {

@@ -121,10 +121,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Classes\DataContexts\Controls\InfoTitleBarControlContext.cs" />
+    <Compile Include="Classes\DataContexts\Controls\Settings\FolderSizeControlContext.cs" />
+    <Compile Include="Classes\DataContexts\Controls\Settings\LogLevelControlContext.cs" />
     <Compile Include="Classes\DataContexts\Dialogs\ChangeBoardNameDialogContext.cs" />
     <Compile Include="Classes\DataContexts\Dialogs\ChangeRidingModeDialogDataContext.cs" />
     <Compile Include="Classes\DataContexts\Pages\SettingsPageContext.cs" />
     <Compile Include="Classes\DataTemplates\Controls\InfoTitleBarControlDataTemplate.cs" />
+    <Compile Include="Classes\DataTemplates\Controls\Settings\FolderSizeControlDataTemplate.cs" />
+    <Compile Include="Classes\DataTemplates\Controls\Settings\LogLevelControlDataTemplate.cs" />
+    <Compile Include="Classes\DataTemplates\Controls\Settings\LogLevelDataTemplate.cs" />
     <Compile Include="Classes\DataTemplates\Dialogs\ChangeBoardNameDialogDataTemplate.cs" />
     <Compile Include="Classes\DataTemplates\Pages\SettingsPageDataTemplate.cs" />
     <Compile Include="Classes\ValueConverters\BatteryLevelGlyphValueConverter.cs" />
@@ -140,6 +145,8 @@
     <Compile Include="Classes\ValueConverters\OnewheelConnectionHelperStateSearchingVisabilityValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\RidingModeDataTemplateCustomShapingVisabilityValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\RidingModeDataTemplateStringDescriptionValueConverter.cs" />
+    <Compile Include="Classes\ValueConverters\Settings\LogLevelStringValueConverter.cs" />
+    <Compile Include="Classes\ValueConverters\Settings\LogLevelWarningVisibilityValueConverter.cs" />
     <Compile Include="Classes\ValueConverters\StringEmptyVisabilityValueConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Onewheel_UI_Context.rd.xml" />

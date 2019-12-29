@@ -1,28 +1,19 @@
-﻿using Logging;
-using Shared.Classes;
+﻿using Onewheel_UI_Context.Classes.DataTemplates.Controls.Settings;
 using System.Threading.Tasks;
-using Windows.Storage;
+using Windows.UI.Xaml;
 
-namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
+namespace Onewheel_UI_Context.Classes.DataContexts.Controls.Settings
 {
-    public sealed class SettingsPageDataTemplate : AbstractDataTemplate
+    public sealed class FolderSizeControlContext
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private string _LogFolderPath;
-        public string LogFolderPath
-        {
-            get => _LogFolderPath;
-            set => SetProperty(ref _LogFolderPath, value);
-        }
+        public readonly FolderSizeControlDataTemplate MODEL = new FolderSizeControlDataTemplate();
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        public SettingsPageDataTemplate()
-        {
-            LoadSettings();
-        }
+
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
@@ -32,19 +23,23 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public async Task UpdateViewAsync(DependencyPropertyChangedEventArgs e)
+        {
+            if (!Equals(e.OldValue, e.NewValue) && e.NewValue is string path)
+            {
+                await MODEL.UpdateViewAsync(path);
+            }
+        }
 
+        public async Task RecalculateFolderSizeAsync(string path)
+        {
+            await MODEL.UpdateViewAsync(path);
+        }
 
         #endregion
 
         #region --Misc Methods (Private)--
-        private void LoadSettings()
-        {
-            Task.Run(async () =>
-            {
-                StorageFolder folder = await Logger.GetLogFolderAsync();
-                LogFolderPath = folder is null ? "" : folder.Path;
-            });
-        }
+
 
         #endregion
 

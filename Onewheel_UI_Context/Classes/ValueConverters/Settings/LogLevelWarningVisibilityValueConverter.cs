@@ -1,28 +1,21 @@
 ﻿using Logging;
-using Shared.Classes;
-using System.Threading.Tasks;
-using Windows.Storage;
+using Onewheel_UI_Context.Classes.DataTemplates.Controls.Settings;
+using System;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Data;
 
-namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
+namespace Onewheel_UI_Context.Classes.ValueConverters.Settings
 {
-    public sealed class SettingsPageDataTemplate : AbstractDataTemplate
+    public sealed class LogLevelWarningVisibilityValueConverter : IValueConverter
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private string _LogFolderPath;
-        public string LogFolderPath
-        {
-            get => _LogFolderPath;
-            set => SetProperty(ref _LogFolderPath, value);
-        }
+
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        public SettingsPageDataTemplate()
-        {
-            LoadSettings();
-        }
+
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
@@ -32,19 +25,24 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is LogLevelDataTemplate logLevel && logLevel.LogLevel == LogLevel.DEBUG)
+            {
+                return Visibility.Visible;
+            }
+            return Visibility.Collapsed;
+        }
 
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 
         #region --Misc Methods (Private)--
-        private void LoadSettings()
-        {
-            Task.Run(async () =>
-            {
-                StorageFolder folder = await Logger.GetLogFolderAsync();
-                LogFolderPath = folder is null ? "" : folder.Path;
-            });
-        }
+
 
         #endregion
 

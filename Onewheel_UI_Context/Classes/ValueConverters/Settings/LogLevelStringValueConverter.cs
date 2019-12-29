@@ -1,33 +1,19 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+﻿using Logging;
+using System;
+using Windows.UI.Xaml.Data;
 
-namespace Onewheel.Controls
+namespace Onewheel_UI_Context.Classes.ValueConverters.Settings
 {
-    public sealed partial class SettingsContentControl : UserControl
+    public sealed class LogLevelStringValueConverter : IValueConverter
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public string Header
-        {
-            get { return (string)GetValue(HeaderProperty); }
-            set { SetValue(HeaderProperty, value); }
-        }
-        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(SettingsContentControl), new PropertyMetadata(""));
 
-        public object MainContent
-        {
-            get { return GetValue(MainContentProperty); }
-            set { SetValue(MainContentProperty, value); }
-        }
-        public static readonly DependencyProperty MainContentProperty = DependencyProperty.Register(nameof(MainContent), typeof(object), typeof(SettingsContentControl), new PropertyMetadata(null));
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        public SettingsContentControl()
-        {
-            this.InitializeComponent();
-        }
+
 
         #endregion
         //--------------------------------------------------------Set-, Get- Methods:---------------------------------------------------------\\
@@ -37,7 +23,38 @@ namespace Onewheel.Controls
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public object Convert(object value, Type targetType, object parameter, string language)
+        {
+            if (value is LogLevel logLevel)
+            {
+                switch (logLevel)
+                {
+                    case LogLevel.NONE:
+                        return "None";
 
+                    case LogLevel.ERROR:
+                        return "Error";
+
+                    case LogLevel.WARNING:
+                        return "Warning";
+
+                    case LogLevel.INFO:
+                        return "Info";
+
+                    case LogLevel.DEBUG:
+                        return "Debug";
+
+                    default:
+                        return logLevel.ToString();
+                }
+            }
+            return "";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 

@@ -1,19 +1,27 @@
-﻿using Onewheel_UI_Context.Classes.DataContexts.Pages;
+﻿using Onewheel_UI_Context.Classes.DataContexts.Controls.Settings;
+using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace Onewheel.Pages
+namespace Onewheel.Controls.Settings
 {
-    public sealed partial class SettingsPage : Page
+    public sealed partial class FolderSizeControl : UserControl
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        public readonly SettingsPageContext VIEW_MODEL = new SettingsPageContext();
+        public string FolderPath
+        {
+            get => (string)GetValue(FolderPathProperty);
+            set => SetValue(FolderPathProperty, value);
+        }
+        public static readonly DependencyProperty FolderPathProperty = DependencyProperty.Register(nameof(FolderPath), typeof(string), typeof(FolderSizeControl), new PropertyMetadata(null, OnFolderPathChanged));
+
+        private readonly FolderSizeControlContext VIEW_MODEL = new FolderSizeControlContext();
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        public SettingsPage()
+        public FolderSizeControl()
         {
             this.InitializeComponent();
         }
@@ -26,12 +34,18 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
-
+        public async Task RecalculateFolderSizeAsync()
+        {
+            await VIEW_MODEL.RecalculateFolderSizeAsync(FolderPath);
+        }
 
         #endregion
 
         #region --Misc Methods (Private)--
-
+        private async Task UpdateViewAsync(DependencyPropertyChangedEventArgs e)
+        {
+            await VIEW_MODEL.UpdateViewAsync(e);
+        }
 
         #endregion
 
@@ -41,15 +55,12 @@ namespace Onewheel.Pages
         #endregion
         //--------------------------------------------------------Events:---------------------------------------------------------------------\\
         #region --Events--
-        private async void DeleteLogs_btn_Click(object sender, RoutedEventArgs e)
+        private static async void OnFolderPathChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            await VIEW_MODEL.DeleteLogsAsync();
-            await logsFolder_fsc.RecalculateFolderSizeAsync();
-        }
-
-        private async void ExportLogs_btn_Click(object sender, RoutedEventArgs e)
-        {
-            await VIEW_MODEL.ExportLogsAsync();
+            if (d is FolderSizeControl folderSizeControl)
+            {
+                await folderSizeControl.UpdateViewAsync(e);
+            }
         }
 
         #endregion

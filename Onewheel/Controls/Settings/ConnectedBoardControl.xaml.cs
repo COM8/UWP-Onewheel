@@ -1,11 +1,11 @@
 ﻿using DataManager.Classes;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
+using OnewheelBluetooth.Classes;
 using System;
 using Windows.Devices.Bluetooth;
-using OnewheelBluetooth.Classes;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
-namespace Onewheel.Controls
+namespace Onewheel.Controls.Settings
 {
     public sealed partial class ConnectedBoardControl : UserControl
     {
@@ -82,12 +82,12 @@ namespace Onewheel.Controls
             }
             else
             {
-                string btAddress = Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
+                string btAddress = DataManager.Classes.Settings.getSettingString(SettingsConsts.BOARD_ADDRESS);
                 if (btAddress != null)
                 {
                     btAddress_tbx.Text = btAddress;
-                    name_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
-                    deviceId_tbx.Text = Settings.getSettingString(SettingsConsts.BOARD_ID) ?? "";
+                    name_tbx.Text = DataManager.Classes.Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
+                    deviceId_tbx.Text = DataManager.Classes.Settings.getSettingString(SettingsConsts.BOARD_ID) ?? "";
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Onewheel.Controls.ConnectBoardControl"
+﻿<UserControl x:Class="Onewheel.Controls.Settings.ConnectBoardControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:connectivity="using:Microsoft.Toolkit.Uwp.Connectivity"

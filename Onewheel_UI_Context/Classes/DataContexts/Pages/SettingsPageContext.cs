@@ -1,4 +1,6 @@
-﻿using Onewheel_UI_Context.Classes.DataTemplates.Pages;
+﻿using Logging;
+using Onewheel_UI_Context.Classes.DataTemplates.Pages;
+using System.Threading.Tasks;
 
 namespace Onewheel_UI_Context.Classes.DataContexts.Pages
 {
@@ -21,7 +23,15 @@ namespace Onewheel_UI_Context.Classes.DataContexts.Pages
         #endregion
         //--------------------------------------------------------Misc Methods:---------------------------------------------------------------\\
         #region --Misc Methods (Public)--
+        public async Task ExportLogsAsync()
+        {
+            await Logger.ExportLogsAsync();
+        }
 
+        public async Task DeleteLogsAsync()
+        {
+            await Logger.DeleteLogsAsync();
+        }
 
         #endregion
 

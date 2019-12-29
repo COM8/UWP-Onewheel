@@ -112,10 +112,10 @@
     <Compile Include="Controls\BoardRidingModeControl.xaml.cs">
       <DependentUpon>BoardRidingModeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ConnectBoardControl.xaml.cs">
+    <Compile Include="Controls\Settings\ConnectBoardControl.xaml.cs">
       <DependentUpon>ConnectBoardControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ConnectedBoardControl.xaml.cs">
+    <Compile Include="Controls\Settings\ConnectedBoardControl.xaml.cs">
       <DependentUpon>ConnectedBoardControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ExtendedSlider.cs" />
@@ -134,7 +134,13 @@
     <Compile Include="Controls\SeperatorControl.xaml.cs">
       <DependentUpon>SeperatorControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\SettingsContentControl.xaml.cs">
+    <Compile Include="Controls\Settings\FolderSizeControl.xaml.cs">
+      <DependentUpon>FolderSizeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\LogLevelControl.xaml.cs">
+      <DependentUpon>LogLevelControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings\SettingsContentControl.xaml.cs">
       <DependentUpon>SettingsContentControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\SpeedGraph.xaml.cs">
@@ -251,11 +257,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ConnectBoardControl.xaml">
+    <Page Include="Controls\Settings\ConnectBoardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ConnectedBoardControl.xaml">
+    <Page Include="Controls\Settings\ConnectedBoardControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -279,7 +285,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\SettingsContentControl.xaml">
+    <Page Include="Controls\Settings\FolderSizeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\LogLevelControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings\SettingsContentControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

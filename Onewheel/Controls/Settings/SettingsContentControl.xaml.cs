@@ -1,27 +1,32 @@
-﻿using Logging;
-using Shared.Classes;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
-namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
+namespace Onewheel.Controls.Settings
 {
-    public sealed class SettingsPageDataTemplate : AbstractDataTemplate
+    public sealed partial class SettingsContentControl : UserControl
     {
         //--------------------------------------------------------Attributes:-----------------------------------------------------------------\\
         #region --Attributes--
-        private string _LogFolderPath;
-        public string LogFolderPath
+        public string Header
         {
-            get => _LogFolderPath;
-            set => SetProperty(ref _LogFolderPath, value);
+            get { return (string)GetValue(HeaderProperty); }
+            set { SetValue(HeaderProperty, value); }
         }
+        public static readonly DependencyProperty HeaderProperty = DependencyProperty.Register(nameof(Header), typeof(string), typeof(SettingsContentControl), new PropertyMetadata(""));
+
+        public object MainContent
+        {
+            get { return GetValue(MainContentProperty); }
+            set { SetValue(MainContentProperty, value); }
+        }
+        public static readonly DependencyProperty MainContentProperty = DependencyProperty.Register(nameof(MainContent), typeof(object), typeof(SettingsContentControl), new PropertyMetadata(null));
 
         #endregion
         //--------------------------------------------------------Constructor:----------------------------------------------------------------\\
         #region --Constructors--
-        public SettingsPageDataTemplate()
+        public SettingsContentControl()
         {
-            LoadSettings();
+            this.InitializeComponent();
         }
 
         #endregion
@@ -37,14 +42,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Pages
         #endregion
 
         #region --Misc Methods (Private)--
-        private void LoadSettings()
-        {
-            Task.Run(async () =>
-            {
-                StorageFolder folder = await Logger.GetLogFolderAsync();
-                LogFolderPath = folder is null ? "" : folder.Path;
-            });
-        }
+
 
         #endregion
 

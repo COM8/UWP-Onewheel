@@ -33,7 +33,7 @@ namespace Onewheel_UI_Context.Classes.DataTemplates.Controls
         #region --Constructors--
         public InfoTitleBarControlDataTemplate()
         {
-            BoardName = Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
+            BoardName = DataManager.Classes.Settings.getSettingString(SettingsConsts.BOARD_NAME) ?? "";
             BatteryLevel = -1;
             ConnectionState = OnewheelConnectionHelper.INSTANCE.GetState();
             OnewheelConnectionHelper.INSTANCE.CACHE.CharacteristicChanged += CACHE_CharacteristicChanged;

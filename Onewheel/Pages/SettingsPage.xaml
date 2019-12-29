@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:settings="using:Onewheel.Controls"
+      xmlns:settings="using:Onewheel.Controls.Settings"
       mc:Ignorable="d">
 
     <ScrollViewer x:Name="main_scv"
@@ -28,6 +28,31 @@
                                                         Margin="0,10,0,0"/>
                         <settings:ConnectBoardControl Grid.Row="2"
                                                       Margin="0,10,0,0"/>
+                    </StackPanel>
+                </settings:SettingsContentControl.MainContent>
+            </settings:SettingsContentControl>
+
+            <!--  Logs  -->
+            <settings:SettingsContentControl x:Name="logs_scp"
+                                             Header="Logs:">
+                <settings:SettingsContentControl.MainContent>
+                    <StackPanel>
+                        <settings:LogLevelControl Margin="0,10,0,0"/>
+                        <Button x:Name="exportLogs_btn"
+                                Margin="0,10,0,0"
+                                Click="ExportLogs_btn_Click"
+                                Content="Export logs"/>
+                        <StackPanel Margin="0,10,0,0"
+                                    Orientation="Horizontal">
+                            <Button x:Name="deleteLogs_btn"
+                                    Margin="0"
+                                    Click="DeleteLogs_btn_Click"
+                                    Content="Delete logs"/>
+                            <settings:FolderSizeControl x:Name="logsFolder_fsc"
+                                                        Margin="10,0,0,0"
+                                                        VerticalAlignment="Center"
+                                                        FolderPath="{x:Bind VIEW_MODEL.MODEL.LogFolderPath, Mode=OneWay}"/>
+                        </StackPanel>
                     </StackPanel>
                 </settings:SettingsContentControl.MainContent>
             </settings:SettingsContentControl>
