@@ -1,6 +1,6 @@
 ﻿using DataManager.Classes;
 using Logging;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +33,11 @@ namespace OnewheelBluetooth.Classes.UnlockHelper
         {
             byte[] challenge = serialReadCache.ToArray();
             byte[] response = await CalcResponseAsync(challenge, onewheel);
-
-            await onewheel.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_WRITE, response);
-            Logger.Info("Sent Gemini unlock response to Onewheel challenge.");
+            if (!(response is null))
+            {
+                await onewheel.WriteBytesAsync(OnewheelCharacteristicsCache.CHARACTERISTIC_UART_SERIAL_WRITE, response);
+                Logger.Info("Sent Gemini unlock response to Onewheel challenge.");
+            }
         }
 
         #endregion
@@ -109,30 +111,24 @@ namespace OnewheelBluetooth.Classes.UnlockHelper
                         if (response.IsSuccessStatusCode)
                         {
                             string responseBody = await response.Content.ReadAsStringAsync();
-                            JArray result = JArray.Parse(responseBody);
-
-                            // TODO parse JSON response and store the API token securely:
-                            /*if (string.IsNullOrWhiteSpace(owKey.Key))
+                            PintGeminiUnlockResponse result = JsonConvert.DeserializeObject<PintGeminiUnlockResponse>(responseBody);
+                            if (result is null || string.IsNullOrEmpty(result.key))
                             {
-                                throw new Exception("No key found.");
+                                throw new Exception($"Unexpected response code ({response.StatusCode})");
                             }
-
-                            await SecureStorage.SetAsync($"board_{deviceName}_key", apiKey);
-                            await SecureStorage.SetAsync($"board_{deviceName}_token", owKey.Key);
-
-                            var tokenArray = owKey.Key.StringToByteArray();
-                            return tokenArray;*/
-                            return null;
+                            apiCredentials.apiKey = result.key;
+                            Vault.StoreCredentials(apiCredentials);
+                            return Utils.HexStringToByteArray(apiCredentials.apiToken);
                         }
                         else
                         {
                             throw new Exception($"Unexpected response code ({response.StatusCode})");
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-
-                        throw;
+                        Logger.Error("Failed to perform Pint Gemini unlock.", e);
+                        return null;
                     }
                 }
             }

@@ -135,6 +135,7 @@
     <Compile Include="Classes\UnlockHelper\OnewheelUnlockHelper.cs" />
     <Compile Include="Classes\UartHelper.cs" />
     <Compile Include="Classes\UnlockHelper\PintGeminiUnlock.cs" />
+    <Compile Include="Classes\UnlockHelper\PintGeminiUnlockResponse.cs" />
     <Compile Include="Classes\Utils.cs" />
     <Compile Include="Classes\Handler\AbstractValueHandler.cs" />
     <Compile Include="Classes\Handler\OnewheelBatteryHandler.cs" />
